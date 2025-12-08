@@ -1,0 +1,44 @@
+# Build outputs
+bin/
+obj/
+publish/
+artifacts/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# Rider / JetBrains
+.idea/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet packages
+*.nupkg
+# packages/  # not needed with PackageReference
+
+# EF Core Migrations snapshots
+**/Migrations/**/Snapshot*
+
+# User secrets
+secrets.json
+
+# Test results
+TestResults/
+
+# Temporary files
+*.swp
+*~
+*.tmp
+*.local
