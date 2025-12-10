@@ -21,7 +21,7 @@ namespace Ecom.Domain.ValueObjects
 
 		private Money(decimal amount)
 		{
-			Amount = Decimal.Round(amount, MidpointRounding.AwayFromZero);
+			Amount = decimal.Round(amount,2, MidpointRounding.AwayFromZero);
 			//يضمن سلوك تقريب ثابت (مثلاً 2.345 => 2.35). مهم علشان الحسابات المالية تبقى متوقعة.
 		}
 
