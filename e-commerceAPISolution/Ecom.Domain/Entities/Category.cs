@@ -1,5 +1,4 @@
 ﻿using Ecom.Domain.Common;
-using Ecom.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +7,19 @@ using System.Threading.Tasks;
 
 namespace Ecom.Domain.Entities
 {
-	public class Product:AuditableEntity
+	public class Category:AuditableEntity
 	{
 		public Guid Id { get; set; }
-
 		public string Name { get; set; } = null!;
+
+		public string? Slug { get; set; }
 		public string? Description { get; set; }
-		public Money Price { get; set; } = null!;
 
 		public string? ImageUrl { get; set; }
 
-		public Guid? CategoryId { get; set; }
-		public Category? Category { get; set; }
-
-		public bool IsAvailable { get; set; } = true;
-
+		public bool IsActive { get; set; } = true;
 		public bool IsDeleted { get; set; } = false;
+
+		public List<Product> Products { get; set; }= new List<Product>();
 	}
 }
