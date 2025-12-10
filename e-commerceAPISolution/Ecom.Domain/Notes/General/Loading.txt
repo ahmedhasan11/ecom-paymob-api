@@ -1,0 +1,47 @@
+﻿Eager loading (Include)
+لما تكتب:
+
+var list = context.Categories.Include(c => c.Products).ToList();
+
+
+ده يعني: أثناء جلب الـ Categories من الداتا بيز، EF كمان هيجيب كل الـ Products المرتبطة بكل Category في نفس الاستعلام أو في استعلامات إضافية تلقائيًا.
+المشكلة: لو عندك آلاف الـ Categories وكل واحد فيه مئات أو آلاف Products، الاستعلام ممكن يرجع ملايين صفوف → بطء وذاكرة كبيرة.
+
+Lazy loading
+لو فعّلت lazy loading، عندما توصل لـ category.Products في كودك لأول مرة EF هيعمل استعلام منفصل للحصول على المنتجات.
+مشكلة: لو بتكرر الوصول لكل كائن في حلقة، هتحصل مشكلة N+1 queries (واحد لجلب الـ Categories + N استعلامات لجلب products لكل category) → بطء كبير.
+
+Explicit loading
+بتطلب من EF صراحة تحميل الـ navigation عند الحاجة:
+
+context.Entry(category).Collection(c => c.Products).Load();
+
+
+ده بيعطيك تحكم أكبر.
+
+ليه الكلام عن "ملايين صفوف" ظهر؟
+
+لو عملت Include على جدول كبير بدون فلتر أو pagination، قاعدة البيانات هترجع كل المطابقات. لو عندك 1000 category وكل واحد فيه 1000 product → هترجع 1,000,000 صف. ده يعطل الأداء ويشغل رام وخادم DB.
+
+أفضل ممارسات لتجنب المشكلة
+
+لا تستخدم Include إلا لما تحتاج البيانات الفعلية للـ Products.
+
+لو عايز مجرد عدد المنتجات لكل قسم استخدم projection:
+
+var result = context.Categories
+    .Select(c => new { c.Id, c.Name, ProductsCount = c.Products.Count() })
+    .ToList();
+
+
+استخدم pagination عند عرض قوائم كبيرة (Skip/Take).
+
+لو محتاج بيانات محددة للـ Products استخدم projection لجلب الحقول المطلوبة فقط، مش كل الكائن:
+
+var data = context.Categories
+    .Where(...)
+    .Select(c => new {
+        c.Id,
+        c.Name,
+        Products = c.Products.Select(p => new { p.Id, p.Name, p.Price }).Take(10)
+    }).ToList();
