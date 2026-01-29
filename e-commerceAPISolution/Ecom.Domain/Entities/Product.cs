@@ -10,7 +10,7 @@ namespace Ecom.Domain.Entities
 {
 	public class Product:AuditableEntity
 	{
-		public Guid Id { get; set; }
+		public Guid Id { get; set; } = Guid.NewGuid();
 
 		public string Name { get; set; } = null!;
 		public string? Description { get; set; }
@@ -24,5 +24,15 @@ namespace Ecom.Domain.Entities
 		public bool IsAvailable { get; set; } = true;
 
 		public bool IsDeleted { get; set; } = false;
+
+		public Product(Decimal price , string name)
+		{
+			if (string.IsNullOrWhiteSpace(name) /*|| price==null*/)
+			{
+				throw new ArgumentException("Name cannot be empty.", nameof(name));
+			}
+			Name=name;
+			Price = Money.From(price); // valdiation of price is done already inside Money VO
+		}
 	}
 }
