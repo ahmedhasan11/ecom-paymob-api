@@ -1,0 +1,16 @@
+﻿2️⃣ CreatedAt مسؤولية الـ Domain
+
+مين المسؤول عن:
+
+إنشاء المنتج؟
+
+تحديد وقت إنشائه؟
+
+👉 Domain Entity
+مش DTO.
+
+الـ Entity هو اللي يقول:
+
+
+
+so in dto , you shouldnt make public DateTime CreatedAt= DateTime.UtcNow ,,,,,, only make the property
