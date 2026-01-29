@@ -1,0 +1,65 @@
+﻿طب إزاي DbContext يعرف الكلاسات دي؟
+
+الـ DbContext بيبقى فيه ميثود واحدة مهمتها تقول:
+
+“لف على كل ملفات الـ Configurations في المشروع وطبّقهم”
+
+الميثود دي اسمها:
+
+OnModelCreating
+
+ودورها بس:
+
+تنادي على EF
+
+تخليه يقرأ كل كلاس Configuration وينفّذ اللي فيه
+
+يعني:
+
+Configure → يحط قواعد كيان واحد
+
+OnModelCreating → يجمع كل القواعد لكل الكيانات
+
+
+
+
+
+
+أولًا: ليه الكلاس "بيورث" من حاجة؟
+
+لما تكتب إن الكلاس بتاعك مرتبط بـ
+IEntityTypeConfiguration<Product>
+
+إنت كأنك بتقول لـ EF Core:
+
+"الكلاس ده فيه تعليمات خاصة بكيان Product
+ولما تيجي تبني الموديل، ناديني عشان أديك القواعد"
+
+يعني دي طريقة تعريف مش وراثة عشان نستخدم كود جاهز
+دي وراثة عشان نسجّل نفسنا عند EF إننا مسؤولين عن Product
+
+
+
+
+
+الجزء	معناه
+الكلاس ProductConfiguration	ملف إعدادات جدول Product
+IEntityTypeConfiguration<Product>	تعريف لـ EF إنك مسؤول عن Product
+Configure	الميثود اللي EF بيناديها عشان ياخد الإعدادات
+البراميتر اللي جواها	الأداة اللي بتبني بيها شكل الجدول
+
+
+
+
+protected override void OnModelCreating(ModelBuilder builder)
+{
+    base.OnModelCreating(builder);
+
+    builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+}
+السطر المهم بيعمل إيه؟
+يدوّر على أي كلاس بيطبّق إعدادات كيانات (زي ProductConfiguration)
+
+يشغّل ميثود Configure بتاعته تلقائي
+
+من غير ما تضيفهم واحد واحد
