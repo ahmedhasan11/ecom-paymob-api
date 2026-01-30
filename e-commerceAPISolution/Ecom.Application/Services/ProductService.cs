@@ -14,9 +14,11 @@ namespace Ecom.Application.Services
 	public class ProductService : IProductService
 	{
 		private readonly IProductRepository _productRepository;
-		public ProductService(IProductRepository productRepository)
+		private readonly IUnitOfWork _unitOfWork;
+		public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
 		{
-		_productRepository = productRepository;
+			_productRepository = productRepository;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto)
 		{
@@ -31,6 +33,7 @@ namespace Ecom.Application.Services
 			//أي فلوس تدخل الدومين لازم تعدّي على Money.From عشان أتأكد إنها فلوس صح، مش رقم وخلاص
 
 			await _productRepository.AddProductAsync(product);
+			await _unitOfWork.SaveChangesAsync();
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt };
 		}

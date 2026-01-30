@@ -1,0 +1,15 @@
+﻿"public static class InfrastructureServiceRegistration" 
+ ----->الكلاس ده مجرد حاوية لدوال مساعدة
+			فبنخليه static عشان:
+			✔ ما يتعملوش instances
+			✔ يبقى واضح إنه Utility/Extensions بس
+
+
+"public static IServiceCollection AddInfrastructure(...)"
+------>وفي C# أي Extension Method لازم تكون:
+
+			جوه كلاس static
+
+			والمethod نفسها static
+
+

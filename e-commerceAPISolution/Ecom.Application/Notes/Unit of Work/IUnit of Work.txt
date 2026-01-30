@@ -1,0 +1,19 @@
+﻿public interface IUnitOfWork
+{
+	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+}
+
+"Task<int>" --> db context returns n of rows affected
+
+
+"CancellationToken cancellationToken" --> يسمح بإلغاء العملية وهي شغالة
+                                    --> يعني تقول للميثود:  "لو حصل إلغاء… وقف اللي بتعمله"
+
+"Cancellation Cases" --> over time / user closed page / server stops request / db heavy query / req timeout
+(*)if any case of these happens --> asp.net core sends cancellation token "الطلب اتلغى، لو لسه شغال وقف"
+
+[brief] --> ASP.NET Core gives each request a cancellation token ,,,, if the ASP.NET Core sends this token
+to EF , then EF can stop process 
+
+
+"default" --> to make it a choice , that is if there is token use it , if there is not --> complete normally
