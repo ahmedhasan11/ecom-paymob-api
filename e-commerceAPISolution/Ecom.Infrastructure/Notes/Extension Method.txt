@@ -1,0 +1,22 @@
+﻿1- in normal , you make a class Car and when you need to use its method you make a new obj of this class and use the 
+				method useing this obj         --------> You who made the Class
+
+2- what if you are not the Owner of the class ,,,,, "you are not the one who made it"
+
+3-here we want to add a method to this class and use it as its a part of this class  [Extension Method meaning]
+		دي ميثود برّه الكلاس
+		لكن C# يخليك تستخدمها كأنها جواه
+
+
+public static class MyExtensions
+{
+    public static void MyMethod(this SomeType obj)
+    {
+"SomeType" --> this means that this Extension Method can be used as a method inside this SomeType Class
+ex: SomeType= "String" ---> so if you made a obj of String class , you will see the Extension Method
+
+
+public static IServiceCollection AddInfrastructure(
+    this IServiceCollection services,IConfiguration configuration)
+
+here--> any obj of type IServiceCollection can call AddInfrastructure
