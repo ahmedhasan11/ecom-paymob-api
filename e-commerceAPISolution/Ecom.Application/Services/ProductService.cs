@@ -38,6 +38,7 @@ namespace Ecom.Application.Services
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt };
 		}
 
+
 		public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync()
 		{
 			IReadOnlyList<Product> products= await _productRepository.GetAllProductsAsync();
@@ -62,6 +63,62 @@ namespace Ecom.Application.Services
 			}
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt };
+		}
+
+		public async Task<ProductDto?> UpdateProductAsync(Guid id, RequestUpdateProductDto requestupdateProductDto)
+		{
+			if (id==Guid.Empty)
+			{
+				throw new ArgumentException("ID cannot be empty", nameof(id));
+			}
+
+			if (requestupdateProductDto==null)
+			{
+				throw new ArgumentNullException("dto is null", nameof(requestupdateProductDto));
+			}
+
+			Product? product = await _productRepository.GetProductByIdAsync(id);
+			if (product==null)
+			{
+				return null;
+			}
+			if (requestupdateProductDto.Name is not null)
+			{
+				product.Name = requestupdateProductDto.Name;
+			}
+			if (requestupdateProductDto.Price.HasValue)
+			{
+				product.Price = Money.From(requestupdateProductDto.Price.Value);
+			}
+			if (requestupdateProductDto.ImageUrl is not null)
+			{
+				product.ImageUrl = requestupdateProductDto.ImageUrl;
+			}
+			if (requestupdateProductDto.Description is not null)
+			{
+				product.Description = requestupdateProductDto.Description;
+			}
+			await _unitOfWork.SaveChangesAsync();
+
+			return new ProductDto() { Id= product.Id, Name= product.Name ,Price= product.Price.Amount, CreatedAt = product.CreatedAt , ImageUrl= product.ImageUrl , Description= product.Description};
+
+		}
+
+
+		public async Task<bool> DeleteProductAsync(Guid id)
+		{
+			if (id==Guid.Empty)
+			{
+				throw new ArgumentException("ID cannot be empty", nameof(id));
+			}
+			Product? product = await _productRepository.GetProductByIdAsync(id);
+			if (product==null)
+			{
+				return false;
+			}
+			await _productRepository.DeleteProductAsync(product);
+			await _unitOfWork.SaveChangesAsync();
+			return true;
 		}
 	}
 }
