@@ -15,5 +15,9 @@ namespace Ecom.Application.Interfaces
 		Task<IReadOnlyList<ProductDto>> GetAllProductsAsync();
 
 		Task<ProductDto?> GetProductByIdAsync(Guid id);
+
+		Task<ProductDto?> UpdateProductAsync(Guid id ,RequestUpdateProductDto requestupdateProductDto );
+
+		Task<bool> DeleteProductAsync(Guid id);
 	}
 }

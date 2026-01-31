@@ -16,20 +16,31 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			_dbContext = context;
 		}
+
 		public async Task AddProductAsync(Product product)
 		{
 			 await _dbContext.Products.AddAsync(product);
 			 //await _dbContext.SaveChangesAsync();
 		}
-
 		public async Task<IReadOnlyList<Product>> GetAllProductsAsync()
 		{
 			return await _dbContext.Products.ToListAsync();
 		}
-
 		public async Task<Product?> GetProductByIdAsync(Guid id)
 		{
 			return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+		}
+
+
+		public  Task UpdateProductAsync(Product product)
+		{
+			return Task.CompletedTask;
+		}
+
+		public Task DeleteProductAsync(Product product)
+		{
+			_dbContext.Products.Remove(product);
+			return Task.CompletedTask;
 		}
 	}
 }

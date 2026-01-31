@@ -15,5 +15,11 @@ namespace Ecom.Domain.Interfaces
 
 		Task<Product?> GetProductByIdAsync(Guid id);//we returned because its a read things so its normal to return
 
+		Task UpdateProductAsync(Product product);
+
+		Task DeleteProductAsync(Product product);
+
+
+
 	}
 }
