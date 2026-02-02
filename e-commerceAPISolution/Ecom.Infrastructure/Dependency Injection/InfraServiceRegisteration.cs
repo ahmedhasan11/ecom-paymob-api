@@ -1,6 +1,7 @@
 ﻿using Ecom.Application.Interfaces;
 using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Persistence;
+using Ecom.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 				(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")));
 
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
-			services.AddScoped<IProductRepository, IProductRepository>();
+			services.AddScoped<IProductRepository, ProductRepository>();
 
 			return services;
 		}
