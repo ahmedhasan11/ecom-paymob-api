@@ -19,7 +19,15 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 			//Description : MaxLength(200)
 			builder.HasKey(p => p.Id);
 			builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
-			builder.Property(p => p.Price).IsRequired().HasPrecision(18, 2);
+			//builder.Property(p => p.Price).IsRequired().HasPrecision(18, 2);
+			builder.OwnsOne(p => p.Price, money =>
+			{
+				money.Property(m => m.Amount)
+					 .HasColumnName("Price")
+					 .HasPrecision(18, 2)
+					 .IsRequired();
+			});
+
 			builder.Property(p => p.Description).HasMaxLength(200);
 
 		}
