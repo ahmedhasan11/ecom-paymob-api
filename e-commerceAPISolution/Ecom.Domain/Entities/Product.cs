@@ -10,6 +10,8 @@ namespace Ecom.Domain.Entities
 {
 	public class Product:AuditableEntity
 	{
+
+
 		public Guid Id { get; set; } = Guid.NewGuid();
 
 		public string Name { get; set; } = null!;
@@ -24,7 +26,7 @@ namespace Ecom.Domain.Entities
 		public bool IsAvailable { get; set; } = true;
 
 		public bool IsDeleted { get; set; } = false;
-
+		private Product() { } // For EF Core
 		public Product(Decimal price , string name)
 		{
 			if (string.IsNullOrWhiteSpace(name) /*|| price==null*/)

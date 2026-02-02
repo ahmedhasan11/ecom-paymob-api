@@ -27,6 +27,9 @@ namespace Ecom.Application.Services
 				throw new ArgumentNullException(nameof(requestAddProductDto));
 			}
 			Product product= new Product(requestAddProductDto.Price, requestAddProductDto.Name);
+			product.ImageUrl = requestAddProductDto.ImageUrl;
+			product.Description = requestAddProductDto.Description;
+
 			//product.Id= Guid.NewGuid();
 			//product.Name= requestAddProductDto.Name;
 			//product.Price= Money.From( requestAddProductDto.Price);
@@ -35,14 +38,14 @@ namespace Ecom.Application.Services
 			await _productRepository.AddProductAsync(product);
 			await _unitOfWork.SaveChangesAsync();
 
-			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt };
+			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt , Description= product.Description, ImageUrl= product.ImageUrl };
 		}
 
 
 		public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync()
 		{
 			IReadOnlyList<Product> products= await _productRepository.GetAllProductsAsync();
-			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt }).ToList();
+			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
 			return productDtos;
 		}
 		 
@@ -62,7 +65,7 @@ namespace Ecom.Application.Services
 				return null;
 			}
 
-			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt };
+			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt, Description= product.Description, ImageUrl= product.ImageUrl };
 		}
 
 		public async Task<ProductDto?> UpdateProductAsync(Guid id, RequestUpdateProductDto requestupdateProductDto)
