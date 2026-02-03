@@ -23,17 +23,7 @@ namespace e_commerceAPI.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ProductDto>> GetProductById(Guid id)
 		{
-			if (id==Guid.Empty)
-			{
-				return Problem(title: "Invalid Request", detail: "Id cannot be empty", statusCode: StatusCodes.Status400BadRequest);
-			}
 			ProductDto? productDto = await _productservice.GetProductByIdAsync(id);
-
-			if (productDto==null)
-			{
-				return Problem(title:"Product Not Found", detail: $"Product with id '{id}' was not found.", 
-					statusCode:StatusCodes.Status404NotFound);
-			}
 			return Ok(productDto);
 		}
 
@@ -54,36 +44,14 @@ namespace e_commerceAPI.Controllers
 		[HttpPatch("{id}")]
 		public async Task<ActionResult<ProductDto>> UpdateProduct(Guid id , RequestUpdateProductDto requestUpdateProductDto)
 		{
-			if (id==Guid.Empty)
-			{
-				return Problem(title: "Invalid Request", detail: "Id cannot be empty", statusCode: StatusCodes.Status400BadRequest);
-			}
-
 			ProductDto? productDto = await _productservice.UpdateProductAsync(id, requestUpdateProductDto);
-			if (productDto==null)
-			{
-				return Problem(title: "Product Not Found", detail: $"Product with id '{id}' was not found.",
-					statusCode: StatusCodes.Status404NotFound);
-			}
 			return Ok(productDto);
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteProduct(Guid id )
 		{
-			if (id==Guid.Empty)
-			{
-				return Problem(title: "Invalid Request", detail: "Id cannot be empty", statusCode: StatusCodes.Status400BadRequest);
-			}
-
-			bool is_deleted = await _productservice.DeleteProductAsync(id);
-
-			if (is_deleted==false)
-			{
-				return Problem(title: "Product Not Found", detail: $"Product with id '{id}' was not found.",
-					statusCode: StatusCodes.Status404NotFound);
-			}
-
+			await _productservice.DeleteProductAsync(id);
 			return NoContent();
 		}
 

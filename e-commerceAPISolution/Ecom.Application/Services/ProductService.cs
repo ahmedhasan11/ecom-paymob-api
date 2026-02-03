@@ -1,4 +1,5 @@
 ﻿using Ecom.Application.DTOs.Products;
+using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
@@ -40,15 +41,12 @@ namespace Ecom.Application.Services
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt , Description= product.Description, ImageUrl= product.ImageUrl };
 		}
-
-
 		public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync()
 		{
 			IReadOnlyList<Product> products= await _productRepository.GetAllProductsAsync();
 			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
 			return productDtos;
-		}
-		 
+		}	 
 		public async Task<ProductDto?> GetProductByIdAsync(Guid id)
 		{
 			if (id == Guid.Empty)
@@ -62,12 +60,12 @@ namespace Ecom.Application.Services
 				//throw new ArgumentException("there is no product with this id"); 
 				//notice: this is not an exception , exception is for programmateic error
 				//but the status we are in is just a not found
-				return null;
+				//return null;
+				throw new NotFoundException($"Product with {id} was not found ");
 			}
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt, Description= product.Description, ImageUrl= product.ImageUrl };
 		}
-
 		public async Task<ProductDto?> UpdateProductAsync(Guid id, RequestUpdateProductDto requestupdateProductDto)
 		{
 			if (id==Guid.Empty)
@@ -83,7 +81,7 @@ namespace Ecom.Application.Services
 			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product==null)
 			{
-				return null;
+				throw new NotFoundException($"Product with {id} was not found ");
 			}
 			if (requestupdateProductDto.Name is not null)
 			{
@@ -106,8 +104,6 @@ namespace Ecom.Application.Services
 			return new ProductDto() { Id= product.Id, Name= product.Name ,Price= product.Price.Amount, CreatedAt = product.CreatedAt , ImageUrl= product.ImageUrl , Description= product.Description};
 
 		}
-
-
 		public async Task<bool> DeleteProductAsync(Guid id)
 		{
 			if (id==Guid.Empty)
@@ -117,7 +113,7 @@ namespace Ecom.Application.Services
 			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product==null)
 			{
-				return false;
+				throw new NotFoundException($"Product with {id} was not found ");
 			}
 			await _productRepository.DeleteProductAsync(product);
 			await _unitOfWork.SaveChangesAsync();
