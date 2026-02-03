@@ -10,10 +10,11 @@ namespace Ecom.Application.DTOs.Products
 	public class RequestAddProductDto
 	{
 		[Required]
-		
+		[StringLength(100)]
 		public string Name { get; set; } = string.Empty;
 
 		[Required]
+		[Range(0, 10000)]
 		public decimal Price { get; set; }
 
 		public string? ImageUrl { get; set; }
