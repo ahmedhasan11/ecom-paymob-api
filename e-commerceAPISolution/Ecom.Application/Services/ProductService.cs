@@ -1,4 +1,5 @@
-﻿using Ecom.Application.Common.Pagination;
+﻿using Ecom.Application.Common.Filtering;
+using Ecom.Application.Common.Pagination;
 using Ecom.Application.DTOs.Products;
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
@@ -43,10 +44,30 @@ namespace Ecom.Application.Services
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt , Description= product.Description, ImageUrl= product.ImageUrl };
 		}
-		public async Task<PagedResult<ProductDto>> GetAllProductsAsync(int pageNumber = 1 , int pageSize = 10)
+		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams)
 		{
 			int maxAllowed = 50;
 			int defaultpageSize = 10;
+			int pageNumber = productQueryParams.pageNumber;
+			int pageSize = productQueryParams.pageSize;
+			string? search = productQueryParams.search;
+			decimal? minPrice = productQueryParams.MinPrice;
+			decimal? maxPrice = productQueryParams.MaxPrice;
+
+			if (minPrice.HasValue && minPrice.Value < 0)
+			{
+				minPrice = null;
+			}
+			if (maxPrice.HasValue && maxPrice.Value < 0)
+			{
+				maxPrice = null;
+			}
+			if (minPrice.HasValue && maxPrice.HasValue && minPrice.Value > maxPrice.Value)
+			{
+				var temp = minPrice;
+				minPrice = maxPrice;
+				maxPrice = temp;
+			}
 			if (pageNumber < 1)
 			{
 				//throw new ArgumentException("pageNumber or pageSize values are Invalid");
@@ -62,8 +83,11 @@ namespace Ecom.Application.Services
 				pageSize = defaultpageSize;
 			}
 
-			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync();
-			IReadOnlyList<Product> products= await _productRepository.GetAllProductsAsync(pageNumber, pageSize);
+			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(search , minPrice , maxPrice);
+
+			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(search, minPrice,
+				maxPrice , pageNumber , pageSize);
+
 			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
 
 			PagedResult<ProductDto> pagedResult = new PagedResult<ProductDto>() 

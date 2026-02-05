@@ -1,4 +1,5 @@
-﻿using Ecom.Application.Common.Pagination;
+﻿using Ecom.Application.Common.Filtering;
+using Ecom.Application.Common.Pagination;
 using Ecom.Application.DTOs.Products;
 using Ecom.Domain.Entities;
 using System;
@@ -13,7 +14,7 @@ namespace Ecom.Application.Interfaces
 	{
 		Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto);
 
-		Task<PagedResult<ProductDto>> GetAllProductsAsync(int pageNumber , int pageSize);
+		Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams);
 
 		Task<ProductDto?> GetProductByIdAsync(Guid id);
 
