@@ -11,7 +11,9 @@ namespace Ecom.Domain.Interfaces
 	{
 		Task AddProductAsync(Product product); //we didnt return the product because this is add thing in repo ,return in Service
 
-		Task<IReadOnlyList<Product>> GetAllProductsAsync(); //we returned because its a read things so its normal to return
+		Task<IReadOnlyList<Product>> GetAllProductsAsync(int pageNumber , int pageSize); //we returned because its a read things so its normal to return
+
+		Task<int> GetTotalProductsCountAsync();
 
 		Task<Product?> GetProductByIdAsync(Guid id);//we returned because its a read things so its normal to return
 

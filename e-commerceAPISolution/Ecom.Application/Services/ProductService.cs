@@ -1,4 +1,5 @@
-﻿using Ecom.Application.DTOs.Products;
+﻿using Ecom.Application.Common.Pagination;
+using Ecom.Application.DTOs.Products;
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Ecom.Application.Services
 {
@@ -41,11 +43,38 @@ namespace Ecom.Application.Services
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt , Description= product.Description, ImageUrl= product.ImageUrl };
 		}
-		public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync()
+		public async Task<PagedResult<ProductDto>> GetAllProductsAsync(int pageNumber = 1 , int pageSize = 10)
 		{
-			IReadOnlyList<Product> products= await _productRepository.GetAllProductsAsync();
+			int maxAllowed = 50;
+			int defaultpageSize = 10;
+			if (pageNumber < 1)
+			{
+				//throw new ArgumentException("pageNumber or pageSize values are Invalid");
+				//pagination doesnt throw an exception its a show logic
+				pageNumber = 1;
+			}
+			if (pageSize > maxAllowed)
+			{
+				pageSize = maxAllowed;
+			}
+			if (pageSize < 1)
+			{
+				pageSize = defaultpageSize;
+			}
+
+			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync();
+			IReadOnlyList<Product> products= await _productRepository.GetAllProductsAsync(pageNumber, pageSize);
 			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
-			return productDtos;
+
+			PagedResult<ProductDto> pagedResult = new PagedResult<ProductDto>() 
+			{
+				Items = productDtos,
+				PageNumber = pageNumber,
+				PageSize = pageSize,
+				TotalCount = TotalProductsCount,
+				TotalPages = (int)Math.Ceiling((double)TotalProductsCount / pageSize) 
+			};
+			return pagedResult;
 		}	 
 		public async Task<ProductDto?> GetProductByIdAsync(Guid id)
 		{
