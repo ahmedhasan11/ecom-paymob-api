@@ -1,4 +1,5 @@
-﻿using Ecom.Application.DTOs.Products;
+﻿using Ecom.Application.Common.Pagination;
+using Ecom.Application.DTOs.Products;
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,10 +29,10 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts()
+		public async Task<ActionResult<PagedResult<ProductDto>>> GetAllProducts([FromQuery]int pageNumber = 1,[FromQuery] int pageSize =10)
 		{
-			IReadOnlyList<ProductDto> productDtos = await _productservice.GetAllProductsAsync();
-			return Ok(productDtos);
+			PagedResult<ProductDto> pagedResult = await _productservice.GetAllProductsAsync(pageNumber, pageSize);
+			return Ok(pagedResult);
 		}
 
 		[HttpPost]

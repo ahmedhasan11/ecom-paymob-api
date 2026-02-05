@@ -1,4 +1,5 @@
-﻿using Ecom.Application.DTOs.Products;
+﻿using Ecom.Application.Common.Pagination;
+using Ecom.Application.DTOs.Products;
 using Ecom.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Ecom.Application.Interfaces
 	{
 		Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto);
 
-		Task<IReadOnlyList<ProductDto>> GetAllProductsAsync();
+		Task<PagedResult<ProductDto>> GetAllProductsAsync(int pageNumber , int pageSize);
 
 		Task<ProductDto?> GetProductByIdAsync(Guid id);
 

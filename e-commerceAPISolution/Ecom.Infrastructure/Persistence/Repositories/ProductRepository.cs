@@ -19,16 +19,26 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 
 		public async Task AddProductAsync(Product product)
 		{
-			 await _dbContext.Products.AddAsync(product);
+			 await _dbContext.Products
+				.AddAsync(product);
 			 //await _dbContext.SaveChangesAsync();
 		}
-		public async Task<IReadOnlyList<Product>> GetAllProductsAsync()
+		public async Task<IReadOnlyList<Product>> GetAllProductsAsync(int pageNumber , int pageSize)
 		{
-			return await _dbContext.Products.ToListAsync();
+			return await _dbContext.Products
+					.OrderByDescending(p => p.CreatedAt)
+					.Skip((pageNumber-1)*pageSize)
+					.Take(pageSize).ToListAsync();
+		}
+		public async Task<int> GetTotalProductsCountAsync()
+		{
+			return await _dbContext.Products
+				.CountAsync();
 		}
 		public async Task<Product?> GetProductByIdAsync(Guid id)
 		{
-			return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+			return await _dbContext.Products
+				.FirstOrDefaultAsync(p => p.Id == id);
 		}
 
 
@@ -39,8 +49,11 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 
 		public Task DeleteProductAsync(Product product)
 		{
-			_dbContext.Products.Remove(product);
+			_dbContext.Products
+				.Remove(product);
 			return Task.CompletedTask;
 		}
+
+
 	}
 }
