@@ -16,5 +16,10 @@ namespace Ecom.Application.Common.Filtering
 		public string? search { get; set; }
 		public decimal? MinPrice { get; set; }
 		public decimal? MaxPrice { get; set; }
+
+		//Sorting
+
+		public string? sortBy { get; set; }
+		public string? sortOrder { get; set; } 
 	}
 }
