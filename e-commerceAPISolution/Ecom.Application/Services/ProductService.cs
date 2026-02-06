@@ -3,11 +3,13 @@ using Ecom.Application.Common.Pagination;
 using Ecom.Application.DTOs.Products;
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
+using Ecom.Domain.Common.Queries;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
 using Ecom.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,14 +48,27 @@ namespace Ecom.Application.Services
 		}
 		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams)
 		{
+
+
+			#region Paging vars
 			int maxAllowed = 50;
 			int defaultpageSize = 10;
 			int pageNumber = productQueryParams.pageNumber;
 			int pageSize = productQueryParams.pageSize;
+			#endregion
+
+			#region Filtering vars
 			string? search = productQueryParams.search;
 			decimal? minPrice = productQueryParams.MinPrice;
 			decimal? maxPrice = productQueryParams.MaxPrice;
+			#endregion
 
+			#region Sorting vars
+			string? sortBy = productQueryParams.sortBy;
+			string? sortOrder = productQueryParams.sortOrder;
+			#endregion
+
+			#region Filtering Conditions
 			if (minPrice.HasValue && minPrice.Value < 0)
 			{
 				minPrice = null;
@@ -68,6 +83,9 @@ namespace Ecom.Application.Services
 				minPrice = maxPrice;
 				maxPrice = temp;
 			}
+			#endregion
+
+			#region Paging Conditions
 			if (pageNumber < 1)
 			{
 				//throw new ArgumentException("pageNumber or pageSize values are Invalid");
@@ -82,11 +100,68 @@ namespace Ecom.Application.Services
 			{
 				pageSize = defaultpageSize;
 			}
+			#endregion
 
-			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(search , minPrice , maxPrice);
+			#region Sorting Conditions
+			//SortBy
+			if (!string.IsNullOrWhiteSpace(sortBy))
+			{
+				sortBy = sortBy.ToLower();
+			}
+			switch (sortBy)
+			{
+				case "price":
+					break;
+				case "name":
+					break;
+				case "createdat":
+					break;
+				default:
+					sortBy = "createdat";
+					break;
+			}
+			//SortOrder
+			if (!string.IsNullOrWhiteSpace(sortOrder))
+			{
+				sortOrder = sortOrder.ToLower();
+			}
+			if (string.IsNullOrWhiteSpace(sortOrder))
+			{
+				if (sortBy == "createdat")
+				{
+					sortOrder = "desc";
+				}
+				else
+				{
+					sortOrder = "asc";
+				}
 
-			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(search, minPrice,
-				maxPrice , pageNumber , pageSize);
+			}
+			else if (sortOrder.Equals("desc"))
+			{
+				sortOrder = "desc";
+			}
+			else
+			{
+				sortOrder = "asc";
+			}
+			#endregion
+
+			ProductQueryOptions productQueryOptions = new ProductQueryOptions()
+			{
+			 search= search,
+			 minPrice= minPrice,
+			 maxPrice= maxPrice,
+			 pageNumber= pageNumber,
+			 pageSize= pageSize,
+			 sortBy=sortBy,
+			 sortOrder=sortOrder,
+			};
+
+			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(productQueryOptions);
+
+
+			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(productQueryOptions);
 
 			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
 
