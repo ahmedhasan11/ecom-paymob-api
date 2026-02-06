@@ -1,4 +1,5 @@
-﻿using Ecom.Domain.Entities;
+﻿using Ecom.Domain.Common.Queries;
+using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,11 +18,8 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 			_dbContext = context;
 		}
 
-		private IQueryable<Product> ApplyFilters(
-		IQueryable<Product> query,
-		string? search,
-		decimal? minPrice,
-		decimal? maxPrice)
+		private IQueryable<Product> ApplyFilters(IQueryable<Product> query,	string? search,	decimal? minPrice,
+			decimal? maxPrice)
 		{
 			if (!string.IsNullOrWhiteSpace(search))
 			{
@@ -47,31 +45,79 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 				.AddAsync(product);
 			 //await _dbContext.SaveChangesAsync();
 		}
-		public async Task<IReadOnlyList<Product>> GetProductsAsync(string? search, decimal? minPrice, decimal? maxPrice,
-																	 int pageNumber, int pageSize)
+		public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions)
 		{
+
 			var query = _dbContext.Products.AsQueryable();
-			query = ApplyFilters(query, search, minPrice, maxPrice);
-			return await query.OrderByDescending(p => p.CreatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+			query = ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
+
+			switch (productQueryOptions.sortBy)
+			{
+				case "price":
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						 query = query.OrderBy(p => p.Price.Amount);
+					}
+					else
+					{ 
+						query= query.OrderByDescending(p => p.Price.Amount);
+					}
+
+					break;
+
+				case "name":
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						 query= query.OrderBy(p => p.Name);
+					}
+					else
+					{
+						query= query.OrderByDescending(p => p.Name);
+					}
+					break;
+
+				case "createdat":
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						query= query.OrderBy(p => p.CreatedAt);
+					}
+					else
+					{
+						query= query.OrderByDescending(p => p.CreatedAt);
+					}
+					break;
+
+				default:
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						query = query.OrderBy(p => p.CreatedAt);
+					}
+					else
+					{
+						query = query.OrderByDescending(p => p.CreatedAt);
+					}
+					break;				
+			}
+
+			return await query.Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync();
 		}
-		public async Task<int> GetTotalProductsCountAsync(string? search, decimal? minPrice, decimal? maxPrice )
+		public async Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions)
 		{
 			var query = _dbContext.Products.AsQueryable();
-			query= ApplyFilters(query, search, minPrice,maxPrice);
+			query= ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
 			return await query.CountAsync();
 		}
+
+
 		public async Task<Product?> GetProductByIdAsync(Guid id)
 		{
 			return await _dbContext.Products
 				.FirstOrDefaultAsync(p => p.Id == id);
 		}
-
-
 		public  Task UpdateProductAsync(Product product)
 		{
 			return Task.CompletedTask;
 		}
-
 		public Task DeleteProductAsync(Product product)
 		{
 			_dbContext.Products
