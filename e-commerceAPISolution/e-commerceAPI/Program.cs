@@ -1,6 +1,7 @@
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 namespace e_commerceAPI
 {
     public class Program
@@ -9,11 +10,24 @@ namespace e_commerceAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //Extension Methods DI
-            builder.Services.AddInfrastructure(builder.Configuration);
+			builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider service, LoggerConfiguration logger_configuration) =>
+			{
+				logger_configuration.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(service);
+				logger_configuration.Enrich.FromLogContext().WriteTo.Console();
+			});
+			builder.Services.AddHttpLogging(options => {
+				options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders
+					|
+					Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
+
+			});
+
+			//Extension Methods DI
+			builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
 
 
+			
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -29,7 +43,6 @@ namespace e_commerceAPI
 						Status = StatusCodes.Status400BadRequest,
 						Instance = context.HttpContext.Request.Path
 					};
-
 					problemDetails.Extensions["traceId"] = context.HttpContext.TraceIdentifier;
 
 					return new BadRequestObjectResult(problemDetails)
@@ -41,7 +54,8 @@ namespace e_commerceAPI
 
 
 			var app = builder.Build();
-            // Configure the HTTP request pipeline.
+			app.UseSerilogRequestLogging();
+			app.UseHttpLogging();
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
