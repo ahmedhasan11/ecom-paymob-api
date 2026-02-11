@@ -38,7 +38,6 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 
 			return query;
 		}
-
 		public async Task AddProductAsync(Product product)
 		{
 			 await _dbContext.Products
@@ -107,8 +106,6 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 			query= ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
 			return await query.CountAsync();
 		}
-
-
 		public async Task<Product?> GetProductByIdAsync(Guid id)
 		{
 			return await _dbContext.Products
