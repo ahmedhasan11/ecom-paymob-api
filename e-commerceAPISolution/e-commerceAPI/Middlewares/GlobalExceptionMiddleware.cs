@@ -7,21 +7,18 @@ namespace e_commerceAPI.Middlewares
 {
 	public class GlobalExceptionMiddleware : IMiddleware
 	{
-		private readonly RequestDelegate _next;
 		private readonly ILogger<GlobalExceptionMiddleware> _logger;
-		int statusCode;
-		string title;
-		public GlobalExceptionMiddleware(RequestDelegate next , ILogger<GlobalExceptionMiddleware> logger)
+
+		public GlobalExceptionMiddleware( ILogger<GlobalExceptionMiddleware> logger)
 		{
 			_logger = logger;
-			_next = next;
-		}
 
+		}
 		public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 		{
 			try
 			{
-				await _next(context);
+				await next(context);
 				#region Notes
 				/*"خلّي الطلب يكمل لباقي السيستم"
 
@@ -32,6 +29,8 @@ namespace e_commerceAPI.Middlewares
 			}
 			catch (Exception ex)
 			{
+				int statusCode;
+				string title;
 				switch (ex)
 				{
 					case ValidationException:
@@ -56,7 +55,9 @@ namespace e_commerceAPI.Middlewares
 
 				}
 				//if an error hhappened at any layer
-				_logger.LogError(ex, "Unhandled exception occurred.");
+				_logger.LogError(ex, "Unhandled exception occurred while processing {Method} {Path}. TraceId={TraceId}",
+				context.Request.Method,	context.Request.Path, context.TraceIdentifier);
+
 				context.Response.ContentType = "application/problem+json";
 				context.Response.StatusCode = statusCode;
 
