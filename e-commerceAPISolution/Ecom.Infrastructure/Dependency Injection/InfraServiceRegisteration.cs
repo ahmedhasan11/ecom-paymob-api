@@ -24,6 +24,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IProductRepository, ProductRepository>();
 			services.AddSingleton<ICacheService, RedisCacheService>();
+			services.AddSingleton<RedisConnectionFactory>();
 			return services;
 		}
 	}
