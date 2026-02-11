@@ -1,5 +1,6 @@
 ﻿using Ecom.Application.Interfaces;
 using Ecom.Domain.Interfaces;
+using Ecom.Infrastructure.Caching;
 using Ecom.Infrastructure.Persistence;
 using Ecom.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IProductRepository, ProductRepository>();
-
+			services.AddSingleton<ICacheService, RedisCacheService>();
 			return services;
 		}
 	}
