@@ -10,8 +10,11 @@ using Ecom.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -21,10 +24,12 @@ namespace Ecom.Application.Services
 	{
 		private readonly IProductRepository _productRepository;
 		private readonly IUnitOfWork _unitOfWork;
-		public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
+		private readonly ICacheService _cacheService;
+		public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, ICacheService cacheService)
 		{
 			_productRepository = productRepository;
 			_unitOfWork = unitOfWork;
+			_cacheService = cacheService;
 		}
 		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto)
 		{
@@ -48,8 +53,6 @@ namespace Ecom.Application.Services
 		}
 		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams)
 		{
-
-
 			#region Paging vars
 			int maxAllowed = 50;
 			int defaultpageSize = 10;
@@ -147,6 +150,21 @@ namespace Ecom.Application.Services
 			}
 			#endregion
 
+			#region Redis Caching
+			var key = $"products:search={search}" +
+		$":min={minPrice}:max={maxPrice}:sort={sortBy}:order={sortOrder}:page={pageNumber}:size={pageSize}";
+
+			var cachedJson = await _cacheService.GetAsync(key);
+			if (cachedJson != null)
+			{
+				PagedResult<ProductDto>? result = JsonSerializer.Deserialize<PagedResult<ProductDto>>(cachedJson);
+				if (result != null)
+				{
+					return result;
+				}
+			} 
+			#endregion
+
 			ProductQueryOptions productQueryOptions = new ProductQueryOptions()
 			{
 			 search= search,
@@ -160,7 +178,6 @@ namespace Ecom.Application.Services
 
 			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(productQueryOptions);
 
-
 			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(productQueryOptions);
 
 			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
@@ -173,6 +190,9 @@ namespace Ecom.Application.Services
 				TotalCount = TotalProductsCount,
 				TotalPages = (int)Math.Ceiling((double)TotalProductsCount / pageSize) 
 			};
+
+			string JsonToCache = JsonSerializer.Serialize(pagedResult);
+			await _cacheService.SetAsync(key, JsonToCache, TimeSpan.FromMinutes(1));
 			return pagedResult;
 		}	 
 		public async Task<ProductDto?> GetProductByIdAsync(Guid id)
@@ -181,6 +201,19 @@ namespace Ecom.Application.Services
 			{
 				throw new ArgumentException("id cannot be empty", nameof(id));
 			}
+
+			#region RedisCaching
+			var key = $"products:{id}";
+			var cachedJson = await _cacheService.GetAsync(key);
+			if (cachedJson != null)
+			{
+				var result = JsonSerializer.Deserialize<ProductDto>(cachedJson);
+				if (result != null)
+				{
+					return result;
+				}
+			} 
+			#endregion
 
 			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product == null)
@@ -192,7 +225,20 @@ namespace Ecom.Application.Services
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
 
-			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt, Description= product.Description, ImageUrl= product.ImageUrl };
+			var productdto = new ProductDto()
+			{
+				Id = product.Id,
+				Name = product.Name,
+				Price = product.Price.Amount,
+				CreatedAt = product.CreatedAt,
+				Description = product.Description,
+				ImageUrl = product.ImageUrl
+			};
+			var jsontocache = JsonSerializer.Serialize(productdto);
+			await _cacheService.SetAsync(key,jsontocache,TimeSpan.FromMinutes(2));
+
+			return productdto;
+
 		}
 		public async Task<ProductDto?> UpdateProductAsync(Guid id, RequestUpdateProductDto requestupdateProductDto)
 		{
