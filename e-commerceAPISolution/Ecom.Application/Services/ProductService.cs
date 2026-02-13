@@ -39,8 +39,6 @@ namespace Ecom.Application.Services
 			if (requestAddProductDto == null)
 			{
 				_logger.LogWarning("AddProduct operation received a null request payload");
-
-
 				throw new ArgumentNullException(nameof(requestAddProductDto));
 			}
 

@@ -1,5 +1,6 @@
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 namespace e_commerceAPI
@@ -29,7 +30,10 @@ namespace e_commerceAPI
 
 			
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
+
+			builder.Services.AddFluentValidationAutoValidation(); /*?? ???? HTTP request ???? FluentValidation ????????*/
+
+			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
 			builder.Services.Configure<ApiBehaviorOptions>(options =>
