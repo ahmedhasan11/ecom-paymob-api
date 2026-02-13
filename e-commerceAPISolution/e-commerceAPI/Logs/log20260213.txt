@@ -1,0 +1,513 @@
+2026-02-13 18:26:40 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:40 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:40 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:40 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:40 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:50 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:50 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:51 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:51 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:51 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:57 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:57 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:57 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:57 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:57 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:26:57 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000001","RequestPath":"/swagger","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Upgrade-Insecure-Requests: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Upgrade-Insecure-Requests":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000001","RequestPath":"/swagger","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 301
+Location: swagger/index.html {"StatusCode":301,"Location":"swagger/index.html","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000001","RequestPath":"/swagger","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger responded 301 in 28.4631 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000001","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger - 301 0 null 206.4434ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000001","RequestPath":"/swagger","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/index.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Upgrade-Insecure-Requests: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/index.html","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Upgrade-Insecure-Requests":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 200
+Content-Type: text/html;charset=utf-8
+Date: Fri, 13 Feb 2026 16:26:57 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"text/html;charset=utf-8","Date":"Fri, 13 Feb 2026 16:26:57 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger/index.html responded 200 in 75.5899 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000003","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/index.html - 200 null text/html;charset=utf-8 92.9271ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/swagger-ui-bundle.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/swagger-ui.css - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:0000000D","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/swagger-ui-standalone-preset.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:0000000B","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/swagger-ui-bundle.js
+Accept: */*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/swagger-ui-bundle.js","Accept":"*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/swagger-ui.css
+Accept: text/css,*/*;q=0.1
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/swagger-ui.css","Accept":"text/css,*/*;q=0.1","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/swagger-ui-standalone-preset.js
+Accept: */*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/swagger-ui-standalone-preset.js","Accept":"*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - 200 16511 application/javascript; charset=utf-8 60.9069ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:0000000B","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJB3IQI6U01:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJB3IQI6U01:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJB3IQI6U01:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/_vs/browserLink - 200 null text/javascript; charset=UTF-8 136.887ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:0000000D","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 200
+Content-Type: text/javascript
+Date: Fri, 13 Feb 2026 16:26:57 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 230280 {"StatusCode":200,"Content-Type":"text/javascript","Date":"Fri, 13 Feb 2026 16:26:57 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"230280","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 200
+Content-Type: text/css
+Date: Fri, 13 Feb 2026 16:26:57 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 152034 {"StatusCode":200,"Content-Type":"text/css","Date":"Fri, 13 Feb 2026 16:26:57 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"152034","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 200
+Content-Type: text/javascript
+Date: Fri, 13 Feb 2026 16:26:57 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 1456926 {"StatusCode":200,"Content-Type":"text/javascript","Date":"Fri, 13 Feb 2026 16:26:57 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"1456926","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 132.9883 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000009","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 136.2697 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000005","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 139.7407 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000007","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/swagger-ui-standalone-preset.js - 200 230280 text/javascript 178.0135ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/swagger-ui.css - 200 152034 text/css 181.985ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/swagger-ui-bundle.js - 200 1456926 text/javascript 187.0824ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/v1/swagger.json
+Accept: application/json,*/*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/v1/swagger.json","Accept":"application/json,*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/favicon-32x32.png - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000011","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/favicon-32x32.png
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/favicon-32x32.png","Accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000011","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 200
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Feb 2026 16:26:58 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"application/json;charset=utf-8","Date":"Fri, 13 Feb 2026 16:26:58 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJB3IQI6U01:00000011","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 41.0454 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:0000000F","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Response:
+StatusCode: 200
+Content-Type: image/png
+Date: Fri, 13 Feb 2026 16:26:58 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 628 {"StatusCode":200,"Content-Type":"image/png","Date":"Fri, 13 Feb 2026 16:26:58 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"628","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000011","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 57.0257ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] HTTP GET /swagger/favicon-32x32.png responded 200 in 41.5329 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U01:00000011","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:26:58 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/favicon-32x32.png - 200 628 image/png 57.5531ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U01:00000011","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNJB3IQI6U01"}
+2026-02-13 18:27:49 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/products - application/json 43 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:49 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/products
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 43
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/products","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"43","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:49 [INF] Executing endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:49 [INF] Route matched with {action = "AddProduct", controller = "Products"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Products.ProductDto]] AddProduct(Ecom.Application.DTOs.Products.RequestAddProductDto) on controller e_commerceAPI.Controllers.ProductsController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"3f73b590-875e-491f-b7f1-f8a780cab03a","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:50 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"3f73b590-875e-491f-b7f1-f8a780cab03a","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:50 [INF] Executed action e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI) in 1465.1097ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:50 [INF] Executed endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:50 [INF] Response:
+StatusCode: 400
+Content-Type: application/problem+json; charset=utf-8
+Date: Fri, 13 Feb 2026 16:27:49 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":400,"Content-Type":"application/problem+json; charset=utf-8","Date":"Fri, 13 Feb 2026 16:27:49 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:50 [INF] HTTP POST /api/products responded 400 in 1529.8018 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3IQI6U03:00000001","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:27:50 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/products - 400 null application/problem+json; charset=utf-8 1541.7514ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3IQI6U03:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3IQI6U03"}
+2026-02-13 18:35:00 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:35:00 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:35:01 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:35:01 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:35:01 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:35:01 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/index.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Upgrade-Insecure-Requests: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/index.html","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Upgrade-Insecure-Requests":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3NANBL8E:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Response:
+StatusCode: 200
+Content-Type: text/html;charset=utf-8
+Date: Fri, 13 Feb 2026 16:35:01 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"text/html;charset=utf-8","Date":"Fri, 13 Feb 2026 16:35:01 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3NANBL8E:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Request starting HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Request starting HTTP/2 GET https://localhost:7088/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] HTTP GET /swagger/index.html responded 200 in 106.8854 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3NANBL8E:00000001","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Request finished HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - 200 16511 application/javascript; charset=utf-8 36.1651ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/index.html - 200 null text/html;charset=utf-8 299.9054ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:01 [INF] Request finished HTTP/2 GET https://localhost:7088/_vs/browserLink - 200 null text/javascript; charset=UTF-8 68.569ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:02 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:02 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/v1/swagger.json
+Accept: application/json,*/*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/v1/swagger.json","Accept":"application/json,*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3NANBL8E:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:02 [INF] Response:
+StatusCode: 200
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Feb 2026 16:35:01 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"application/json;charset=utf-8","Date":"Fri, 13 Feb 2026 16:35:01 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3NANBL8E:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:02 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 35.9549 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3NANBL8E:00000007","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:02 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 49.0671ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8E:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3NANBL8E"}
+2026-02-13 18:35:03 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/products - application/json 43 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:03 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/products
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 43
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/products","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"43","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:03 [INF] Executing endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:03 [INF] Route matched with {action = "AddProduct", controller = "Products"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Products.ProductDto]] AddProduct(Ecom.Application.DTOs.Products.RequestAddProductDto) on controller e_commerceAPI.Controllers.ProductsController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"d41d9146-cfda-41eb-9e96-3f20bd3df557","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:04 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"d41d9146-cfda-41eb-9e96-3f20bd3df557","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:04 [INF] Executed action e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI) in 812.7269ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:04 [INF] Executed endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:04 [INF] Response:
+StatusCode: 400
+Content-Type: application/problem+json; charset=utf-8
+Date: Fri, 13 Feb 2026 16:35:03 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":400,"Content-Type":"application/problem+json; charset=utf-8","Date":"Fri, 13 Feb 2026 16:35:03 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:04 [INF] HTTP POST /api/products responded 400 in 876.6951 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3NANBL8G:00000001","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:35:04 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/products - 400 null application/problem+json; charset=utf-8 889.8377ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3NANBL8G:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3NANBL8G"}
+2026-02-13 18:36:26 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:36:26 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:36:26 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:36:26 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:36:26 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-13 18:36:26 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/index.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Upgrade-Insecure-Requests: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/index.html","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Upgrade-Insecure-Requests":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S0:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Response:
+StatusCode: 200
+Content-Type: text/html;charset=utf-8
+Date: Fri, 13 Feb 2026 16:36:25 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"text/html;charset=utf-8","Date":"Fri, 13 Feb 2026 16:36:25 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S0:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] HTTP GET /swagger/index.html responded 200 in 91.6965 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3O41D4S0:00000001","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request starting HTTP/2 GET https://localhost:7088/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request starting HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/index.html - 200 null text/html;charset=utf-8 225.6284ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request finished HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - 200 16511 application/javascript; charset=utf-8 23.7258ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request finished HTTP/2 GET https://localhost:7088/_vs/browserLink - 200 null text/javascript; charset=UTF-8 47.3106ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/v1/swagger.json
+Accept: application/json,*/*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Referer: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/v1/swagger.json","Accept":"application/json,*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br","Accept-Language":"en-US,en;q=0.9","Referer":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S0:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:26 [INF] Response:
+StatusCode: 200
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Feb 2026 16:36:26 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"application/json;charset=utf-8","Date":"Fri, 13 Feb 2026 16:36:26 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S0:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:27 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 32.6632 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3O41D4S0:00000007","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:27 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 44.1187ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S0:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJB3O41D4S0"}
+2026-02-13 18:36:28 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/products - application/json 43 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:28 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/products
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 43
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/products","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"43","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:28 [INF] Executing endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] Route matched with {action = "AddProduct", controller = "Products"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Products.ProductDto]] AddProduct(Ecom.Application.DTOs.Products.RequestAddProductDto) on controller e_commerceAPI.Controllers.ProductsController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] Executed action e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI) in 802.8552ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] Executed endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] Response:
+StatusCode: 400
+Content-Type: application/problem+json; charset=utf-8
+Date: Fri, 13 Feb 2026 16:36:29 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":400,"Content-Type":"application/problem+json; charset=utf-8","Date":"Fri, 13 Feb 2026 16:36:29 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] HTTP POST /api/products responded 400 in 884.1469 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000001","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:29 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/products - 400 null application/problem+json; charset=utf-8 896.925ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000001","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/products - application/json 43 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/products
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 43
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/products","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"43","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Executing endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Route matched with {action = "AddProduct", controller = "Products"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Products.ProductDto]] AddProduct(Ecom.Application.DTOs.Products.RequestAddProductDto) on controller e_commerceAPI.Controllers.ProductsController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Executed action e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI) in 16.5042ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Executed endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Response:
+StatusCode: 400
+Content-Type: application/problem+json; charset=utf-8
+Date: Fri, 13 Feb 2026 16:36:40 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":400,"Content-Type":"application/problem+json; charset=utf-8","Date":"Fri, 13 Feb 2026 16:36:40 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] HTTP POST /api/products responded 400 in 48.4507 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000002","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:40 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/products - 400 null application/problem+json; charset=utf-8 57.6737ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000002","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/products - application/json 40 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/products
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 40
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/products","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"40","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Executing endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Route matched with {action = "AddProduct", controller = "Products"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Products.ProductDto]] AddProduct(Ecom.Application.DTOs.Products.RequestAddProductDto) on controller e_commerceAPI.Controllers.ProductsController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Executed action e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI) in 13.9527ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Executed endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Response:
+StatusCode: 400
+Content-Type: application/problem+json; charset=utf-8
+Date: Fri, 13 Feb 2026 16:36:48 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":400,"Content-Type":"application/problem+json; charset=utf-8","Date":"Fri, 13 Feb 2026 16:36:48 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] HTTP POST /api/products responded 400 in 43.5761 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000003","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:48 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/products - 400 null application/problem+json; charset=utf-8 54.0764ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000003","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/products - application/json 42 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/products
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 42
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/products","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"42","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Executing endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Route matched with {action = "AddProduct", controller = "Products"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Products.ProductDto]] AddProduct(Ecom.Application.DTOs.Products.RequestAddProductDto) on controller e_commerceAPI.Controllers.ProductsController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"4698d0d1-d896-4605-8abd-a9583eb534f3","ActionName":"e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Executed action e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI) in 7.952ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Executed endpoint 'e_commerceAPI.Controllers.ProductsController.AddProduct (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Response:
+StatusCode: 400
+Content-Type: application/problem+json; charset=utf-8
+Date: Fri, 13 Feb 2026 16:36:55 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":400,"Content-Type":"application/problem+json; charset=utf-8","Date":"Fri, 13 Feb 2026 16:36:55 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] HTTP POST /api/products responded 400 in 40.8282 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJB3O41D4S2:00000004","ConnectionId":"0HNJB3O41D4S2"}
+2026-02-13 18:36:55 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/products - 400 null application/problem+json; charset=utf-8 52.6975ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJB3O41D4S2:00000004","RequestPath":"/api/products","ConnectionId":"0HNJB3O41D4S2"}
