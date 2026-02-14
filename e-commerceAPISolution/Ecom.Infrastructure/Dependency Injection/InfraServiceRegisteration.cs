@@ -1,4 +1,5 @@
-﻿using Ecom.Application.Interfaces;
+﻿using Ecom.Application.Common.Settings;
+using Ecom.Application.Interfaces;
 using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Caching;
 using Ecom.Infrastructure.Persistence;
@@ -25,6 +26,8 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IProductRepository, ProductRepository>();
 			services.AddSingleton<ICacheService, RedisCacheService>();
 			services.AddSingleton<RedisConnectionFactory>();
+
+			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			return services;
 		}
 	}

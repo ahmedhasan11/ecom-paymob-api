@@ -13,10 +13,11 @@ namespace Ecom.Application.Dependency_Injection
 {
 	public static class AppServiceRegisteration
 	{
-		public static IServiceCollection AddApplication(this IServiceCollection services )
+		public static IServiceCollection AddApplication(this IServiceCollection services  )
 		{
 			services.AddScoped<IProductService, ProductService>();
 			services.AddValidatorsFromAssembly(typeof(AddProductDtoValidator).Assembly);
+			
 
 			return services;
 		}

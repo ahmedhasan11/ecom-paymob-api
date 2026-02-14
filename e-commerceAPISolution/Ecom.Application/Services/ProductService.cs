@@ -70,13 +70,11 @@ namespace Ecom.Application.Services
 			int pageNumber = productQueryParams.pageNumber;
 			int pageSize = productQueryParams.pageSize;
 			#endregion
-
 			#region Filtering vars
 			string? search = productQueryParams.search;
 			decimal? minPrice = productQueryParams.MinPrice;
 			decimal? maxPrice = productQueryParams.MaxPrice;
 			#endregion
-
 			#region Sorting vars
 			string? sortBy = productQueryParams.sortBy;
 			string? sortOrder = productQueryParams.sortOrder;
@@ -98,7 +96,6 @@ namespace Ecom.Application.Services
 				maxPrice = temp;
 			}
 			#endregion
-
 			#region Paging Conditions
 			if (pageNumber < 1)
 			{
@@ -115,7 +112,6 @@ namespace Ecom.Application.Services
 				pageSize = defaultpageSize;
 			}
 			#endregion
-
 			#region Sorting Conditions
 			//SortBy
 			if (!string.IsNullOrWhiteSpace(sortBy))
@@ -296,7 +292,9 @@ namespace Ecom.Application.Services
 			"Starting UpdateProduct operation. ProductId={ProductId}", id);
 
 			Product? product = await _productRepository.GetProductByIdAsync(id);
-			if (product==null)
+
+			#region Values Checks
+			if (product == null)
 			{
 				_logger.LogWarning("Product not found for update. ProductId={ProductId}", id);
 				throw new NotFoundException($"Product with {id} was not found ");
@@ -316,7 +314,9 @@ namespace Ecom.Application.Services
 			if (requestupdateProductDto.Description is not null)
 			{
 				product.Description = requestupdateProductDto.Description;
-			}
+			} 
+			#endregion
+
 			await _unitOfWork.SaveChangesAsync();
 			_logger.LogInformation(
 			"Product updated successfully. ProductId={ProductId}", product.Id);
