@@ -44,7 +44,7 @@ namespace Ecom.Application.Services
 
 			_logger.LogInformation("Starting product creation with Name={Name} and Price={Price}",
 			requestAddProductDto.Name, requestAddProductDto.Price);
-			Product product= new Product(requestAddProductDto.Price, requestAddProductDto.Name);
+			Product product= new Product(requestAddProductDto.Price!.Value, requestAddProductDto.Name!);
 			product.ImageUrl = requestAddProductDto.ImageUrl;
 			product.Description = requestAddProductDto.Description;
 

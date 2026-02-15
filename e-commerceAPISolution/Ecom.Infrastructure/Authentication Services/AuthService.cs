@@ -13,20 +13,52 @@ namespace Ecom.Infrastructure.Authentication_Services
 	public class AuthService : IAuthService
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly RoleManager _roleManager;
-		public AuthService(UserManager<ApplicationUser> userManager , RoleManager roleManager)
+		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly IJwtService _jwtService;
+		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IJwtService jwtService )
 		{
-			 _roleManager = roleManager;
 			_userManager = userManager;
+			_signInManager = signInManager;
+			_jwtService = jwtService;
+			_roleManager = roleManager;
+		}
+		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
+		{
+			if (await IsEmailAlreadyRegistered(dto.Email!))
+			{
+				return new AuthResponseDto() { IsSuccess=false , Errors= new List<string> { "Email Is Already Registered"} };
+			}
+			ApplicationUser user = new ApplicationUser() { FullName=dto.FullName! , PhoneNumber=dto.PhoneNumber,
+				Email= dto.Email, UserName= dto.Email, CreatedAt= DateTime.UtcNow};
+
+			var result =await _userManager.CreateAsync(user, dto.Password!);
+			if (!result.Succeeded)
+			{
+				return new AuthResponseDto() { IsSuccess = false, Errors= result.Errors.Select(e=>e.Description) };
+			}
+			await _userManager.AddToRoleAsync(user, "User");
+			var roles = await _userManager.GetRolesAsync(user);
+
+			JwtUserDataDto jwtUserDataDto = new JwtUserDataDto() { UserId=user.Id, Email= user.Email! , FullName= user.FullName , Roles= roles}; 
+			JwtResultDto jwtresult= await _jwtService.GenerateTokenAsync(jwtUserDataDto);
+
+			return new AuthResponseDto() { IsSuccess = true , Token = jwtresult.Token, ExpiresAt = jwtresult.ExpiresAt };
 		}
 		public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
 		{
 			throw new NotImplementedException();
 		}
 
-		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
+		private async Task<bool> IsEmailAlreadyRegistered(string email)
 		{
-			throw new NotImplementedException();
+			 var result =await _userManager.FindByEmailAsync(email);
+			if (result !=null)
+			{
+				return true;
+			}
+			return false;
 		}
+
 	}
 }
