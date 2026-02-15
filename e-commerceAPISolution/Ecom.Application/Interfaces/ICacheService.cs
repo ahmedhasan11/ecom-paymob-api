@@ -8,9 +8,9 @@ namespace Ecom.Application.Interfaces
 {
 	public interface ICacheService
 	{
-		public Task<string?> GetAsync(string key);
+		public Task<T?> GetAsync<T>(string key);
 
-		public Task SetAsync(string key, string value, TimeSpan expiry);
+		public Task SetAsync<T>(string key, T value, TimeSpan expiry);
 
 		public Task RemoveAsync(string key);
 	}

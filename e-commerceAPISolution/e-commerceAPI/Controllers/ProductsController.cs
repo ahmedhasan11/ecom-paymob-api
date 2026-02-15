@@ -2,6 +2,7 @@
 using Ecom.Application.Common.Pagination;
 using Ecom.Application.DTOs.Products;
 using Ecom.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,7 @@ namespace e_commerceAPI.Controllers
 			return Ok(productDto);
 		}
 
+		[Authorize]
 		[HttpGet]
 		public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery]ProductQueryParams productQueryParams)
 		{

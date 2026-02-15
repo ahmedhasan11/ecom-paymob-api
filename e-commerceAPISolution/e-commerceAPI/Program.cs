@@ -2,9 +2,13 @@ using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
 using Ecom.Infrastructure.Identity;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 namespace e_commerceAPI
 {
@@ -30,9 +34,30 @@ namespace e_commerceAPI
 			builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
 
+			var jwtSettings = builder.Configuration.GetSection("Jwt");
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
 
-			
-            builder.Services.AddControllers();
+					ValidIssuer = jwtSettings["Issuer"],
+					ValidAudience = jwtSettings["Audience"],
+					IssuerSigningKey = new SymmetricSecurityKey(
+					Encoding.UTF8.GetBytes(jwtSettings["Secret"]))
+				};
+			});
+
+			builder.Services.AddAuthorization();
+
+			builder.Services.AddControllers();
 
 			builder.Services.AddFluentValidationAutoValidation(); /*?? ???? HTTP request ???? FluentValidation ????????*/
 
@@ -74,9 +99,11 @@ namespace e_commerceAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
+			app.UseAuthentication();
+			app.UseAuthorization();
+			app.MapControllers();
             app.Run();
         }
     }
