@@ -37,13 +37,16 @@ namespace Ecom.Infrastructure.Authentication_Services
 				new Claim(ClaimTypes.Name, dto.FullName),
 				new Claim(ClaimTypes.Email, dto.Email)			
 				};
+
 			foreach (var role in dto.Roles)
 			{
 				tokenclaims.Add(new Claim(ClaimTypes.Role,role));
 			}
 
 			SymmetricSecurityKey key = new SymmetricSecurityKey(secretkey);
+
 			SigningCredentials signingcredentials = new SigningCredentials(key , SecurityAlgorithms.HmacSha256);
+
 			JwtSecurityToken token = new JwtSecurityToken( issuer:Issuer, audience:Audience,
 				claims:tokenclaims, expires:expiration, signingCredentials:signingcredentials);
 

@@ -1,13 +1,16 @@
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
+using Ecom.Infrastructure.Identity;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+
 namespace e_commerceAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +61,12 @@ namespace e_commerceAPI
 
 
 			var app = builder.Build();
+			using (var scope = app.Services.CreateScope())
+			{
+				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+				await IdentityDbInitializer.SeedRolesAsync(roleManager);
+			}
+
 			app.UseSerilogRequestLogging();
 			app.UseHttpLogging();
             if (app.Environment.IsDevelopment())
