@@ -8,6 +8,7 @@ using Ecom.Infrastructure.Persistence;
 using Ecom.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -37,14 +38,17 @@ namespace Ecom.Infrastructure.Dependency_Injection
 				.AddDefaultTokenProviders();
 
 
-			
 
+			services.AddMemoryCache();
+			services.AddSingleton<RedisConnectionFactory>();
+			services.AddSingleton<ICacheService, RedisCacheService>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IProductRepository, ProductRepository>();
-			//services.AddSingleton<ICacheService, RedisCacheService>();
-			//services.AddSingleton<RedisConnectionFactory>();
+
+
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();
+			services.AddScoped<IAuthService, AuthService>();
 			return services;
 		}
 	}

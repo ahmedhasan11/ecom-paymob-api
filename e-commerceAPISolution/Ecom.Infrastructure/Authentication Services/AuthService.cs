@@ -13,10 +13,10 @@ namespace Ecom.Infrastructure.Authentication_Services
 	public class AuthService : IAuthService
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly RoleManager<ApplicationRole> _roleManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly IJwtService _jwtService;
-		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IJwtService jwtService )
+		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService )
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

@@ -14,7 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
+
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -164,15 +164,12 @@ namespace Ecom.Application.Services
 			var key = $"products:search={search}" +
 		$":min={minPrice}:max={maxPrice}:sort={sortBy}:order={sortOrder}:page={pageNumber}:size={pageSize}";
 
-			var cachedJson = await _cacheService.GetAsync(key);
+			var cachedJson = await _cacheService.GetAsync<PagedResult<ProductDto>>(key);
 			if (cachedJson != null)
 			{
-				PagedResult<ProductDto>? result = JsonSerializer.Deserialize<PagedResult<ProductDto>>(cachedJson);
-				if (result != null)
-				{
 					_logger.LogInformation("Cache HIT for products list. Key={CacheKey}", key);
-					return result;
-				}
+					return cachedJson;
+				
 			}
 			#endregion
 			_logger.LogInformation("Cache MISS for products list. Key={CacheKey}. Fetching from database...", key);
@@ -204,8 +201,8 @@ namespace Ecom.Application.Services
 				TotalPages = (int)Math.Ceiling((double)TotalProductsCount / pageSize) 
 			};
 
-			string JsonToCache = JsonSerializer.Serialize(pagedResult);
-			await _cacheService.SetAsync(key, JsonToCache, TimeSpan.FromMinutes(1));
+
+			await _cacheService.SetAsync(key, pagedResult, TimeSpan.FromMinutes(1));
 			_logger.LogInformation("Products list cached successfully. Key={CacheKey}", key);
 
 			return pagedResult;
@@ -223,18 +220,15 @@ namespace Ecom.Application.Services
 
 			#region RedisCaching
 			var key = $"products:{id}";
-			var cachedJson = await _cacheService.GetAsync(key);
+			var cachedJson = await _cacheService.GetAsync<ProductDto>(key);
 			if (cachedJson != null)
 			{
-				var result = JsonSerializer.Deserialize<ProductDto>(cachedJson);
-				if (result != null)
-				{
 					_logger.LogInformation(
 						"Cache HIT for product. ProductId={ProductId}, CacheKey={CacheKey}",
 						id, key);
 
-					return result;
-				}
+					return cachedJson;
+				
 			}
 			#endregion
 			_logger.LogInformation(
@@ -263,8 +257,8 @@ namespace Ecom.Application.Services
 				Description = product.Description,
 				ImageUrl = product.ImageUrl
 			};
-			var jsontocache = JsonSerializer.Serialize(productdto);
-			await _cacheService.SetAsync(key,jsontocache,TimeSpan.FromMinutes(2));
+
+			await _cacheService.SetAsync(key,productdto,TimeSpan.FromMinutes(2));
 			_logger.LogInformation(
 				"Product cached successfully. ProductId={ProductId}, CacheKey={CacheKey}",
 				id, key);
