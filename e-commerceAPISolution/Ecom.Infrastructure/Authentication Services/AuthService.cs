@@ -32,7 +32,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			ApplicationUser user = new ApplicationUser() { FullName=dto.FullName! , PhoneNumber=dto.PhoneNumber,
 				Email= dto.Email, UserName= dto.Email, CreatedAt= DateTime.UtcNow};
 
-			var result =await _userManager.CreateAsync(user, dto.Password!);
+			var result =await _userManager.CreateAsync(user, dto.Password!);	 
 			if (!result.Succeeded)
 			{
 				return new AuthResponseDto() { IsSuccess = false, Errors= result.Errors.Select(e=>e.Description) };
@@ -47,7 +47,28 @@ namespace Ecom.Infrastructure.Authentication_Services
 		}
 		public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
 		{
-			throw new NotImplementedException();
+			var user = await _userManager.FindByEmailAsync(dto.Email!);
+			if (user==null)
+			{
+				return new AuthResponseDto() { IsSuccess=false, Errors= new List<string>() { "Email Or Password is Invalid" } };
+			}
+			var passwordcheck = await _userManager.CheckPasswordAsync(user, dto.Password!);
+			if (!passwordcheck)
+			{
+				return new AuthResponseDto() { IsSuccess = false, Errors = new List<string>() { "Email Or Password is Invalid" } };
+			}
+			var roles = await _userManager.GetRolesAsync(user);
+			JwtUserDataDto jwtUserData = new JwtUserDataDto()
+			{
+				UserId = user.Id,
+				FullName = user.FullName
+				,
+				Email = dto.Email!,
+				Roles = roles
+			};
+			JwtResultDto TokenDto = await _jwtService.GenerateTokenAsync(jwtUserData);
+			return new AuthResponseDto() {IsSuccess=true, Token=TokenDto.Token, ExpiresAt= TokenDto.ExpiresAt, };
+
 		}
 
 		private async Task<bool> IsEmailAlreadyRegistered(string email)

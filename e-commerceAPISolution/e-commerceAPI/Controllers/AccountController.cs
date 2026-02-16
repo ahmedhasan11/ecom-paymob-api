@@ -18,12 +18,27 @@ namespace e_commerceAPI.Controllers
 		[HttpPost("register")]
 		public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto)
 		{
+
 			var result = await _authService.RegisterAsync(dto);
-			if (!result.IsSuccess)
+			if (result.IsSuccess==false)
 			{
 				return BadRequest(result);
 			}
 			return Ok(result);
+		}
+
+		[HttpPost("login")]
+
+		public async Task<ActionResult<AuthResponseDto>> Login (LoginDto dto)
+		{
+
+			var result = await _authService.LoginAsync(dto);
+			if (result.IsSuccess==false)
+			{
+				return Unauthorized(result);
+			}
+			return Ok(result);
+
 		}
 
 	}
