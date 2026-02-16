@@ -1,0 +1,146 @@
+2026-02-16 17:23:33 [INF] Executed DbCommand (131ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-16 17:23:33 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-16 17:23:33 [INF] User profile is available. Using 'C:\Users\user\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. {"EventId":{"Id":63,"Name":"UsingProfileAsKeyRepositoryWithDPAPI"},"SourceContext":"Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager"}
+2026-02-16 17:23:34 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-16 17:23:34 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-16 17:23:34 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-16 17:23:34 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-16 17:23:34 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-16 17:23:34 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/index.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Upgrade-Insecure-Requests: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/index.html","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Upgrade-Insecure-Requests":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAH:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Response:
+StatusCode: 200
+Content-Type: text/html;charset=utf-8
+Date: Mon, 16 Feb 2026 15:23:34 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"text/html;charset=utf-8","Date":"Mon, 16 Feb 2026 15:23:34 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAH:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] HTTP GET /swagger/index.html responded 200 in 107.0391 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJDDTCLDQAH:00000001","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/index.html - 200 null text/html;charset=utf-8 310.9603ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request starting HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request starting HTTP/2 GET https://localhost:7088/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request finished HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - 200 16511 application/javascript; charset=utf-8 16.033ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request finished HTTP/2 GET https://localhost:7088/_vs/browserLink - 200 null text/javascript; charset=UTF-8 68.1198ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/v1/swagger.json
+Accept: application/json,*/*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Referer: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/v1/swagger.json","Accept":"application/json,*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Referer":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAH:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Response:
+StatusCode: 200
+Content-Type: application/json;charset=utf-8
+Date: Mon, 16 Feb 2026 15:23:34 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"application/json;charset=utf-8","Date":"Mon, 16 Feb 2026 15:23:34 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAH:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 42.8492 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJDDTCLDQAH:00000007","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 57.7135ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAH:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJDDTCLDQAH"}
+2026-02-16 17:23:42 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/account/login - application/json 60 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:42 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/account/login
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 60
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/account/login","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"60","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Executing endpoint 'e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Route matched with {action = "Login", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Authentication.AuthResponseDto]] Login(Ecom.Application.DTOs.Authentication.LoginDto) on controller e_commerceAPI.Controllers.AccountController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Executed DbCommand (5ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Executing OkObjectResult, writing value of type 'Ecom.Application.DTOs.Authentication.AuthResponseDto'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Executed action e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI) in 465.454ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Executed endpoint 'e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Response:
+StatusCode: 200
+Content-Type: application/json; charset=utf-8
+Date: Mon, 16 Feb 2026 15:23:44 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":200,"Content-Type":"application/json; charset=utf-8","Date":"Mon, 16 Feb 2026 15:23:44 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] HTTP POST /api/account/login responded 200 in 1737.7532 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJDDTCLDQAJ:00000001","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:23:44 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/account/login - 200 null application/json; charset=utf-8 1757.0065ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAJ:00000001","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Request starting HTTP/1.1 POST https://localhost:7088/api/account/login - application/json 59 {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Request:
+Protocol: HTTP/1.1
+Method: POST
+Scheme: https
+PathBase: 
+Path: /api/account/login
+Accept: */*
+Connection: keep-alive
+Host: localhost:7088
+User-Agent: PostmanRuntime/7.51.1
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/json
+Content-Length: 59
+Postman-Token: [Redacted] {"Protocol":"HTTP/1.1","Method":"POST","Scheme":"https","PathBase":"","Path":"/api/account/login","Accept":"*/*","Connection":"keep-alive","Host":"localhost:7088","User-Agent":"PostmanRuntime/7.51.1","Accept-Encoding":"gzip, deflate, br","Content-Type":"application/json","Content-Length":"59","Postman-Token":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Executing endpoint 'e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)' {"EventId":{"Name":"ExecutingEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Route matched with {action = "Login", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ecom.Application.DTOs.Authentication.AuthResponseDto]] Login(Ecom.Application.DTOs.Authentication.LoginDto) on controller e_commerceAPI.Controllers.AccountController (e-commerceAPI). {"EventId":{"Id":102,"Name":"ControllerActionExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Executing UnauthorizedObjectResult, writing value of type 'Ecom.Application.DTOs.Authentication.AuthResponseDto'. {"EventId":{"Id":1,"Name":"ObjectResultExecuting"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor","ActionId":"05b12f0a-2822-4c42-9575-c789a99fb407","ActionName":"e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Executed action e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI) in 107.5508ms {"EventId":{"Id":105,"Name":"ActionExecuted"},"SourceContext":"Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Executed endpoint 'e_commerceAPI.Controllers.AccountController.Login (e-commerceAPI)' {"EventId":{"Id":1,"Name":"ExecutedEndpoint"},"SourceContext":"Microsoft.AspNetCore.Routing.EndpointMiddleware","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Response:
+StatusCode: 401
+Content-Type: application/json; charset=utf-8
+Date: Mon, 16 Feb 2026 15:24:03 GMT
+Server: Kestrel
+Transfer-Encoding: chunked {"StatusCode":401,"Content-Type":"application/json; charset=utf-8","Date":"Mon, 16 Feb 2026 15:24:03 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] HTTP POST /api/account/login responded 401 in 147.4066 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJDDTCLDQAJ:00000002","ConnectionId":"0HNJDDTCLDQAJ"}
+2026-02-16 17:24:03 [INF] Request finished HTTP/1.1 POST https://localhost:7088/api/account/login - 401 null application/json; charset=utf-8 158.4153ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJDDTCLDQAJ:00000002","RequestPath":"/api/account/login","ConnectionId":"0HNJDDTCLDQAJ"}

@@ -1,13 +1,20 @@
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
+using Ecom.Infrastructure.Identity;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
+
 namespace e_commerceAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +34,30 @@ namespace e_commerceAPI
 			builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
 
+			var jwtSettings = builder.Configuration.GetSection("Jwt");
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
 
-			
-            builder.Services.AddControllers();
+					ValidIssuer = jwtSettings["Issuer"],
+					ValidAudience = jwtSettings["Audience"],
+					IssuerSigningKey = new SymmetricSecurityKey(
+					Encoding.UTF8.GetBytes(jwtSettings["Secret"]))
+				};
+			});
+
+			builder.Services.AddAuthorization();
+
+			builder.Services.AddControllers();
 
 			builder.Services.AddFluentValidationAutoValidation(); /*?? ???? HTTP request ???? FluentValidation ????????*/
 
@@ -58,6 +86,12 @@ namespace e_commerceAPI
 
 
 			var app = builder.Build();
+			using (var scope = app.Services.CreateScope())
+			{
+				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+				await IdentityDbInitializer.SeedRolesAsync(roleManager);
+			}
+
 			app.UseSerilogRequestLogging();
 			app.UseHttpLogging();
             if (app.Environment.IsDevelopment())
@@ -65,9 +99,11 @@ namespace e_commerceAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
+			app.UseAuthentication();
+			app.UseAuthorization();
+			app.MapControllers();
             app.Run();
         }
     }
