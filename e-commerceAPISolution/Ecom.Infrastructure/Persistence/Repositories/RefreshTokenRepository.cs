@@ -1,5 +1,6 @@
 ﻿using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +11,24 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 {
 	public class RefreshTokenRepository : IRefreshTokenRepository
 	{
-		public Task AddRefreshTokenAsync(RefreshToken refreshToken)
+		private readonly AppDbContext _db;
+		public RefreshTokenRepository( AppDbContext db) 
 		{
-			throw new NotImplementedException();
+		 _db = db;
+		}
+		public async Task AddRefreshTokenAsync(RefreshToken refreshToken)
+		{
+			await _db.RefreshTokens.AddAsync(refreshToken);
 		}
 
-		public Task<List<RefreshToken>> GetAllUserTokensAsync(Guid userId)
+		public async Task<List<RefreshToken>> GetAllUserTokensAsync(Guid userId)
 		{
-			throw new NotImplementedException();
+			return await _db.RefreshTokens.Where(token => token.UserId == userId).ToListAsync();
 		}
 
-		public Task<RefreshToken?> GetByHashedTokenAsync(string hashedToken)
+		public async Task<RefreshToken?> GetByHashedTokenAsync(string hashedToken)
 		{
-			throw new NotImplementedException();
+			return await _db.RefreshTokens.FirstOrDefaultAsync(token => token.HashedToken == hashedToken);
 		}
 	}
 }
