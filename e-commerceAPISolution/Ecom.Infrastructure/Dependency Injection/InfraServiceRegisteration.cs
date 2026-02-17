@@ -44,8 +44,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddSingleton<ICacheService, RedisCacheService>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IProductRepository, ProductRepository>();
-
-
+			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
