@@ -1,4 +1,5 @@
 ﻿using Ecom.Application.DTOs.Authentication;
+using Ecom.Application.DTOs.Authentication.RefreshToken;
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +42,16 @@ namespace e_commerceAPI.Controllers
 
 		}
 
+		[HttpPost("refresh")]
+		public async Task<ActionResult<AuthResponseDto>> RefreshSession(RefreshRequestDto dto)
+		{
+			AuthResponseDto result= await _authService.RefreshSessionAsync(dto.RefreshToken);
+			if (!result.IsSuccess)
+			{
+				return Unauthorized(result);
+			}
+			return Ok(result);
+
+		}
 	}
 }

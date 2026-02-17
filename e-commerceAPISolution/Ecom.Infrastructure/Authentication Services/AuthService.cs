@@ -19,7 +19,6 @@ namespace Ecom.Infrastructure.Authentication_Services
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly RoleManager<ApplicationRole> _roleManager;
-		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly IJwtService _jwtService;
 		private readonly IRefreshTokenRepository _refreshTokenRepository;
 		private readonly IRefreshTokenService _refreshTokenService;
