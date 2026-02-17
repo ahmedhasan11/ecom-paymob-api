@@ -1,7 +1,11 @@
 ﻿using Ecom.Application.DTOs.Authentication;
+using Ecom.Application.DTOs.Authentication.RefreshToken;
 using Ecom.Application.Interfaces;
+using Ecom.Domain.Entities;
+using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +20,44 @@ namespace Ecom.Infrastructure.Authentication_Services
 		private readonly RoleManager<ApplicationRole> _roleManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly IJwtService _jwtService;
-		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService )
+		private readonly IRefreshTokenRepository _refreshTokenRepository;
+		private readonly IRefreshTokenService _refreshTokenService;
+		private readonly IConfiguration _configuration;
+		private readonly IUnitOfWork _unitOfWork;
+		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService
+			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_jwtService = jwtService;
 			_roleManager = roleManager;
+			_refreshTokenRepository = refreshTokenRepository;
+			_refreshTokenService = refreshTokenService;
+			_unitOfWork = unitOfWork;
+			_configuration = configuration;
+		}
+
+
+		private async Task<RefreshTokenResultDto> IssueNewSessionAsync(Guid userId)
+		{
+			int lifetimeDays = _configuration.GetValue<int>("RefreshToken:RefreshTokenLifetimeDays");
+			DateTime absoluteExpirationTime = DateTime.UtcNow.AddDays(lifetimeDays);
+
+			RefreshTokenResultDto refreshTokenresult = await _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
+
+			RefreshToken refreshEntity = new RefreshToken(userId, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
+			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
+			await _unitOfWork.SaveChangesAsync();
+
+			return refreshTokenresult;
 		}
 		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
 		{
 			if (await IsEmailAlreadyRegistered(dto.Email!))
 			{
 				return new AuthResponseDto() { IsSuccess=false , Errors= new List<string> { "Email Is Already Registered"} };
-			}
+			}  
+
 			ApplicationUser user = new ApplicationUser() { FullName=dto.FullName! , PhoneNumber=dto.PhoneNumber,
 				Email= dto.Email, UserName= dto.Email, CreatedAt= DateTime.UtcNow};
 
@@ -37,13 +66,15 @@ namespace Ecom.Infrastructure.Authentication_Services
 			{
 				return new AuthResponseDto() { IsSuccess = false, Errors= result.Errors.Select(e=>e.Description) };
 			}
+
 			await _userManager.AddToRoleAsync(user, "User");
 			var roles = await _userManager.GetRolesAsync(user);
 
 			JwtUserDataDto jwtUserDataDto = new JwtUserDataDto() { UserId=user.Id, Email= user.Email! , FullName= user.FullName , Roles= roles}; 
 			JwtResultDto jwtresult= await _jwtService.GenerateTokenAsync(jwtUserDataDto);
 
-			return new AuthResponseDto() { IsSuccess = true , Token = jwtresult.Token, ExpiresAt = jwtresult.ExpiresAt };
+			var session = await IssueNewSessionAsync(user.Id);
+			return new AuthResponseDto() { IsSuccess = true , Token = jwtresult.Token, RefreshToken= session.RawToken, ExpiresAt = jwtresult.ExpiresAt };
 		}
 		public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
 		{
@@ -58,6 +89,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 				return new AuthResponseDto() { IsSuccess = false, Errors = new List<string>() { "Email Or Password is Invalid" } };
 			}
 			var roles = await _userManager.GetRolesAsync(user);
+
 			JwtUserDataDto jwtUserData = new JwtUserDataDto()
 			{
 				UserId = user.Id,
@@ -67,7 +99,10 @@ namespace Ecom.Infrastructure.Authentication_Services
 				Roles = roles
 			};
 			JwtResultDto TokenDto = await _jwtService.GenerateTokenAsync(jwtUserData);
-			return new AuthResponseDto() {IsSuccess=true, Token=TokenDto.Token, ExpiresAt= TokenDto.ExpiresAt, };
+
+			var session = await IssueNewSessionAsync(user.Id);
+
+			return new AuthResponseDto() {IsSuccess=true, Token=TokenDto.Token, RefreshToken= session.RawToken, ExpiresAt= TokenDto.ExpiresAt, };
 
 		}
 

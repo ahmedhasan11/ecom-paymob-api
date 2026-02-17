@@ -12,6 +12,7 @@ namespace Ecom.Application.DTOs.Authentication
 
 		public string? Token { get; set; }
 
+		public string? RefreshToken { get; set; }
 		public DateTime? ExpiresAt { get; set; }
 		public IEnumerable<string>? Errors { get; set; }
 	}

@@ -48,6 +48,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
+			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 			return services;
 		}
 	}
