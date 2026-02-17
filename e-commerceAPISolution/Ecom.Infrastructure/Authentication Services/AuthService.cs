@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,21 +37,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_unitOfWork = unitOfWork;
 			_configuration = configuration;
 		}
-
-
-		private async Task<RefreshTokenResultDto> IssueNewSessionAsync(Guid userId)
-		{
-			int lifetimeDays = _configuration.GetValue<int>("RefreshToken:RefreshTokenLifetimeDays");
-			DateTime absoluteExpirationTime = DateTime.UtcNow.AddDays(lifetimeDays);
-
-			RefreshTokenResultDto refreshTokenresult = await _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
-
-			RefreshToken refreshEntity = new RefreshToken(userId, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
-			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
-			await _unitOfWork.SaveChangesAsync();
-
-			return refreshTokenresult;
-		}
+	
 		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
 		{
 			if (await IsEmailAlreadyRegistered(dto.Email!))
@@ -102,10 +89,9 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 			var session = await IssueNewSessionAsync(user.Id);
 
-			return new AuthResponseDto() {IsSuccess=true, Token=TokenDto.Token, RefreshToken= session.RawToken, ExpiresAt= TokenDto.ExpiresAt, };
+			return new AuthResponseDto() {IsSuccess=true, Token=TokenDto.Token, RefreshToken= session.RawToken, ExpiresAt= TokenDto.ExpiresAt };
 
 		}
-
 		private async Task<bool> IsEmailAlreadyRegistered(string email)
 		{
 			 var result =await _userManager.FindByEmailAsync(email);
@@ -115,6 +101,95 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			return false;
 		}
+		private async Task<RefreshTokenResultDto> IssueNewSessionAsync(Guid userId)
+		{
+			int lifetimeDays = _configuration.GetValue<int>("RefreshToken:RefreshTokenLifetimeDays");
+			DateTime absoluteExpirationTime = DateTime.UtcNow.AddDays(lifetimeDays);
 
+			RefreshTokenResultDto refreshTokenresult = await _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
+
+			RefreshToken refreshEntity = new RefreshToken(userId, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
+			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
+			await _unitOfWork.SaveChangesAsync();
+
+			return refreshTokenresult;
+		}
+		public async Task<AuthResponseDto> RefreshSessionAsync(string refreshToken)
+		{
+			if (string.IsNullOrWhiteSpace(refreshToken))
+			{
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Invalid session." }
+				};
+			}
+
+			#region Hashing
+			byte[] rawBytes = Encoding.UTF8.GetBytes(refreshToken);
+			using var sha = SHA256.Create();
+			byte[] hashedBytes = sha.ComputeHash(rawBytes);
+			string hashedtoken = Convert.ToBase64String(hashedBytes);
+			#endregion
+
+			#region RefreshToken Validations
+			var refreshtokenfrom_db = await _refreshTokenRepository.GetByHashedTokenAsync(hashedtoken);
+			if (refreshtokenfrom_db == null)
+			{
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Invalid session." }
+				};
+			}
+			if (refreshtokenfrom_db.IsRevoked == true)
+			{
+				var user_tokens = await _refreshTokenRepository.GetAllUserTokensAsync(refreshtokenfrom_db.UserId);
+				foreach (var token in user_tokens)
+				{
+					token.Revoke();
+				}
+				await _unitOfWork.SaveChangesAsync();
+
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Invalid session." }
+				};
+			}
+			if (refreshtokenfrom_db.IsExpired == true)
+			{
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Session expired. Please login again." }
+				};
+			} 
+			#endregion
+
+			#region Generate JWT access token
+			ApplicationUser? user = await _userManager.FindByIdAsync(refreshtokenfrom_db.UserId.ToString());
+			if (user == null)
+			{
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Invalid session." }
+				};
+			}
+			var roles = await _userManager.GetRolesAsync(user);
+			JwtUserDataDto jwtUserDataDto = new JwtUserDataDto() { UserId = user.Id, Email = user.Email!, FullName = user.FullName, Roles = roles };
+			JwtResultDto jwtresult = await _jwtService.GenerateTokenAsync(jwtUserDataDto); 
+			#endregion
+
+			DateTime absoluteExpirationTime = refreshtokenfrom_db.ExpiresAt; //keep same absolute expiration
+
+			RefreshTokenResultDto refreshTokenresult = await _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
+			refreshtokenfrom_db.Revoke();
+			RefreshToken refreshEntity = new RefreshToken(user.Id, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
+			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
+			await _unitOfWork.SaveChangesAsync();
+			return new AuthResponseDto() { IsSuccess = true, Token = jwtresult.Token, RefreshToken = refreshTokenresult.RawToken, ExpiresAt = jwtresult.ExpiresAt };
+		}
 	}
 }
