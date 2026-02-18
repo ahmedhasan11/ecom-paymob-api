@@ -218,5 +218,28 @@ namespace Ecom.Infrastructure.Authentication_Services
 			await _unitOfWork.SaveChangesAsync();
 			return true;
 		}
+
+		public async Task<bool> ChangePasswordAsync(Guid userId , ChangePasswordDto dto)
+		{
+			ApplicationUser? user = await _userManager.FindByIdAsync(userId.ToString());
+			if (user==null)
+			{
+				return false;
+			}
+
+			var identityResult = await _userManager.ChangePasswordAsync(user, dto.oldPassword, dto.newPassword);
+			if (!identityResult.Succeeded)
+			{
+				return false;
+			}
+			await _unitOfWork.SaveChangesAsync();
+			var logoutResult =await LogoutAllDevicesAsync(user.Id);
+			if (logoutResult==false)
+			{
+				return false;
+			}
+			return true;
+
+		}
 	}
 }

@@ -14,5 +14,7 @@ namespace Ecom.Application.Interfaces
 		Task<AuthResponseDto> RefreshSessionAsync(string refreshToken);
 		Task<bool> LogoutDeviceAsync(string refreshToken);
 		Task<bool> LogoutAllDevicesAsync(Guid userId);
+
+		Task<bool> ChangePasswordAsync(Guid userId,ChangePasswordDto dto);
 	}
 }
