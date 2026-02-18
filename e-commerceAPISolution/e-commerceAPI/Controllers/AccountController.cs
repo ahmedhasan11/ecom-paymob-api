@@ -85,5 +85,22 @@ namespace e_commerceAPI.Controllers
 			return Ok(result);
 
 		}
+
+		[Authorize]
+		[HttpPost("change-password")]
+		public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+		{
+			var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+			if(!Guid.TryParse(userIdClaim, out var userId))
+			{
+				return Unauthorized();
+			}
+			bool result = await _authService.ChangePasswordAsync(userId, dto);
+			if (result==false)
+			{
+				return BadRequest("Old password is incorrect.");
+			}
+			return Ok(result);
+		}
 	}
 }
