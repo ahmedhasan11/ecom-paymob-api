@@ -197,11 +197,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 			if (tokenfromdb==null)
 			{
-				return new AuthResponseDto
-				{
-					IsSuccess = false,
-					Errors = new List<string> { "Invalid session." }
-				};
+				return false;
 			}
 			tokenfromdb.Revoke();
 			await _unitOfWork.SaveChangesAsync();
@@ -210,6 +206,10 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 		public async Task<bool> LogoutAllDevicesAsync(Guid userId)
 		{
+			if (userId==Guid.Empty)
+			{
+				return false;
+			}
 			var tokens = await _refreshTokenRepository.GetAllUserTokensAsync(userId);
 			foreach (var token in tokens)
 			{

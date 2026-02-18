@@ -1,8 +1,11 @@
 ﻿using Ecom.Application.DTOs.Authentication;
 using Ecom.Application.DTOs.Authentication.RefreshToken;
 using Ecom.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace e_commerceAPI.Controllers
 {
@@ -47,6 +50,35 @@ namespace e_commerceAPI.Controllers
 		{
 			AuthResponseDto result= await _authService.RefreshSessionAsync(dto.RefreshToken);
 			if (!result.IsSuccess)
+			{
+				return Unauthorized(result);
+			}
+			return Ok(result);
+
+		}
+
+		[Authorize]
+		[HttpPost("logout")]
+		public async Task<IActionResult> Logout(LogoutRequestDto dto)
+		{
+			bool result = await _authService.LogoutDeviceAsync(dto.refreshToken);
+			if (result==false)
+			{
+				return Unauthorized(result);
+			}
+			return Ok(result);
+		}
+		[Authorize]
+		[HttpPost("logout-all")]
+		public async Task<IActionResult> LogoutAll()
+		{
+			var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value; //byrg3 string , method el service mstnya Guid
+			if (!Guid.TryParse(userIdClaim, out var userId)) //TryParse 3shan lw Guid.Parse lw wrong value --> exception
+			{
+				return Unauthorized();
+			}
+			var result = await _authService.LogoutAllDevicesAsync(userId);
+			if (result==false)
 			{
 				return Unauthorized(result);
 			}
