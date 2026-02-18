@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ namespace Ecom.Infrastructure.Authentication_Services
 			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork)
 		{
 			_userManager = userManager;
-			_signInManager = signInManager;
 			_jwtService = jwtService;
 			_roleManager = roleManager;
 			_refreshTokenRepository = refreshTokenRepository;
@@ -105,7 +105,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			int lifetimeDays = _configuration.GetValue<int>("RefreshToken:RefreshTokenLifetimeDays");
 			DateTime absoluteExpirationTime = DateTime.UtcNow.AddDays(lifetimeDays);
 
-			RefreshTokenResultDto refreshTokenresult = await _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
+			RefreshTokenResultDto refreshTokenresult =  _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
 
 			RefreshToken refreshEntity = new RefreshToken(userId, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
 			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
@@ -124,12 +124,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 				};
 			}
 
-			#region Hashing
-			byte[] rawBytes = Encoding.UTF8.GetBytes(refreshToken);
-			using var sha = SHA256.Create();
-			byte[] hashedBytes = sha.ComputeHash(rawBytes);
-			string hashedtoken = Convert.ToBase64String(hashedBytes);
-			#endregion
+			string hashedtoken=  _refreshTokenService.HashToken(refreshToken);
 
 			#region RefreshToken Validations
 			var refreshtokenfrom_db = await _refreshTokenRepository.GetByHashedTokenAsync(hashedtoken);
@@ -183,12 +178,45 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 			DateTime absoluteExpirationTime = refreshtokenfrom_db.ExpiresAt; //keep same absolute expiration
 
-			RefreshTokenResultDto refreshTokenresult = await _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
+			RefreshTokenResultDto refreshTokenresult =  _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
 			refreshtokenfrom_db.Revoke();
 			RefreshToken refreshEntity = new RefreshToken(user.Id, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
 			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
 			await _unitOfWork.SaveChangesAsync();
 			return new AuthResponseDto() { IsSuccess = true, Token = jwtresult.Token, RefreshToken = refreshTokenresult.RawToken, ExpiresAt = jwtresult.ExpiresAt };
+		}
+
+		public async Task<bool> LogoutDeviceAsync(string refreshToken)
+		{
+			if (string.IsNullOrWhiteSpace(refreshToken))
+			{
+				return false;
+			}
+			string HashedToken =_refreshTokenService.HashToken(refreshToken);
+			RefreshToken? tokenfromdb = await _refreshTokenRepository.GetByHashedTokenAsync(HashedToken);
+
+			if (tokenfromdb==null)
+			{
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Invalid session." }
+				};
+			}
+			tokenfromdb.Revoke();
+			await _unitOfWork.SaveChangesAsync();
+			return true;
+		}
+
+		public async Task<bool> LogoutAllDevicesAsync(Guid userId)
+		{
+			var tokens = await _refreshTokenRepository.GetAllUserTokensAsync(userId);
+			foreach (var token in tokens)
+			{
+				token.Revoke();
+			}
+			await _unitOfWork.SaveChangesAsync();
+			return true;
 		}
 	}
 }

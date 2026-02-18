@@ -12,5 +12,7 @@ namespace Ecom.Application.Interfaces
 		Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
 		Task<AuthResponseDto> LoginAsync(LoginDto dto);
 		Task<AuthResponseDto> RefreshSessionAsync(string refreshToken);
+		Task<bool> LogoutDeviceAsync(string refreshToken);
+		Task<bool> LogoutAllDevicesAsync(Guid userId);
 	}
 }

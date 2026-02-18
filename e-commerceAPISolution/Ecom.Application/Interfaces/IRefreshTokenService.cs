@@ -9,6 +9,7 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IRefreshTokenService
 	{
-		Task<RefreshTokenResultDto> GenerateRefreshTokenAsync(DateTime expiresAt);
+		RefreshTokenResultDto GenerateRefreshTokenAsync(DateTime expiresAt);
+		string HashToken(string rawToken);
 	}
 }
