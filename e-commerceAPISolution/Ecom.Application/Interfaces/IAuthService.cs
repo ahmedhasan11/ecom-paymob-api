@@ -16,5 +16,7 @@ namespace Ecom.Application.Interfaces
 		Task<bool> LogoutAllDevicesAsync(Guid userId);
 
 		Task<bool> ChangePasswordAsync(Guid userId,ChangePasswordDto dto);
+		Task ForgotPasswordAsync(string email);
+		Task<AuthResponseDto> ResetPasswordAsync(ResetPasswordDto dto);
 	}
 }

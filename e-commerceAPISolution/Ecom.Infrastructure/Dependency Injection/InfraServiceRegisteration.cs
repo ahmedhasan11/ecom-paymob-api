@@ -49,6 +49,8 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+			services.AddScoped<IEmailService, EmailService>();
+			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			return services;
 		}
 	}

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,8 +26,9 @@ namespace Ecom.Infrastructure.Authentication_Services
 		private readonly IRefreshTokenService _refreshTokenService;
 		private readonly IConfiguration _configuration;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IEmailService _emailService;
 		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService
-			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork)
+			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork, IEmailService emailService)
 		{
 			_userManager = userManager;
 			_jwtService = jwtService;
@@ -35,6 +37,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_refreshTokenService = refreshTokenService;
 			_unitOfWork = unitOfWork;
 			_configuration = configuration;
+			_emailService = emailService;
 		}
 	
 		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
@@ -240,6 +243,33 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			return true;
 
+		}
+
+		public async Task ForgetPasswordAsync(string email) 
+		{
+			if (string.IsNullOrWhiteSpace(email))
+			{
+				return;
+			}
+			ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+			if (user == null)
+			{
+				return;
+			}
+			var rawToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+			var encodedToken= WebUtility.UrlEncode(rawToken);
+			var encodedEmail= WebUtility.UrlEncode(email);
+			var BaseUrl = _configuration.GetValue<string>("ClientApp:BaseUrl");
+			var resetlink = $"{BaseUrl}/reset-password?email={encodedEmail}&token={encodedToken}";
+			var to = email;
+			string Subject = "Reset Your Password";
+			string Body = $"Click the link below to reset your password:\r\n<{resetlink}>\r\n";
+			await _emailService.SendEmailAsync(to, Subject, Body);
+			return;
+		}
+		public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto)
+		{
+			
 		}
 	}
 }
