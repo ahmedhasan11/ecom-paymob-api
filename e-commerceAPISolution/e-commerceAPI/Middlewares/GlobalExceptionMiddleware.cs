@@ -2,6 +2,7 @@
 using Ecom.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace e_commerceAPI.Middlewares
 {
@@ -47,7 +48,10 @@ namespace e_commerceAPI.Middlewares
 						statusCode = StatusCodes.Status401Unauthorized;
 						title = "Unauthorized access";
 						break;
-
+					case EmailSendingException:
+						statusCode = StatusCodes.Status500InternalServerError;
+						title = "Email service is currently unavailable.";
+						break;
 					default:
 						statusCode = StatusCodes.Status500InternalServerError;
 						title = "Internal Server error";

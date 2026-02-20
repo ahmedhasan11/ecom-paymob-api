@@ -102,5 +102,6 @@ namespace e_commerceAPI.Controllers
 			}
 			return Ok(result);
 		}
+
 	}
 }

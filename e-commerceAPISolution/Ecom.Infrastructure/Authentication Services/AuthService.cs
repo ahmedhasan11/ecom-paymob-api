@@ -1,11 +1,13 @@
 ﻿using Ecom.Application.DTOs.Authentication;
 using Ecom.Application.DTOs.Authentication.RefreshToken;
+using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +29,10 @@ namespace Ecom.Infrastructure.Authentication_Services
 		private readonly IConfiguration _configuration;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IEmailService _emailService;
+		private readonly ILogger<AuthService> _logger;
 		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService
-			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork, IEmailService emailService)
+			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork, IEmailService emailService,
+			ILogger<AuthService> logger)
 		{
 			_userManager = userManager;
 			_jwtService = jwtService;
@@ -38,6 +42,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_unitOfWork = unitOfWork;
 			_configuration = configuration;
 			_emailService = emailService;
+			_logger = logger;
 		}
 	
 		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
@@ -264,7 +269,13 @@ namespace Ecom.Infrastructure.Authentication_Services
 			var to = email;
 			string Subject = "Reset Your Password";
 			string Body = $"Click the link below to reset your password:\r\n<{resetlink}>\r\n";
-			await _emailService.SendEmailAsync(to, Subject, Body);
+			try 
+			{ await _emailService.SendEmailAsync(to, Subject, Body);
+			}
+			catch (EmailSendingException ex)
+			{
+				_logger.LogError(ex, "Failed to send reset password email to {Email}", email);
+			}
 			return;
 		}
 		public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto)
