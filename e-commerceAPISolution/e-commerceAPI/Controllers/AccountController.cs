@@ -103,5 +103,16 @@ namespace e_commerceAPI.Controllers
 			return Ok(result);
 		}
 
+		[AllowAnonymous]
+		[HttpPost("forgot-password")]
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+		{
+			await _authService.ForgotPasswordAsync(dto.Email);
+			return Ok(new
+			{
+				message = "If your email exists, you will receive a reset link."
+			});
+		}
+
 	}
 }
