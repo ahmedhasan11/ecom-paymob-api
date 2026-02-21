@@ -250,7 +250,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 		}
 
-		public async Task ForgetPasswordAsync(string email) 
+		public async Task ForgotPasswordAsync(string email) 
 		{
 			if (string.IsNullOrWhiteSpace(email))
 			{
@@ -278,9 +278,22 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			return;
 		}
-		public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto)
+		public async Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto)
 		{
-			
+			var DecodedToken = WebUtility.UrlDecode(dto.Token);
+			ApplicationUser? user = await _userManager.FindByEmailAsync(dto.Email);
+			if (user==null)
+			{
+				return new ResetPasswordResultDto() {IsSuccess=false, Errors= new List<string> { "problem ocured"} };
+			}
+			IdentityResult result= await _userManager.ResetPasswordAsync(user, DecodedToken, dto.NewPassword);
+			if (!result.Succeeded)
+			{
+				return new ResetPasswordResultDto() { IsSuccess = false, Errors = result.Errors.Select(e=>e.Description).ToList() };
+			}
+
+			await LogoutAllDevicesAsync(user.Id);		
+			return new ResetPasswordResultDto() {IsSuccess=true };
 		}
 	}
 }
