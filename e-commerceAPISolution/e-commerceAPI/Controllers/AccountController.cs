@@ -129,5 +129,24 @@ namespace e_commerceAPI.Controllers
 			});
 		}
 
+		[AllowAnonymous]
+		[HttpPost("confirm-email")]
+		public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto dto)
+		{
+			bool isconfirmed = await _authService.ConfirmEmailAsync(dto);
+			if (isconfirmed==false)
+			{
+				return BadRequest(new
+				{
+					message = "Invalid or expired confirmation link."
+				});
+			}
+			return Ok(new
+			{
+				message = "Email confirmed successfully."
+			});
+
+		}
+
 	}
 }
