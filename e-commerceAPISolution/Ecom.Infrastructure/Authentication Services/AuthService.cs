@@ -16,6 +16,7 @@ using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Ecom.Infrastructure.Authentication_Services
 {
@@ -45,11 +46,11 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_logger = logger;
 		}
 	
-		public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
+		public async Task<RegisterResponseDto> RegisterAsync(RegisterDto dto)
 		{
 			if (await IsEmailAlreadyRegistered(dto.Email!))
 			{
-				return new AuthResponseDto() { IsSuccess=false , Errors= new List<string> { "Email Is Already Registered"} };
+				return new RegisterResponseDto() { IsSuccess=false , Message=  "Email Is Already Registered" };
 			}  
 
 			ApplicationUser user = new ApplicationUser() { FullName=dto.FullName! , PhoneNumber=dto.PhoneNumber,
@@ -58,17 +59,12 @@ namespace Ecom.Infrastructure.Authentication_Services
 			var result =await _userManager.CreateAsync(user, dto.Password!);	 
 			if (!result.Succeeded)
 			{
-				return new AuthResponseDto() { IsSuccess = false, Errors= result.Errors.Select(e=>e.Description) };
+				return new RegisterResponseDto() { IsSuccess = false, Message= "error while creating user" };
 			}
 
 			await _userManager.AddToRoleAsync(user, "User");
-			var roles = await _userManager.GetRolesAsync(user);
-
-			JwtUserDataDto jwtUserDataDto = new JwtUserDataDto() { UserId=user.Id, Email= user.Email! , FullName= user.FullName , Roles= roles}; 
-			JwtResultDto jwtresult= await _jwtService.GenerateTokenAsync(jwtUserDataDto);
-
-			var session = await IssueNewSessionAsync(user.Id);
-			return new AuthResponseDto() { IsSuccess = true , Token = jwtresult.Token, RefreshToken= session.RawToken, ExpiresAt = jwtresult.ExpiresAt };
+			await SendEmailConfirmationAsync(user.Email!);
+			return new RegisterResponseDto() { IsSuccess = true, Message = "Registration successful. Please check your email to confirm your account." };
 		}
 		public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
 		{
@@ -81,6 +77,14 @@ namespace Ecom.Infrastructure.Authentication_Services
 			if (!passwordcheck)
 			{
 				return new AuthResponseDto() { IsSuccess = false, Errors = new List<string>() { "Email Or Password is Invalid" } };
+			}
+			if (user.EmailConfirmed==false)
+			{
+				return new AuthResponseDto
+				{
+					IsSuccess = false,
+					Errors = new List<string> { "Please confirm your email first." }
+				};
 			}
 			var roles = await _userManager.GetRolesAsync(user);
 
