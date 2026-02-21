@@ -18,5 +18,8 @@ namespace Ecom.Application.Interfaces
 		Task<bool> ChangePasswordAsync(Guid userId,ChangePasswordDto dto);
 		Task ForgotPasswordAsync(string email);
 		Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto);
+
+		Task SendEmailConfirmationAsync( string email);
+		Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto);
 	}
 }

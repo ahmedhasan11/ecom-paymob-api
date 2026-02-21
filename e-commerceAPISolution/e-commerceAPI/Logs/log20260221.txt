@@ -1,0 +1,207 @@
+2026-02-21 22:34:33 [INF] Executed DbCommand (91ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-21 22:34:33 [INF] Executed DbCommand (8ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-21 22:34:33 [INF] User profile is available. Using 'C:\Users\user\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. {"EventId":{"Id":63,"Name":"UsingProfileAsKeyRepositoryWithDPAPI"},"SourceContext":"Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager"}
+2026-02-21 22:34:34 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-21 22:34:34 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-21 22:34:34 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-21 22:34:34 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-21 22:34:34 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000001","RequestPath":"/swagger","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Upgrade-Insecure-Requests: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Upgrade-Insecure-Requests":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000001","RequestPath":"/swagger","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Response:
+StatusCode: 301
+Location: swagger/index.html {"StatusCode":301,"Location":"swagger/index.html","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000001","RequestPath":"/swagger","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] HTTP GET /swagger responded 301 in 34.9120 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000001","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger - 301 0 null 240.4769ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000001","RequestPath":"/swagger","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/index.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Upgrade-Insecure-Requests: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/index.html","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Upgrade-Insecure-Requests":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Response:
+StatusCode: 200
+Content-Type: text/html;charset=utf-8
+Date: Sat, 21 Feb 2026 20:34:35 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"text/html;charset=utf-8","Date":"Sat, 21 Feb 2026 20:34:35 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] HTTP GET /swagger/index.html responded 200 in 97.5340 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000003","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/index.html - 200 null text/html;charset=utf-8 113.1438ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/swagger-ui.css - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:0000000B","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:0000000D","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/swagger-ui-bundle.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/swagger-ui-standalone-preset.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/swagger-ui.css
+Accept: text/css,*/*;q=0.1
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Referer: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/swagger-ui.css","Accept":"text/css,*/*;q=0.1","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Referer":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/swagger-ui-bundle.js
+Accept: */*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Referer: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/swagger-ui-bundle.js","Accept":"*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Referer":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - 200 16511 application/javascript; charset=utf-8 87.3158ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:0000000B","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/swagger-ui-standalone-preset.js
+Accept: */*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Referer: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/swagger-ui-standalone-preset.js","Accept":"*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Referer":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJHH2FVNQ3B:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJHH2FVNQ3B:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/_vs/browserLink - 200 null text/javascript; charset=UTF-8 170.954ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:0000000D","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A' {"EventId":{"Id":2,"Name":"FileServed"},"SourceContext":"Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware","RequestId":"0HNJHH2FVNQ3B:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Response:
+StatusCode: 200
+Content-Type: text/css
+Date: Sat, 21 Feb 2026 20:34:35 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 152034 {"StatusCode":200,"Content-Type":"text/css","Date":"Sat, 21 Feb 2026 20:34:35 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"152034","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Response:
+StatusCode: 200
+Content-Type: text/javascript
+Date: Sat, 21 Feb 2026 20:34:35 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 230280 {"StatusCode":200,"Content-Type":"text/javascript","Date":"Sat, 21 Feb 2026 20:34:35 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"230280","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Response:
+StatusCode: 200
+Content-Type: text/javascript
+Date: Sat, 21 Feb 2026 20:34:35 GMT
+Server: Kestrel
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Tue, 21 May 2024 16:42:50 GMT
+Content-Length: 1456926 {"StatusCode":200,"Content-Type":"text/javascript","Date":"Sat, 21 Feb 2026 20:34:35 GMT","Server":"Kestrel","Accept-Ranges":"bytes","ETag":"[Redacted]","Last-Modified":"Tue, 21 May 2024 16:42:50 GMT","Content-Length":"1456926","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 89.9896 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000009","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 179.6982 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000005","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 186.5507 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:00000007","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/swagger-ui-standalone-preset.js - 200 230280 text/javascript 223.8789ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000009","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/swagger-ui.css - 200 152034 text/css 224.2481ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/swagger-ui-bundle.js - 200 1456926 text/javascript 238.9566ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:00000007","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:35 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/v1/swagger.json
+Accept: application/json,*/*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Referer: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/v1/swagger.json","Accept":"application/json,*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Referer":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:36 [INF] Response:
+StatusCode: 200
+Content-Type: application/json;charset=utf-8
+Date: Sat, 21 Feb 2026 20:34:35 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"application/json;charset=utf-8","Date":"Sat, 21 Feb 2026 20:34:35 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:36 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 32.2521 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJHH2FVNQ3B:0000000F","ConnectionId":"0HNJHH2FVNQ3B"}
+2026-02-21 22:34:36 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 42.0911ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJHH2FVNQ3B:0000000F","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJHH2FVNQ3B"}

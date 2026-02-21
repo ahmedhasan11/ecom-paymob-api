@@ -295,5 +295,56 @@ namespace Ecom.Infrastructure.Authentication_Services
 			await LogoutAllDevicesAsync(user.Id);		
 			return new ResetPasswordResultDto() {IsSuccess=true };
 		}
+
+		public async Task SendEmailConfirmationAsync( string email)
+		{
+			if (string.IsNullOrWhiteSpace(email))
+			{
+				return;
+			}
+			ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+			if (user == null)
+			{
+				return;
+			}
+
+			string confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			string encodedToken = WebUtility.UrlEncode(confirmationToken);
+			string encodedEmail = WebUtility.UrlEncode(email);
+			var BaseUrl = _configuration.GetValue<string>("ClientApp:BaseUrl");
+			var confirmlink = $"{BaseUrl}/confirm-email?email={encodedEmail}&token={encodedToken}";
+			var to = email;
+			string Subject = "Confirm Your Email";
+			string Body = $"Click the link below to Confirm your Email:\r\n<{confirmlink}>\r\n";
+			try
+			{
+				await _emailService.SendEmailAsync(to, Subject, Body);
+			}
+			catch (EmailSendingException ex)
+			{
+				_logger.LogError(ex, "Failed to send confirmation email to {Email}", user.Email);
+			}
+			return;
+		}
+
+		public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto)
+		{
+			var decodedToken = WebUtility.UrlDecode(dto.ConfirmationToken);
+			ApplicationUser? user = await _userManager.FindByEmailAsync(dto.Email);
+			if (user == null) 
+			{
+				return false;
+			}
+			if (user.EmailConfirmed == true)
+			{
+				return true;
+			}
+			IdentityResult result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+			if (!result.Succeeded)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 }

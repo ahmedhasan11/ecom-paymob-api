@@ -2,14 +2,8 @@
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Microsoft.Extensions.Options;
-using Pipelines.Sockets.Unofficial;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ecom.Infrastructure.Authentication_Services
 {
@@ -18,8 +12,9 @@ namespace Ecom.Infrastructure.Authentication_Services
 		private readonly EmailSettings _emailSettings;
 		public EmailService( IOptions<EmailSettings> emailsettings) 
 		{
-		_emailSettings=emailsettings.Value;
+			_emailSettings=emailsettings.Value;
 		}
+
 		public async Task SendEmailAsync(string to, string subject, string body)
 		{
 			using var message = new MailMessage();
