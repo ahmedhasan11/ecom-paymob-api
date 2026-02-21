@@ -114,5 +114,20 @@ namespace e_commerceAPI.Controllers
 			});
 		}
 
+		[AllowAnonymous]
+		[HttpPost("reset-password")]
+		public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+		{
+			ResetPasswordResultDto result=  await _authService.ResetPasswordAsync(dto);
+			if (!result.IsSuccess)
+			{
+				return BadRequest(result);
+			}
+			return Ok(new
+			{
+				message = "Password has been reset successfully. Please login again."
+			});
+		}
+
 	}
 }
