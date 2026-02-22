@@ -73,11 +73,18 @@ namespace Ecom.Infrastructure.Authentication_Services
 			{
 				return new AuthResponseDto() { IsSuccess=false, Errors= new List<string>() { "Email Or Password is Invalid" } };
 			}
+			if (await _userManager.IsLockedOutAsync(user)==true) //check if user is Locked
+			{
+				return new AuthResponseDto() { IsSuccess = false, Errors = new List<string>() { "Your account is locked, Try again later"} };
+			}
 			var passwordcheck = await _userManager.CheckPasswordAsync(user, dto.Password!);
 			if (!passwordcheck)
 			{
+				await _userManager.AccessFailedAsync(user); //increment 1 attempt failed to the AccessFailedCount Property
 				return new AuthResponseDto() { IsSuccess = false, Errors = new List<string>() { "Email Or Password is Invalid" } };
 			}
+			await _userManager.ResetAccessFailedCountAsync(user); //reset counter because user logged in successfully (password is right)
+
 			if (user.EmailConfirmed==false)
 			{
 				return new AuthResponseDto

@@ -37,7 +37,12 @@ namespace Ecom.Infrastructure.Dependency_Injection
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();
 
-
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10); //lockout time 
+				options.Lockout.MaxFailedAccessAttempts = 5; //max n of failed attempts
+				options.Lockout.AllowedForNewUsers = true; // new account is able to be locked
+			});
 
 			services.AddMemoryCache();
 			services.AddSingleton<RedisConnectionFactory>();
