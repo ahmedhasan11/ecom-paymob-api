@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace e_commerceAPI
 {
@@ -35,6 +37,45 @@ namespace e_commerceAPI
             builder.Services.AddApplication();
 
 			var jwtSettings = builder.Configuration.GetSection("Jwt");
+
+			builder.Services.AddRateLimiter(options =>
+			{
+				options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 100,
+							Window = TimeSpan.FromMinutes(1),
+							SegmentsPerWindow = 4,
+							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+							QueueLimit = 0
+						}));
+				options.AddPolicy("LoginPolicy", context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 5,
+							Window = TimeSpan.FromMinutes(1),
+							SegmentsPerWindow = 2,
+							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+							QueueLimit = 0
+						}));
+				options.AddPolicy("ForgotPolicy", context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 3,
+							Window = TimeSpan.FromMinutes(10),
+							SegmentsPerWindow = 2,
+							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+							QueueLimit = 0
+						}));
+				options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+			});
+
 			builder.Services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -85,6 +126,8 @@ namespace e_commerceAPI
 			});
 
 
+
+
 			var app = builder.Build();
 			using (var scope = app.Services.CreateScope())
 			{
@@ -101,6 +144,7 @@ namespace e_commerceAPI
             }
 
             app.UseHttpsRedirection();
+			app.UseRateLimiter();
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.MapControllers();

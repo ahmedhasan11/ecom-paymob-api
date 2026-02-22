@@ -4,6 +4,7 @@ using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -31,6 +32,7 @@ namespace e_commerceAPI.Controllers
 			return Ok(result);
 		}
 
+		[EnableRateLimiting("LoginPolicy")]
 		[HttpPost("login")]
 
 		public async Task<ActionResult<AuthResponseDto>> Login (LoginDto dto)
@@ -104,6 +106,7 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[AllowAnonymous]
+		[EnableRateLimiting("ForgotPolicy")]
 		[HttpPost("forgot-password")]
 		public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
 		{
