@@ -134,14 +134,12 @@ namespace e_commerceAPI
 				};
 			});
 
-
-
-
 			var app = builder.Build();
 			using (var scope = app.Services.CreateScope())
 			{
-				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-				await IdentityDbInitializer.SeedRolesAsync(roleManager);
+				var initializer = scope.ServiceProvider	.GetRequiredService<IdentityDbInitializer>();
+				await initializer.SeedRolesAsync();
+				await initializer.SeedAdminUserAsync();
 			}
 
 			app.UseSerilogRequestLogging();
