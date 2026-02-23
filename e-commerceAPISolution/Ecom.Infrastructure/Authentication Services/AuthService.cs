@@ -47,8 +47,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_emailService = emailService;
 			_logger = logger;
 			_httpContextAccessor = httpContextAccessor;
-		}
-	
+		}	
 		public async Task<RegisterResponseDto> RegisterAsync(RegisterDto dto)
 		{
 			_logger.LogInformation("Registration attempt started for Email: {Email}", dto.Email);
@@ -225,7 +224,6 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 			return new AuthResponseDto() { IsSuccess = true, Token = jwtresult.Token, RefreshToken = refreshTokenresult.RawToken, ExpiresAt = jwtresult.ExpiresAt };
 		}
-
 		public async Task<bool> LogoutDeviceAsync(string refreshToken)
 		{
 			_logger.LogInformation("Logout device attempt started");
@@ -247,7 +245,6 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_logger.LogInformation("Device logged out successfully for UserId: {UserId}", tokenfromdb.UserId);
 			return true;
 		}
-
 		public async Task<bool> LogoutAllDevicesAsync(Guid userId)
 		{
 			_logger.LogInformation("Logout all devices started for UserId: {UserId}", userId);
@@ -266,8 +263,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_logger.LogInformation("All devices logged out for UserId: {UserId}", userId);
 			return true;
 		}
-
-		public async Task<bool> ChangePasswordAsync(Guid userId , ChangePasswordDto dto)
+		public async Task<bool> ChangePasswordAsync(Guid userId,ChangePasswordDto dto)
 		{
 			_logger.LogInformation("Change password attempt started for UserId: {UserId}", userId);
 			ApplicationUser? user = await _userManager.FindByIdAsync(userId.ToString());
@@ -293,7 +289,6 @@ namespace Ecom.Infrastructure.Authentication_Services
 			return true;
 
 		}
-
 		public async Task ForgotPasswordAsync(string email) 
 		{
 			_logger.LogInformation("Forgot password requested for Email: {Email}", email);
@@ -347,8 +342,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_logger.LogInformation("Password reset successfully for UserId: {UserId}", user.Id);
 			return new ResetPasswordResultDto() {IsSuccess=true };
 		}
-
-		public async Task SendEmailConfirmationAsync( string email)
+		public async Task SendEmailConfirmationAsync(string email)
 		{
 			_logger.LogInformation("Email confirmation requested for Email: {Email}", email);
 
@@ -381,7 +375,6 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			return;
 		}
-
 		public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto)
 		{
 			_logger.LogInformation("Email confirmation attempt for Email: {Email}", dto.Email);
