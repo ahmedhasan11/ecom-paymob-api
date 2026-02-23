@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ecom.Application.DTOs.Authentication
 {
-	public class AuthResponseDto
+	public class ResetPasswordResultDto
 	{
 		public bool IsSuccess { get; set; }
 
-		public string? Token { get; set; }
-
-		public string? RefreshToken { get; set; }
-		public DateTime? ExpiresAt { get; set; }
-		public IEnumerable<string>? Errors { get; set; }
+		public List<string>? Errors { get; set; }
 	}
 }

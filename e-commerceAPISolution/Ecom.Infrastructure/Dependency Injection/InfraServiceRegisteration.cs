@@ -37,18 +37,25 @@ namespace Ecom.Infrastructure.Dependency_Injection
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();
 
-
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10); //lockout time 
+				options.Lockout.MaxFailedAccessAttempts = 5; //max n of failed attempts
+				options.Lockout.AllowedForNewUsers = true; // new account is able to be locked
+			});
 
 			services.AddMemoryCache();
 			services.AddSingleton<RedisConnectionFactory>();
 			services.AddSingleton<ICacheService, RedisCacheService>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IProductRepository, ProductRepository>();
-
-
+			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
+			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+			services.AddScoped<IEmailService, EmailService>();
+			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			return services;
 		}
 	}
