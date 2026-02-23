@@ -15,14 +15,7 @@ namespace e_commerceAPI.Controllers
 		private readonly IProductService _productservice;
 		public ProductsController(IProductService productService) { _productservice = productService; }
 
-		#region Preparing 
-		//Add Product ---> ActionResult --> returning product obj               [POST]              //DONE
-		//Update Product ---> ActionResult --> returning product obj            [Patch]
-		//Delete Product ---> IActionResult --> returning NoCOntent             [Delete]
-		//GetProductById ---> ActionResult --> returning product obj            [GET]               //DONE
-		//GetAllProducts ---> ActionResult --> returning objects				[GET]              //DONE 
-		#endregion
-
+		[AllowAnonymous]
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ProductDto>> GetProductById(Guid id)
 		{
@@ -30,7 +23,7 @@ namespace e_commerceAPI.Controllers
 			return Ok(productDto);
 		}
 
-		[Authorize]
+		[AllowAnonymous]
 		[HttpGet]
 		public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery]ProductQueryParams productQueryParams)
 		{
@@ -38,6 +31,7 @@ namespace e_commerceAPI.Controllers
 			return Ok(pagedResult);
 		}
 
+		[Authorize(Policy = "AdminOnly")]
 		[HttpPost]
 		public async Task<ActionResult<ProductDto>> AddProduct(RequestAddProductDto requestAddProductDto)
 		{
@@ -45,6 +39,7 @@ namespace e_commerceAPI.Controllers
 			return CreatedAtAction(nameof(GetProductById), new { id= productDto.Id}, productDto);
 		}
 
+		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{id}")]
 		public async Task<ActionResult<ProductDto>> UpdateProduct(Guid id , RequestUpdateProductDto requestUpdateProductDto)
 		{
@@ -52,6 +47,7 @@ namespace e_commerceAPI.Controllers
 			return Ok(productDto);
 		}
 
+		[Authorize(Policy = "AdminOnly")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteProduct(Guid id )
 		{

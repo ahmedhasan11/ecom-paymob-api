@@ -4,6 +4,7 @@ using Ecom.Infrastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -96,7 +97,15 @@ namespace e_commerceAPI
 				};
 			});
 
-			builder.Services.AddAuthorization();
+			builder.Services.AddAuthorization(options =>
+			{ //so now any endpoint that dont have [AllowAnonymous] will be [Authorize] by default
+				options.FallbackPolicy = new AuthorizationPolicyBuilder() //FallBackPolicy y3ny endpoint m4 3leh [Authorize] aw [AllowAnonymous]
+						.RequireAuthenticatedUser() //so here we says if there is endpopint have nothing , make the user authenticated on it
+						.Build();
+
+				options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin")); 
+				//here framework reads the jwt token sent , check claims if there is claim --> role= Admin
+			});
 
 			builder.Services.AddControllers();
 
