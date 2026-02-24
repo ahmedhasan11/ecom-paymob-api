@@ -10,16 +10,15 @@ using System.Security.Claims;
 
 namespace e_commerceAPI.Controllers
 {
+
 	[Route("api/[controller]")]
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
 		private readonly IAuthService _authService;
-		public AccountController( IAuthService authService)
-		{ 
-			_authService = authService; 		
-		}
+		public AccountController( IAuthService authService)	{_authService = authService;}
 
+		[AllowAnonymous]
 		[HttpPost("register")]
 		public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto)
 		{
@@ -33,8 +32,8 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[EnableRateLimiting("LoginPolicy")]
+		[AllowAnonymous]
 		[HttpPost("login")]
-
 		public async Task<ActionResult<AuthResponseDto>> Login (LoginDto dto)
 		{
 
@@ -47,6 +46,7 @@ namespace e_commerceAPI.Controllers
 
 		}
 
+		[AllowAnonymous]
 		[HttpPost("refresh")]
 		public async Task<ActionResult<AuthResponseDto>> RefreshSession(RefreshRequestDto dto)
 		{
@@ -59,7 +59,6 @@ namespace e_commerceAPI.Controllers
 
 		}
 
-		[Authorize]
 		[HttpPost("logout")]
 		public async Task<IActionResult> Logout(LogoutRequestDto dto)
 		{
@@ -70,7 +69,7 @@ namespace e_commerceAPI.Controllers
 			}
 			return Ok(result);
 		}
-		[Authorize]
+
 		[HttpPost("logout-all")]
 		public async Task<IActionResult> LogoutAll()
 		{
@@ -88,7 +87,6 @@ namespace e_commerceAPI.Controllers
 
 		}
 
-		[Authorize]
 		[HttpPost("change-password")]
 		public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
 		{
@@ -105,8 +103,9 @@ namespace e_commerceAPI.Controllers
 			return Ok(result);
 		}
 
-		[AllowAnonymous]
+
 		[EnableRateLimiting("ForgotPolicy")]
+		[AllowAnonymous]
 		[HttpPost("forgot-password")]
 		public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
 		{
