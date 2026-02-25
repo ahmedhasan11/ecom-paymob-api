@@ -45,7 +45,7 @@ namespace Ecom.Infrastructure.Identity
 			if (user==null)
 			{
 				_logger.LogInformation("Admin user not found. Creating new admin user with Email: {Email}", email);
-				user = new ApplicationUser() { Email=email, FullName= name , EmailConfirmed=true};
+				user = new ApplicationUser() { Email=email, FullName= name , EmailConfirmed=true, UserName= email};
 				var result = await _userManager.CreateAsync(user, password);
 
 				if (!result.Succeeded)
