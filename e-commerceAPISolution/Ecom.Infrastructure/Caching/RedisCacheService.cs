@@ -20,6 +20,7 @@ namespace Ecom.Infrastructure.Caching
 		public RedisCacheService(RedisConnectionFactory connectionFactory , IMemoryCache memoryCache)
 		{
 			_db = connectionFactory.GetDatabase();
+			_db.Ping();
 			_fallbackCache = memoryCache;
 			try
 			{
@@ -87,6 +88,29 @@ namespace Ecom.Infrastructure.Caching
 			}
 
 			_fallbackCache.Remove(key);
+		}
+
+		public  async Task RemoveByPrefixAsync(string prefix)
+		{
+			if (_redisAvailable)
+			{
+				try
+				{
+					var server = _db.Multiplexer.GetServer(_db.Multiplexer.GetEndPoints().First());
+					var keys = server.Keys(pattern: $"{prefix}*").ToArray();
+
+					foreach (var key in keys) 
+					{
+						await _db.KeyDeleteAsync(key);
+					}
+					return;
+				}
+				catch
+				{
+					//falback
+				}
+
+			}
 		}
 	}
 }

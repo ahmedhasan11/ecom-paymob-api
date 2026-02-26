@@ -16,7 +16,8 @@ namespace Ecom.Application.Validators
 		{
 			RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
 			RuleFor(x => x.Price).NotEmpty().GreaterThanOrEqualTo(0).LessThanOrEqualTo(10000);
-			RuleFor(x => x.Description).MaximumLength(500).When(x => x.Description != null); ;
+			RuleFor(x => x.Stock).GreaterThanOrEqualTo(0).When(x=>x.Stock.HasValue).WithMessage("Stock cannot be negative.");
+			RuleFor(x => x.Description).MaximumLength(500).When(x => x.Description != null); 
 		}
 	}
 }

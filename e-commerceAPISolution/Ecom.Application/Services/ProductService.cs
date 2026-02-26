@@ -338,7 +338,8 @@ namespace Ecom.Application.Services
 				"Deleting product. ProductId={ProductId}, ProductName={ProductName}",
 				product.Id, product.Name);
 
-			await _productRepository.DeleteProductAsync(product);
+			//await _productRepository.DeleteProductAsync(product);
+			product.SoftDelete();
 			await _unitOfWork.SaveChangesAsync();
 			_logger.LogInformation("Product deleted successfully. ProductId={ProductId}", id);
 

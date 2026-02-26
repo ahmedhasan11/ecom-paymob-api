@@ -13,7 +13,7 @@ namespace Ecom.Domain.Entities
 		public Guid Id { get; private set; } = Guid.NewGuid();
 		public string Name { get; set; } = null!;
 		public string? Description { get; set; }
-		public Money Price { get; private set; } = null!;
+		public Money Price { get; set; } = null!;
 
 		public string? ImageUrl { get; set; }
 
