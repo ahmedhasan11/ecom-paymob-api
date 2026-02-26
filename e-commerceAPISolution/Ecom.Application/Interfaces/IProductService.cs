@@ -21,5 +21,12 @@ namespace Ecom.Application.Interfaces
 		Task<ProductDto?> UpdateProductAsync(Guid id ,RequestUpdateProductDto requestupdateProductDto );
 
 		Task<bool> DeleteProductAsync(Guid id);
+
+		Task IncreaseStockAsync(UpdateStockDto dto);
+		Task DecreaseStockAsync(UpdateStockDto dto);
+
+		Task ToggleAvailabilityAsync(ToggleAvailabilityDto dto);
+
+		Task RestoreProductAsync(Guid id);
 	}
 }

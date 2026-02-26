@@ -17,5 +17,6 @@ namespace Ecom.Domain.Interfaces
 		Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions);
 
 		Task<Product?> GetProductByIdAsync(Guid id);//we returned because its a read things so its normal to return
+		Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id); //to make the soft delete thing 
 	}
 }
