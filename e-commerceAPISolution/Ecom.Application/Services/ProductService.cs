@@ -362,15 +362,19 @@ namespace Ecom.Application.Services
 
 			return true;
 		}
-		public async Task IncreaseStockAsync(UpdateStockDto dto)
+		public async Task IncreaseStockAsync(Guid id,UpdateStockDto dto)
 		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
 			_logger.LogInformation(	"Starting IncreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
-			dto.Id, dto.Quantity);
-			Product? product = await _productRepository.GetProductByIdAsync(dto.Id);
+			id, dto.Quantity);
+			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product==null)
 			{
-				_logger.LogWarning("Product not found for Increase stock. ProductId={ProductId}", dto.Id);
-				throw new NotFoundException($"Product with {dto.Id} was not found ");
+				_logger.LogWarning("Product not found for Increase stock. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
 			}
 			product.IncreaseStock(dto.Quantity);
 			await _unitOfWork.SaveChangesAsync();
@@ -379,15 +383,19 @@ namespace Ecom.Application.Services
 				product.Id, product.StockQuantity);
 			return;
 		}
-		public async Task DecreaseStockAsync(UpdateStockDto dto)
+		public async Task DecreaseStockAsync(Guid id, UpdateStockDto dto)
 		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
 			_logger.LogInformation("Starting DecreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
-			dto.Id, dto.Quantity);
-			Product? product = await _productRepository.GetProductByIdAsync(dto.Id);
+			id, dto.Quantity);
+			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product == null)
 			{
-				_logger.LogWarning("Product not found for Decrease stock. ProductId={ProductId}", dto.Id);
-				throw new NotFoundException($"Product with {dto.Id} was not found ");
+				_logger.LogWarning("Product not found for Decrease stock. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
 			}
 			product.DecreaseStock(dto.Quantity);
 			await _unitOfWork.SaveChangesAsync();
@@ -396,15 +404,19 @@ namespace Ecom.Application.Services
 			product.Id, product.StockQuantity);
 			return;
 		}
-		public async Task ToggleAvailabilityAsync(ToggleAvailabilityDto dto)
+		public async Task ToggleAvailabilityAsync(Guid id, ToggleAvailabilityDto dto)
 		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
 			_logger.LogInformation("Starting ToggleAvailability operation. ProductId={ProductId}, RequestedAvailability={Availability}",
-			dto.Id, dto.Available);
-			Product? product = await _productRepository.GetProductByIdAsync(dto.Id);
+			id, dto.Available);
+			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product == null)
 			{
-				_logger.LogWarning("Product not found for Toggle Availability. ProductId={ProductId}", dto.Id);
-				throw new NotFoundException($"Product with {dto.Id} was not found ");
+				_logger.LogWarning("Product not found for Toggle Availability. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
 			}
 
 			if (product.IsAvailable==dto.Available)
@@ -428,6 +440,10 @@ namespace Ecom.Application.Services
 		}
 		public async Task RestoreProductAsync(Guid id)
 		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
 			_logger.LogInformation(	"Starting RestoreProduct operation. ProductId={ProductId}",	id);
 			Product? product = await _productRepository.GetProductByIdIncludingDeletedAsync(id);
 			if (product == null)

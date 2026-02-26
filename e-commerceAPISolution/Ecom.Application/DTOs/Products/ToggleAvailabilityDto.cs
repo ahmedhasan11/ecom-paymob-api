@@ -8,7 +8,7 @@ namespace Ecom.Application.DTOs.Products
 {
 	public class ToggleAvailabilityDto
 	{
-		public Guid Id { get; set; }
+		//public Guid Id { get; set; }
 
 		public bool Available { get; set; }
 	}

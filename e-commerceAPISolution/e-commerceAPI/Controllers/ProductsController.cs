@@ -55,6 +55,36 @@ namespace e_commerceAPI.Controllers
 			return NoContent();
 		}
 
+		[Authorize(Policy = "AdminOnly")]
+		[HttpPatch("{id}/stock/increase")]
+		public async Task<IActionResult> IncreaseStock(Guid id,UpdateStockDto dto)
+		{
+			await _productservice.IncreaseStockAsync(id,dto);
+			return NoContent();
+		}
+		[Authorize(Policy = "AdminOnly")]
+		[HttpPatch("{id}/stock/decrease")]
+		public async Task<IActionResult> DecreaseStock(Guid id, UpdateStockDto dto)
+		{
+			await _productservice.DecreaseStockAsync(id,dto);
+			return NoContent();
+		}
 
+		[Authorize(Policy = "AdminOnly")]
+		[HttpPatch("{id}/availability")]
+		public async Task<IActionResult> ToggleAvailability(Guid id, ToggleAvailabilityDto dto)
+		{
+
+			await _productservice.ToggleAvailabilityAsync(id,dto);
+			return NoContent();
+		}
+
+		[Authorize(Policy = "AdminOnly")]
+		[HttpPatch("{id}/restore")]
+		public async Task<IActionResult> RestoreProduct(Guid id)
+		{
+			await _productservice.RestoreProductAsync(id);
+			return NoContent();
+		}
 	}
 }

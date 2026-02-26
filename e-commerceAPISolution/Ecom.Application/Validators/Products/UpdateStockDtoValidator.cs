@@ -12,7 +12,6 @@ namespace Ecom.Application.Validators.Products
 	{
 		public UpdateStockDtoValidator() 
 		{
-			RuleFor(x => x.Id).NotEmpty();
 			RuleFor(x=>x.Quantity).NotEmpty().GreaterThan(0);
 		}
 	}

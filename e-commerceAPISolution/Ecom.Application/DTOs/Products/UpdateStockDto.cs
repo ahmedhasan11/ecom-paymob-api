@@ -8,7 +8,7 @@ namespace Ecom.Application.DTOs.Products
 {
 	public class UpdateStockDto
 	{
-		public Guid Id { get; set; }
+		//public Guid Id { get; set; }
 
 		public int Quantity { get; set; }
 	}

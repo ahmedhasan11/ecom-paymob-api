@@ -1700,3 +1700,99 @@ Server: Kestrel
 Transfer-Encoding: chunked {"StatusCode":200,"Content-Type":"application/json; charset=utf-8","Date":"Thu, 26 Feb 2026 02:00:09 GMT","Server":"Kestrel","Transfer-Encoding":"chunked","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJKRB1H2OCN:00000001","RequestPath":"/api/products","ConnectionId":"0HNJKRB1H2OCN"}
 2026-02-26 04:00:09 [INF] HTTP GET /api/products responded 200 in 860.1746 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJKRB1H2OCN:00000001","ConnectionId":"0HNJKRB1H2OCN"}
 2026-02-26 04:00:09 [INF] Request finished HTTP/1.1 GET https://localhost:7088/api/products - 200 null application/json; charset=utf-8 884.6886ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJKRB1H2OCN:00000001","RequestPath":"/api/products","ConnectionId":"0HNJKRB1H2OCN"}
+2026-02-26 23:10:42 [INF] User profile is available. Using 'C:\Users\user\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. {"EventId":{"Id":63,"Name":"UsingProfileAsKeyRepositoryWithDPAPI"},"SourceContext":"Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager"}
+2026-02-26 23:10:45 [INF] Executed DbCommand (90ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-26 23:10:45 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-26 23:10:45 [INF] Starting admin user seeding process {"SourceContext":"Ecom.Infrastructure.Identity.IdentityDbInitializer"}
+2026-02-26 23:10:45 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-26 23:10:45 [INF] Admin user already exists with Email: admin@ecommerce.com {"SourceContext":"Ecom.Infrastructure.Identity.IdentityDbInitializer"}
+2026-02-26 23:10:45 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-26 23:10:45 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-26 23:10:45 [INF] Executed DbCommand (2ms) [Parameters=[@__get_Item_0='?' (DbType = Guid), @__get_Item_1='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[UserId], [a].[RoleId]
+FROM [AspNetUserRoles] AS [a]
+WHERE [a].[UserId] = @__get_Item_0 AND [a].[RoleId] = @__get_Item_1 {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}
+2026-02-26 23:10:45 [INF] Admin seeding process completed successfully {"SourceContext":"Ecom.Infrastructure.Identity.IdentityDbInitializer"}
+2026-02-26 23:10:45 [INF] Now listening on: https://localhost:7088 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-26 23:10:45 [INF] Now listening on: http://localhost:5208 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-26 23:10:45 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-26 23:10:45 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-26 23:10:45 [INF] Content root path: D:\BackEnd.NET\.NET\ecom-paymob-api\e-commerceAPISolution\e-commerceAPI {"SourceContext":"Microsoft.Hosting.Lifetime"}
+2026-02-26 23:10:46 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/index.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Upgrade-Insecure-Requests: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-user: [Redacted]
+sec-fetch-dest: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-ch-ua-platform: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/index.html","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Upgrade-Insecure-Requests":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-user":"[Redacted]","sec-fetch-dest":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-ch-ua-platform":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJLFE1534CD:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Response:
+StatusCode: 200
+Content-Type: text/html;charset=utf-8
+Date: Thu, 26 Feb 2026 21:10:46 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"text/html;charset=utf-8","Date":"Thu, 26 Feb 2026 21:10:46 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJLFE1534CD:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] HTTP GET /swagger/index.html responded 200 in 105.2622 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJLFE1534CD:00000001","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/index.html - 200 null text/html;charset=utf-8 310.8744ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Request starting HTTP/2 GET https://localhost:7088/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Request starting HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Request finished HTTP/2 GET https://localhost:7088/_framework/aspnetcore-browser-refresh.js - 200 16511 application/javascript; charset=utf-8 40.7891ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000003","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:46 [INF] Request finished HTTP/2 GET https://localhost:7088/_vs/browserLink - 200 null text/javascript; charset=UTF-8 99.2952ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000005","RequestPath":"/_vs/browserLink","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:47 [INF] Request starting HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:47 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /swagger/v1/swagger.json
+Accept: application/json,*/*
+Host: localhost:7088
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.6
+Cookie: [Redacted]
+Referer: [Redacted]
+sec-ch-ua-platform: [Redacted]
+sec-ch-ua: [Redacted]
+sec-ch-ua-mobile: [Redacted]
+sec-gpc: [Redacted]
+sec-fetch-site: [Redacted]
+sec-fetch-mode: [Redacted]
+sec-fetch-dest: [Redacted]
+priority: [Redacted] {"Protocol":"HTTP/2","Method":"GET","Scheme":"https","PathBase":"","Path":"/swagger/v1/swagger.json","Accept":"application/json,*/*","Host":"localhost:7088","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.6","Cookie":"[Redacted]","Referer":"[Redacted]","sec-ch-ua-platform":"[Redacted]","sec-ch-ua":"[Redacted]","sec-ch-ua-mobile":"[Redacted]","sec-gpc":"[Redacted]","sec-fetch-site":"[Redacted]","sec-fetch-mode":"[Redacted]","sec-fetch-dest":"[Redacted]","priority":"[Redacted]","EventId":{"Id":1,"Name":"RequestLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJLFE1534CD:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:47 [INF] Response:
+StatusCode: 200
+Content-Type: application/json;charset=utf-8
+Date: Thu, 26 Feb 2026 21:10:46 GMT
+Server: Kestrel {"StatusCode":200,"Content-Type":"application/json;charset=utf-8","Date":"Thu, 26 Feb 2026 21:10:46 GMT","Server":"Kestrel","EventId":{"Id":2,"Name":"ResponseLog"},"SourceContext":"Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware","RequestId":"0HNJLFE1534CD:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:47 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 55.6817 ms {"SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNJLFE1534CD:00000007","ConnectionId":"0HNJLFE1534CD"}
+2026-02-26 23:10:47 [INF] Request finished HTTP/2 GET https://localhost:7088/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 74.3694ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNJLFE1534CD:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNJLFE1534CD"}
