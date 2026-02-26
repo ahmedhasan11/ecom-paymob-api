@@ -98,30 +98,22 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 					break;				
 			}
 
-			return await query.Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync();
+			return await query.Where(product => !product.IsDeleted).Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync();
 		}
 		public async Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions)
 		{
 			var query = _dbContext.Products.AsQueryable();
 			query= ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
-			return await query.CountAsync();
+			return await query.Where(product => !product.IsDeleted).CountAsync();
 		}
 		public async Task<Product?> GetProductByIdAsync(Guid id)
 		{
-			return await _dbContext.Products
-				.FirstOrDefaultAsync(p => p.Id == id);
-		}
-		public  Task UpdateProductAsync(Product product)
-		{
-			return Task.CompletedTask;
-		}
-		public Task DeleteProductAsync(Product product)
-		{
-			_dbContext.Products
-				.Remove(product);
-			return Task.CompletedTask;
+			return await _dbContext.Products.Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id);
 		}
 
-
+		public async Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id)
+		{
+			return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+		}
 	}
 }

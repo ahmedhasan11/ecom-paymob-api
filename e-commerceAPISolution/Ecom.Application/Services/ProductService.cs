@@ -34,6 +34,12 @@ namespace Ecom.Application.Services
 			_cacheService = cacheService;
 			_logger = logger;
 		}
+
+		private async Task InvalidateProductsCacheAsync(string reason)
+		{
+			await _cacheService.RemoveByPrefixAsync("products:");
+			_logger.LogInformation("Products cache invalidated. Reason: {Reason}", reason);
+		}
 		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto)
 		{
 			if (requestAddProductDto == null)
@@ -43,8 +49,8 @@ namespace Ecom.Application.Services
 			}
 
 			_logger.LogInformation("Starting product creation with Name={Name} and Price={Price}",
-			requestAddProductDto.Name, requestAddProductDto.Price);
-			Product product= new Product(requestAddProductDto.Price!.Value, requestAddProductDto.Name!);
+			requestAddProductDto.Name, requestAddProductDto.Price);			
+			Product product= new Product(requestAddProductDto.Price!.Value, requestAddProductDto.Name!, requestAddProductDto.Stock);
 			product.ImageUrl = requestAddProductDto.ImageUrl;
 			product.Description = requestAddProductDto.Description;
 
@@ -57,10 +63,12 @@ namespace Ecom.Application.Services
 			#endregion
 			await _productRepository.AddProductAsync(product);
 			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Product Added");
 
 			_logger.LogInformation("Product created successfully with Id={ProductId}", product.Id);
 
-			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt , Description= product.Description, ImageUrl= product.ImageUrl };
+			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt
+				, Description= product.Description, ImageUrl= product.ImageUrl, IsAvailable= product.IsAvailable, IsInStock= product.IsInStock };
 		}
 		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams)
 		{
@@ -190,7 +198,7 @@ namespace Ecom.Application.Services
 
 			_logger.LogInformation("Fetched {Count} products from database", products.Count);
 
-			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description }).ToList();
+			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description, IsAvailable = p.IsAvailable, IsInStock = p.IsInStock }).ToList();
 
 			PagedResult<ProductDto> pagedResult = new PagedResult<ProductDto>() 
 			{
@@ -255,7 +263,9 @@ namespace Ecom.Application.Services
 				Price = product.Price.Amount,
 				CreatedAt = product.CreatedAt,
 				Description = product.Description,
-				ImageUrl = product.ImageUrl
+				ImageUrl = product.ImageUrl,
+				IsAvailable = product.IsAvailable,
+				IsInStock = product.IsInStock
 			};
 
 			await _cacheService.SetAsync(key,productdto,TimeSpan.FromMinutes(2));
@@ -312,10 +322,12 @@ namespace Ecom.Application.Services
 			#endregion
 
 			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Product Updated");
+
 			_logger.LogInformation(
 			"Product updated successfully. ProductId={ProductId}", product.Id);
 
-			return new ProductDto() { Id= product.Id, Name= product.Name ,Price= product.Price.Amount, CreatedAt = product.CreatedAt , ImageUrl= product.ImageUrl , Description= product.Description};
+			return new ProductDto() { Id= product.Id, Name= product.Name ,Price= product.Price.Amount, CreatedAt = product.CreatedAt , ImageUrl= product.ImageUrl , Description= product.Description, IsAvailable = product.IsAvailable, IsInStock = product.IsInStock };
 
 		}
 		public async Task<bool> DeleteProductAsync(Guid id)
@@ -325,8 +337,10 @@ namespace Ecom.Application.Services
 				_logger.LogWarning("DeleteProduct received an empty ProductId");
 				throw new ArgumentException("ID cannot be empty", nameof(id));
 			}
+
 			_logger.LogInformation(
 			"Starting DeleteProduct operation. ProductId={ProductId}", id);
+
 			Product? product = await _productRepository.GetProductByIdAsync(id);
 			if (product==null)
 			{
@@ -334,15 +348,119 @@ namespace Ecom.Application.Services
 
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
+
 			_logger.LogInformation(
 				"Deleting product. ProductId={ProductId}, ProductName={ProductName}",
 				product.Id, product.Name);
 
-			await _productRepository.DeleteProductAsync(product);
+			product.SoftDelete();
 			await _unitOfWork.SaveChangesAsync();
+
+			await InvalidateProductsCacheAsync("Product Soft Deleted");
+
 			_logger.LogInformation("Product deleted successfully. ProductId={ProductId}", id);
 
 			return true;
+		}
+		public async Task IncreaseStockAsync(Guid id,UpdateStockDto dto)
+		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
+			_logger.LogInformation(	"Starting IncreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
+			id, dto.Quantity);
+			Product? product = await _productRepository.GetProductByIdAsync(id);
+			if (product==null)
+			{
+				_logger.LogWarning("Product not found for Increase stock. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
+			}
+			product.IncreaseStock(dto.Quantity);
+			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Product Stock Increase");
+			_logger.LogInformation(	"Stock increased successfully. ProductId={ProductId}, NewStock={Stock}",
+				product.Id, product.StockQuantity);
+			return;
+		}
+		public async Task DecreaseStockAsync(Guid id, UpdateStockDto dto)
+		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
+			_logger.LogInformation("Starting DecreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
+			id, dto.Quantity);
+			Product? product = await _productRepository.GetProductByIdAsync(id);
+			if (product == null)
+			{
+				_logger.LogWarning("Product not found for Decrease stock. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
+			}
+			product.DecreaseStock(dto.Quantity);
+			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Product Stock Decrease");
+			_logger.LogInformation("Stock decreased successfully. ProductId={ProductId}, NewStock={Stock}",
+			product.Id, product.StockQuantity);
+			return;
+		}
+		public async Task ToggleAvailabilityAsync(Guid id, ToggleAvailabilityDto dto)
+		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
+			_logger.LogInformation("Starting ToggleAvailability operation. ProductId={ProductId}, RequestedAvailability={Availability}",
+			id, dto.Available);
+			Product? product = await _productRepository.GetProductByIdAsync(id);
+			if (product == null)
+			{
+				_logger.LogWarning("Product not found for Toggle Availability. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
+			}
+
+			if (product.IsAvailable==dto.Available)
+			{
+				_logger.LogInformation(	"ToggleAvailability skipped. Product already in requested state. ProductId={ProductId}, Availability={Availability}",
+				product.Id, product.IsAvailable);
+				return;
+			}
+
+			if (dto.Available==true)			
+				product.MakeAvailable();
+			else 
+				product.MakeUnavailable();
+
+
+			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Toggle Product Availability");
+			_logger.LogInformation("Product availability updated successfully. ProductId={ProductId}, NewAvailability={Availability}",
+			product.Id, product.IsAvailable);
+			return;
+		}
+		public async Task RestoreProductAsync(Guid id)
+		{
+			if (id == Guid.Empty)
+			{
+				throw new ArgumentException("Id cannot be empty.");
+			}
+			_logger.LogInformation(	"Starting RestoreProduct operation. ProductId={ProductId}",	id);
+			Product? product = await _productRepository.GetProductByIdIncludingDeletedAsync(id);
+			if (product == null)
+			{
+				_logger.LogWarning("Product not found for Restore. ProductId={ProductId}", id);
+				throw new NotFoundException($"Product with {id} was not found ");
+			}
+			if (product.IsDeleted==false)
+			{
+				_logger.LogInformation("Restore skipped. Product is not deleted. ProductId={ProductId}",product.Id);
+				return;
+			}
+			product.Restore();
+			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Restore Product");
+			_logger.LogInformation(	"Product restored successfully. ProductId={ProductId}",	product.Id);
+			return;
 		}
 	}
 }

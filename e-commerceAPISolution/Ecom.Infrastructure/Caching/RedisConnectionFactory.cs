@@ -10,27 +10,18 @@ namespace Ecom.Infrastructure.Caching
 {
 	public class RedisConnectionFactory
 	{
-		private readonly Lazy<ConnectionMultiplexer> _connection;
+		private readonly ConnectionMultiplexer _connection;
 		public RedisConnectionFactory(IConfiguration configuration)
 		{
-			var host = configuration["Redis:Host"];
-			var port = configuration["Redis:Port"];
-			var password = configuration["Redis:Password"];
-
-			var options = new ConfigurationOptions()
-			{
-				EndPoints = { $"{host}:{port}" },
-				User = "default",
-				Password = password,
-				Ssl = true,
-				AbortOnConnectFail =false
-			};
-			_connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(options));
+			var connectionString = configuration["Redis:ConnectionString"];
+			if (string.IsNullOrWhiteSpace(connectionString))
+				throw new ArgumentException("Redis connection string is not configured.");
+			_connection = ConnectionMultiplexer.Connect(connectionString);
 		}
 
 		public IDatabase GetDatabase() 
 		{
-			return _connection.Value.GetDatabase();
+			return _connection.GetDatabase();
 		}
 	}
 }
