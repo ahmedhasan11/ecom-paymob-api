@@ -34,6 +34,12 @@ namespace Ecom.Application.Services
 			_cacheService = cacheService;
 			_logger = logger;
 		}
+
+		private async Task InvalidateProductsCacheAsync(string reason)
+		{
+			await _cacheService.RemoveByPrefixAsync("products:");
+			_logger.LogInformation("Products cache invalidated. Reason: {Reason}", reason);
+		}
 		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto)
 		{
 			if (requestAddProductDto == null)
@@ -57,6 +63,7 @@ namespace Ecom.Application.Services
 			#endregion
 			await _productRepository.AddProductAsync(product);
 			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Product Added");
 
 			_logger.LogInformation("Product created successfully with Id={ProductId}", product.Id);
 
@@ -312,6 +319,8 @@ namespace Ecom.Application.Services
 			#endregion
 
 			await _unitOfWork.SaveChangesAsync();
+			await InvalidateProductsCacheAsync("Product Updated");
+
 			_logger.LogInformation(
 			"Product updated successfully. ProductId={ProductId}", product.Id);
 
@@ -341,6 +350,9 @@ namespace Ecom.Application.Services
 			//await _productRepository.DeleteProductAsync(product);
 			product.SoftDelete();
 			await _unitOfWork.SaveChangesAsync();
+
+			await InvalidateProductsCacheAsync("Product Soft Deleted");
+
 			_logger.LogInformation("Product deleted successfully. ProductId={ProductId}", id);
 
 			return true;
