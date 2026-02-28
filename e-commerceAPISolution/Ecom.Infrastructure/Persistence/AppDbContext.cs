@@ -1,4 +1,5 @@
-﻿using Ecom.Domain.Entities;
+﻿using Ecom.Domain.Common;
+using Ecom.Domain.Entities;
 using Ecom.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,6 +21,25 @@ namespace Ecom.Infrastructure.Persistence
 		public DbSet<Product> Products { get; set; }
 		public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
+		{
+			var entries = ChangeTracker	.Entries<AuditableEntity>();
+
+			foreach (var entry in entries)
+			{
+				if (entry.State == EntityState.Added)
+				{
+					entry.Entity.CreatedAt = DateTime.UtcNow;
+				}
+
+				if (entry.State == EntityState.Modified)
+				{
+					entry.Entity.UpdatedAt = DateTime.UtcNow;
+					entry.Property(x => x.CreatedAt).IsModified = false;
+				}
+			}
+			return await base.SaveChangesAsync(cancellationToken);
+		}
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
