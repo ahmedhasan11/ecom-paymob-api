@@ -1,0 +1,14 @@
+﻿using Ecom.Application.DTOs.Cart;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ecom.Application.Interfaces
+{
+	public interface ICartService
+	{
+		Task<CartResultDto> GetMyCartAsync(Guid userId);
+	}
+}
