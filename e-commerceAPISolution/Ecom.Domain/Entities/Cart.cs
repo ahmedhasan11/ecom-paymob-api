@@ -27,6 +27,27 @@ namespace Ecom.Domain.Entities
 			UserId = userId;
 		}
 
+		public void AddItem(Guid productId, int Quantity)
+		{
+			if (productId==Guid.Empty)
+			{
+				throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
+			}
+			if (Quantity<=0)
+			{
+				throw new ArgumentException("Quantity must be greater than zero.", nameof(Quantity));
+			}
+			var existingItem = CartItems.FirstOrDefault(x => x.ProductId == productId);
+			if (existingItem is not null)
+			{
+				existingItem.IncreaseQuantity(Quantity);
+				return;
+			}
+
+			CartItem cartItem= new CartItem(productId, Quantity);
+			CartItems.Add(cartItem);
+		}
+
 
 	}
 }

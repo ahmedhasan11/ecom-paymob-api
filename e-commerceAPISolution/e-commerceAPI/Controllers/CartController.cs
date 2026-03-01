@@ -1,4 +1,5 @@
 ﻿using Ecom.Application.DTOs.Cart;
+using Ecom.Application.DTOs.Products;
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,20 @@ namespace e_commerceAPI.Controllers
 				return Unauthorized();
 			}
 			CartResultDto cart =await _cartService.GetMyCartAsync(userId);
+			return Ok(cart);
+		}
+
+		[HttpPost("add-item")]
+		public async Task<ActionResult<CartResultDto>> AddItemToCart(RequestAddToCartDto dto)
+		{
+			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+			if(!Guid.TryParse(Id, out var userId))
+			{
+				return Unauthorized();
+			}
+
+			CartResultDto cart = await _cartService.AddItemToCartAsync(userId,dto);
+
 			return Ok(cart);
 		}
 	}

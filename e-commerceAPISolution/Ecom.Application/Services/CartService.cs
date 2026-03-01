@@ -1,5 +1,6 @@
 ﻿using Ecom.Application.DTOs.Cart;
 using Ecom.Application.Interfaces;
+using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,13 +16,16 @@ namespace Ecom.Application.Services
 	public class CartService:ICartService
 	{
 		private readonly ICartRepository _cartRepository;
+		private readonly IProductRepository _productRepository;
 		private readonly ILogger<CartService> _logger;
-		public CartService(ICartRepository cartRepository, ILogger<CartService> logger) 
+		private readonly IUnitOfWork _unitOfWork;
+		public CartService(ICartRepository cartRepository, ILogger<CartService> logger, IProductRepository productRepository, IUnitOfWork unitOfWork) 
 		{
 			_cartRepository=cartRepository;
 			_logger=logger;
+			_productRepository=productRepository;
+			_unitOfWork=unitOfWork;
 		}
-
 		public async Task<CartResultDto> GetMyCartAsync(Guid userId)
 		{
 			if (userId==Guid.Empty)
@@ -29,22 +33,22 @@ namespace Ecom.Application.Services
 				throw new ArgumentException("UserId cannot be empty.", nameof(userId));
 			}
 
-			var query = _cartRepository.GetMyCartAsyc(userId);
+			var query = _cartRepository.GetCartQuery(userId);
 
 			CartResultDto? cart = await query.Select(c => new CartResultDto
 			{
 				CartId = c.Id,
 			    TotalItemsCount= c.CartItems.Select(ci=>ci.Quantity).DefaultIfEmpty(0).Sum(),
-			    SubTotal= c.CartItems.Select(ci => ci.Quantity * ci.UnitPrice).DefaultIfEmpty(0m).Sum(),
-			    HasUnavailableItems= c.CartItems.Any(ci=>ci.Product.IsDeleted||!ci.Product.IsAvailable||ci.Product.StockQuantity<=0),
+			    SubTotal= c.CartItems.Select(ci => ci.Quantity * ci.Product.Price.Amount).DefaultIfEmpty(0m).Sum(),
+			    HasUnavailableItems= c.CartItems.Any(ci=>ci.Product.IsDeleted||!ci.Product.IsAvailable|| ci.Product.StockQuantity < ci.Quantity),
 				CartItems= c.CartItems.Select(ci=>new CartItemDto
 				{
 					 ProductId=ci.ProductId,
 					 Quantity=ci.Quantity,
 					 ProductName=ci.Product.Name,
-					 UnitPrice= ci.UnitPrice,
-					 Total= ci.Quantity*ci.UnitPrice,
-					 IsAvailable = (ci.Product.IsAvailable&& !ci.Product.IsDeleted && ci.Product.StockQuantity>0)
+					 UnitPrice= ci.Product.Price.Amount,
+					 Total= ci.Quantity* ci.Product.Price.Amount,
+					 IsAvailable = (ci.Product.IsAvailable&& !ci.Product.IsDeleted && ci.Product.StockQuantity>0 && ci.Product.StockQuantity >= ci.Quantity)
 				}).ToList()			
 			}).FirstOrDefaultAsync();
 
@@ -54,6 +58,36 @@ namespace Ecom.Application.Services
 			}
 
 			return cart;
+		}
+
+		public async Task<CartResultDto> AddItemToCartAsync(Guid userId , RequestAddToCartDto dto)
+		{
+			if (userId == Guid.Empty)
+				throw new ArgumentException("Invalid userId.", nameof(userId));
+			if (dto.Quantity <= 0)
+				throw new ArgumentException("Quantity must be greater than zero.");
+			Product? product =await _productRepository.GetProductByIdAsync(dto.ProductId);
+
+			if (product is null)
+				throw new ArgumentException("Product not found.", nameof(dto.ProductId));
+			if (product.IsDeleted || !product.IsAvailable)
+				throw new ArgumentException("Product is not available.", nameof(dto.ProductId));
+
+			Cart? cart = await _cartRepository.GetMyCartAsync(userId);
+			
+			if (cart is null)
+			{
+				cart = new Cart(userId);
+				await _cartRepository.AddCartAsync(cart);
+			}
+			var existingQuantity= cart.CartItems.Where(x=>x.ProductId==product.Id).Select(x=>x.Quantity).FirstOrDefault();
+
+			if (existingQuantity+dto.Quantity > product.StockQuantity)
+				throw new ArgumentException("Requested quantity exceeds available stock.");
+
+			cart.AddItem(product.Id, dto.Quantity);
+			await _unitOfWork.SaveChangesAsync();
+			return await GetMyCartAsync(userId);
 		}
 	}
 }

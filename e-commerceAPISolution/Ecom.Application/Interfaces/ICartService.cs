@@ -10,5 +10,7 @@ namespace Ecom.Application.Interfaces
 	public interface ICartService
 	{
 		Task<CartResultDto> GetMyCartAsync(Guid userId);
+
+		Task<CartResultDto> AddItemToCartAsync(Guid userId ,RequestAddToCartDto dto);
 	}
 }

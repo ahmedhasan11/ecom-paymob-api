@@ -20,17 +20,17 @@ namespace Ecom.Domain.Entities
 
 		public int Quantity { get; private set; }
 
-		public decimal UnitPrice { get; private set; }
+		//public decimal UnitPrice { get; private set; }
 
-		public decimal Total => Quantity * UnitPrice;
+		//public decimal Total => Quantity * UnitPrice;
 
 		private CartItem() { }
 
-		public CartItem(Guid productId, int quantity, decimal unitPrice)
+		public CartItem(Guid productId, int quantity/*, decimal unitPrice*/)
 		{
 			ProductId = productId;
 			Quantity = quantity;
-			UnitPrice = unitPrice;
+			//UnitPrice = unitPrice;
 		}
 
 		public void IncreaseQuantity(int quantity)

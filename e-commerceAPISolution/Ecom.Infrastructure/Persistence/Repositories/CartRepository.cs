@@ -16,9 +16,20 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			_db = db;
 		}
-		public IQueryable<Cart> GetMyCartAsyc(Guid userId )
+
+		public async Task AddCartAsync(Cart cart)
+		{
+			await _db.Carts.AddAsync(cart);
+		}
+
+		public IQueryable<Cart> GetCartQuery(Guid userId )
 		{
 			return _db.Carts.Where(x => x.UserId == userId); //bnrg3 el query nfson , el query hna lsa mt3mlo4 execute
+		}
+
+		public async Task<Cart?> GetMyCartAsync(Guid userId)
+		{
+			return await _db.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c=>c.UserId==userId);
 		}
 	}
 }

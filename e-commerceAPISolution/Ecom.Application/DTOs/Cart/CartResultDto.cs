@@ -8,7 +8,7 @@ namespace Ecom.Application.DTOs.Cart
 {
 	public class CartResultDto
 	{
-		public Guid CartId { get; set; }
+		public Guid? CartId { get; set; }
 
 		public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
 
