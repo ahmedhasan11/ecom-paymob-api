@@ -12,5 +12,7 @@ namespace Ecom.Application.Interfaces
 		Task<CartResultDto> GetMyCartAsync(Guid userId);
 
 		Task<CartResultDto> AddItemToCartAsync(Guid userId ,RequestAddToCartDto dto);
+
+		Task<CartResultDto> RemoveItemFromCartAsync(Guid userId ,Guid productId);
 	}
 }

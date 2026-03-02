@@ -89,5 +89,27 @@ namespace Ecom.Application.Services
 			await _unitOfWork.SaveChangesAsync();
 			return await GetMyCartAsync(userId);
 		}
+
+		public async Task<CartResultDto> RemoveItemFromCartAsync(Guid userId, Guid productId)
+		{
+			if (userId==Guid.Empty)
+			{
+				throw new ArgumentException("Invalid userId.", nameof(userId));
+			}
+			if (productId==Guid.Empty)
+			{
+				throw new ArgumentException(nameof(productId));
+			}
+
+			var cart = await _cartRepository.GetMyCartAsync(userId);
+			if (cart is null)
+			{
+				return new CartResultDto();
+			}
+			cart.RemoveItem(productId);
+			await _unitOfWork.SaveChangesAsync();
+			return await GetMyCartAsync(userId);
+
+		}
 	}
 }

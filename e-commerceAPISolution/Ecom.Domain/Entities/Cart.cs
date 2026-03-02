@@ -43,9 +43,22 @@ namespace Ecom.Domain.Entities
 				existingItem.IncreaseQuantity(Quantity);
 				return;
 			}
-
 			CartItem cartItem= new CartItem(productId, Quantity);
 			CartItems.Add(cartItem);
+		}
+
+		public void RemoveItem(Guid productId) 
+		{
+			if (productId == Guid.Empty)
+			{
+				throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
+			}
+			var expectedItem = CartItems.FirstOrDefault(x => x.ProductId == productId);
+			if (expectedItem is null)
+			{
+				return;
+			}
+			CartItems.Remove(expectedItem);
 		}
 
 

@@ -14,7 +14,7 @@ namespace e_commerceAPI.Controllers
 		private readonly ICartService _cartService;
 		public CartController(ICartService cartService)
 		{
-		_cartService = cartService;
+			_cartService = cartService;
 		}
 
 
@@ -22,25 +22,41 @@ namespace e_commerceAPI.Controllers
 		public async Task<ActionResult<CartResultDto>> GetCart()
 		{
 			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if(!Guid.TryParse(Id, out var userId))
+			if (!Guid.TryParse(Id, out var userId))
 			{
 				return Unauthorized();
 			}
-			CartResultDto cart =await _cartService.GetMyCartAsync(userId);
+			CartResultDto cart = await _cartService.GetMyCartAsync(userId);
 			return Ok(cart);
 		}
 
-		[HttpPost("add-item")]
+		[HttpPost("items/add")]
 		public async Task<ActionResult<CartResultDto>> AddItemToCart(RequestAddToCartDto dto)
 		{
 			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if(!Guid.TryParse(Id, out var userId))
+			if (!Guid.TryParse(Id, out var userId))
 			{
 				return Unauthorized();
 			}
 
-			CartResultDto cart = await _cartService.AddItemToCartAsync(userId,dto);
+			CartResultDto cart = await _cartService.AddItemToCartAsync(userId, dto);
 
+			return Ok(cart);
+		}
+
+		[HttpDelete("items/{productId}")]
+		public async Task<ActionResult<CartResultDto>> RemoveItemFromCart(Guid productId)
+		{
+			if (productId==Guid.Empty)
+			{
+				return BadRequest();
+			}
+			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+			if (!Guid.TryParse(Id, out var userId))
+			{
+				return Unauthorized();
+			}
+			CartResultDto cart = await _cartService.RemoveItemFromCartAsync(userId,productId );
 			return Ok(cart);
 		}
 	}
