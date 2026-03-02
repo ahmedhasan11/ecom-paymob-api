@@ -146,5 +146,20 @@ namespace Ecom.Application.Services
 			return await GetMyCartAsync(userId);
 
 		}
+
+		public async Task ClearCartAsync(Guid userId)
+		{
+			if (userId==Guid.Empty)
+			{
+				throw new ArgumentException("Invalid userId.", nameof(userId));
+			}
+			var cart = await _cartRepository.GetMyCartAsync(userId);
+			if (cart is null)
+			{
+				return;
+			}
+			cart.ClearCart();
+			await _unitOfWork.SaveChangesAsync();
+		}
 	}
 }

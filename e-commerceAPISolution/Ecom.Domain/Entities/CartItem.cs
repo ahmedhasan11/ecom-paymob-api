@@ -63,5 +63,6 @@ namespace Ecom.Domain.Entities
 			}
 			Quantity = quantity;
 		}
+
 	}
 }

@@ -17,8 +17,6 @@ namespace e_commerceAPI.Controllers
 		{
 			_cartService = cartService;
 		}
-
-
 		[HttpGet]
 		public async Task<ActionResult<CartResultDto>> GetCart()
 		{
@@ -79,6 +77,18 @@ namespace e_commerceAPI.Controllers
 
 			CartResultDto cart = await _cartService.UpdateCartItemQuantityAsync(userId, productId, dto);
 			return Ok(cart);
+		}
+
+		[HttpDelete("items")]
+		public async Task<IActionResult> ClearCart()
+		{
+			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+			if(!Guid.TryParse(id, out var userId))
+			{
+				return Unauthorized();
+			}
+			await _cartService.ClearCartAsync(userId);
+			return NoContent();
 		}
 	}
 }

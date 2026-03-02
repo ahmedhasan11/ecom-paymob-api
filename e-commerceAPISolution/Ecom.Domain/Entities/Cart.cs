@@ -79,6 +79,11 @@ namespace Ecom.Domain.Entities
 
 		}
 
+		public void ClearCart()
+		{
+			CartItems.Clear();
+		}
+
 
 	}
 }
