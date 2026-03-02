@@ -61,6 +61,24 @@ namespace Ecom.Domain.Entities
 			CartItems.Remove(expectedItem);
 		}
 
+		public void UpdateQuantity(Guid productId, int newQuantity)
+		{
+			if (productId == Guid.Empty)
+				throw new ArgumentException(nameof(productId));
+			var existingItem = CartItems.FirstOrDefault(x=>x.ProductId==productId);
+			if (existingItem is null) 
+			{
+				throw new InvalidOperationException("Cart item not found.");
+			}
+			if (newQuantity == 0)
+			{
+				CartItems.Remove(existingItem);
+				return;
+			}
+			existingItem.SetQuantity(newQuantity);
+
+		}
+
 
 	}
 }

@@ -111,5 +111,40 @@ namespace Ecom.Application.Services
 			return await GetMyCartAsync(userId);
 
 		}
+
+		public async Task<CartResultDto> UpdateCartItemQuantityAsync(Guid userId, Guid productId, UpdateCartItemQuantityDto dto)
+		{
+			if (userId == Guid.Empty)
+			{
+				throw new ArgumentException("Invalid userId.", nameof(userId));
+			}
+			if (productId == Guid.Empty)
+			{
+				throw new ArgumentException(nameof(productId));
+			}
+			if (dto.Quantity < 0)
+			{
+				throw new ArgumentException(nameof(dto.Quantity));
+			}
+			var product = await _productRepository.GetProductByIdAsync(productId);
+			if (product is null)
+				throw new ArgumentException("Product not found.", nameof(productId));
+			if (product.IsDeleted || !product.IsAvailable)
+				throw new ArgumentException("Product is not available.", nameof(productId));
+			if (dto.Quantity > product.StockQuantity)
+			{
+				throw new InvalidOperationException("Requested quantity exceeds available stock.");
+			}
+			var cart = await _cartRepository.GetMyCartAsync(userId);
+			if (cart is null)
+			{
+				throw new InvalidOperationException("Cart not found.");
+			}
+
+			cart.UpdateQuantity(productId, dto.Quantity);
+			await _unitOfWork.SaveChangesAsync();
+			return await GetMyCartAsync(userId);
+
+		}
 	}
 }

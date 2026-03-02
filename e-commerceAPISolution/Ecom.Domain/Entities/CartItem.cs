@@ -54,5 +54,14 @@ namespace Ecom.Domain.Entities
 			}
 			Quantity -= quantity;
 		}
+
+		public void SetQuantity(int quantity)
+		{
+			if (quantity < 0)
+			{
+				throw new ArgumentException("quantity cannot be less than 0", nameof(quantity));
+			}
+			Quantity = quantity;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Ecom.Application.DTOs.Cart;
 using Ecom.Application.DTOs.Products;
 using Ecom.Application.Interfaces;
+using Ecom.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -57,6 +58,26 @@ namespace e_commerceAPI.Controllers
 				return Unauthorized();
 			}
 			CartResultDto cart = await _cartService.RemoveItemFromCartAsync(userId,productId );
+			return Ok(cart);
+		}
+		[HttpPatch("items/{productId}")]
+		public async Task<ActionResult<CartResultDto>> UpdateCartItemQuantity(Guid productId, UpdateCartItemQuantityDto dto)
+		{
+			if (productId == Guid.Empty)
+			{
+				return BadRequest();
+			}
+			if (dto.Quantity < 0)
+			{
+				return BadRequest();
+			}
+			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+			if (!Guid.TryParse(Id, out var userId))
+			{
+				return Unauthorized();
+			}
+
+			CartResultDto cart = await _cartService.UpdateCartItemQuantityAsync(userId, productId, dto);
 			return Ok(cart);
 		}
 	}
