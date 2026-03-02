@@ -16,6 +16,7 @@ namespace Ecom.Application.DTOs.Cart
 
 		public decimal UnitPrice { get; set; }
 
+		public int AvailableStock { get; set; }
 		public int Quantity { get; set; }
 
 		public decimal Total { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Ecom.Application.DTOs.Cart;
+using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
@@ -48,6 +49,7 @@ namespace Ecom.Application.Services
 					 ProductName=ci.Product.Name,
 					 UnitPrice= ci.Product.Price.Amount,
 					 Total= ci.Quantity* ci.Product.Price.Amount,
+					 AvailableStock =(!ci.Product.IsDeleted && ci.Product.IsAvailable)? ci.Product.StockQuantity: 0,
 					 IsAvailable = (ci.Product.IsAvailable&& !ci.Product.IsDeleted && ci.Product.StockQuantity>0 && ci.Product.StockQuantity >= ci.Quantity)
 				}).ToList()			
 			}).FirstOrDefaultAsync();
@@ -69,9 +71,9 @@ namespace Ecom.Application.Services
 			Product? product =await _productRepository.GetProductByIdAsync(dto.ProductId);
 
 			if (product is null)
-				throw new ArgumentException("Product not found.", nameof(dto.ProductId));
+				throw new NotFoundException("Product not found.");
 			if (product.IsDeleted || !product.IsAvailable)
-				throw new ArgumentException("Product is not available.", nameof(dto.ProductId));
+				throw new InvalidOperationException("Product is not available.");
 
 			Cart? cart = await _cartRepository.GetMyCartAsync(userId);
 			
@@ -83,7 +85,12 @@ namespace Ecom.Application.Services
 			var existingQuantity= cart.CartItems.Where(x=>x.ProductId==product.Id).Select(x=>x.Quantity).FirstOrDefault();
 
 			if (existingQuantity+dto.Quantity > product.StockQuantity)
-				throw new ArgumentException("Requested quantity exceeds available stock.");
+			{
+				_logger.LogWarning(	"User {UserId} attempted to exceed stock for product {ProductId}. Requested: {Requested}, Available: {Available}",
+					userId,	product.Id,	dto.Quantity,	product.StockQuantity);
+				throw new InvalidOperationException("Requested quantity exceeds available stock.");
+			}
+
 
 			cart.AddItem(product.Id, dto.Quantity);
 			await _unitOfWork.SaveChangesAsync();
@@ -128,17 +135,21 @@ namespace Ecom.Application.Services
 			}
 			var product = await _productRepository.GetProductByIdAsync(productId);
 			if (product is null)
-				throw new ArgumentException("Product not found.", nameof(productId));
+				throw new NotFoundException("Product not found.");
 			if (product.IsDeleted || !product.IsAvailable)
-				throw new ArgumentException("Product is not available.", nameof(productId));
+				throw new InvalidOperationException("Product is not available.");
 			if (dto.Quantity > product.StockQuantity)
 			{
+				_logger.LogWarning(
+				"User {UserId} attempted to update quantity exceeding stock for product {ProductId}. Requested: {Requested}, Available: {Available}",
+				userId,	productId,	dto.Quantity,	product.StockQuantity);
+
 				throw new InvalidOperationException("Requested quantity exceeds available stock.");
 			}
 			var cart = await _cartRepository.GetMyCartAsync(userId);
 			if (cart is null)
 			{
-				throw new InvalidOperationException("Cart not found.");
+				throw new NotFoundException("Cart not found.");
 			}
 
 			cart.UpdateQuantity(productId, dto.Quantity);
