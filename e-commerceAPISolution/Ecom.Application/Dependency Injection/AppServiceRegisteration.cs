@@ -16,6 +16,7 @@ namespace Ecom.Application.Dependency_Injection
 		public static IServiceCollection AddApplication(this IServiceCollection services  )
 		{
 			services.AddScoped<IProductService, ProductService>();
+			services.AddScoped<ICartService, CartService>();
 			services.AddValidatorsFromAssembly(typeof(AddProductDtoValidator).Assembly);
 			
 
