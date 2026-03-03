@@ -3,7 +3,7 @@ bin/
 obj/
 publish/
 artifacts/
-
+e-commerceAPI/Logs/
 # Visual Studio
 .vs/
 *.user

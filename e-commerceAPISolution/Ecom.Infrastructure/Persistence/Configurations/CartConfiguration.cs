@@ -20,6 +20,8 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 			builder.HasMany(x=>x.CartItems).WithOne(ci=>ci.Cart).HasForeignKey(x=>x.CartId).OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasOne<ApplicationUser>().WithOne().HasForeignKey<Cart>(c => c.UserId).OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasIndex(c => c.UserId);
 		}
 	}
 }

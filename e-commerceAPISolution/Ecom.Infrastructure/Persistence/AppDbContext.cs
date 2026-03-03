@@ -22,6 +22,9 @@ namespace Ecom.Infrastructure.Persistence
 		public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 		public DbSet<Cart> Carts { get; set; }
+		public DbSet<CartItem> CartItems { get; set; }
+		public DbSet<Order> Orders { get; set; }
+		public DbSet<OrderItem> OrderItems { get; set; }
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
 		{
 			var entries = ChangeTracker	.Entries<AuditableEntity>();

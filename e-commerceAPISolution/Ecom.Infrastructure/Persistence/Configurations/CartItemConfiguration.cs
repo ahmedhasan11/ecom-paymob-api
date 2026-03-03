@@ -15,7 +15,6 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 		{
 			builder.HasKey(x => x.Id);
 			builder.Property(x => x.Quantity).IsRequired();
-			builder.Property(x => x.UnitPrice).HasColumnType("decimal(18,2)").IsRequired();
 			builder.HasOne(x=>x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
 		}
 	}
