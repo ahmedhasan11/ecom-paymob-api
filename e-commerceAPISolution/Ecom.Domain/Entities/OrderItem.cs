@@ -30,19 +30,19 @@ namespace Ecom.Domain.Entities
 		{
 			if (productId==Guid.Empty)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException(nameof(productId));
 			}
-			if (string.IsNullOrEmpty(productName))
+			if (string.IsNullOrWhiteSpace(productName))
 			{
-				throw new ArgumentException();
+				throw new ArgumentException(nameof(productName));
 			}
 			if (unitPrice<=0)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException(nameof(unitPrice));
 			}
 			if (quantity <= 0)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException(nameof(quantity));
 			}
 			Id = Guid.NewGuid();
 			ProductId = productId;

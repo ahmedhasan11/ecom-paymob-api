@@ -28,56 +28,92 @@ namespace Ecom.Domain.Entities
 
 		private Order() {}
 
-		//public Order(Guid userId)
-		//{
-		//	if (userId==Guid.Empty)
-		//	{
-		//		throw new ArgumentException();
-		//	}
-		//	UserId= userId;
-		//	Id = Guid.NewGuid();		
-		//	Status = OrderStatusEnum.Pending;
-		//	TotalAmount = SubTotal;
-		//}
-		//public void MarkAsPaid()
-		//{
-		//	if (Status==OrderStatusEnum.Pending)
-		//	{
-		//		Status = OrderStatusEnum.Paid;
-		//	}
-		//	else
-		//	{
-		//		throw new ArgumentException();
-		//	}
+		public static Order Create(Guid userId , ShippingAddress address , List<CreateOrderItemData> requestedItems)
+		{
 
-		//}
+			if (userId==Guid.Empty)
+			{
+				throw new ArgumentException(nameof(userId));
+			}
+			if (requestedItems==null || !requestedItems.Any())
+			{
+				throw new ArgumentException(nameof(requestedItems));
+			}
+			if (address is null)
+			{
+				throw new ArgumentException(nameof(address));
+			}
+			var order = new Order ()
+			{
+				Id=Guid.NewGuid(),
+				UserId=userId,
+				Address=address,
+				Currency="EGP",
+				Status=OrderStatusEnum.Pending
+			};
+			foreach (var item in requestedItems)
+			{
+				if (item.ProductId==Guid.Empty)
+				{
+					throw new ArgumentException(nameof(item.ProductId));
+				}
+				if (string.IsNullOrWhiteSpace(item.ProductName))
+				{
+					throw new ArgumentException(nameof(item.ProductName));
+				}
+				if (item.UnitPrice<=0)
+				{
+					throw new ArgumentException(nameof(item.UnitPrice));
+				}
+				if (item.Quantity<=0)
+				{
+					throw new ArgumentException(nameof(item.Quantity));
+				}
+				OrderItem orderItem = new OrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.Quantity);
+				order._privateList.Add(orderItem);
+				order.SubTotal += orderItem.LineTotal;
+			}
+			order.TotalAmount = order.SubTotal;
+			return order;
+		}
+		public void MarkAsPaid()
+		{
+			if (Status == OrderStatusEnum.Pending)
+			{
+				Status = OrderStatusEnum.Paid;
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
 
-		//public void MarkAsPaymentFailed()
-		//{
-		//	if (Status==OrderStatusEnum.Pending)
-		//	{
-		//		Status= OrderStatusEnum.PaymentFailed;
-		//	}
-		//	else
-		//	{
-		//		throw new ArgumentException();
-		//	}
-		//}
-		//public void Cancel()
-		//{
-		//	if (Status==OrderStatusEnum.Paid)
-		//	{
-		//		throw new ArgumentException("Refund not implemented yet");
-		//	}
-		//	else if (Status==OrderStatusEnum.PaymentFailed)
-		//	{
-		//		Status = OrderStatusEnum.Cancelled;
-		//	}
-		//	else
-		//	{
-		//		throw new ArgumentException();
-		//	}
+		}
+		public void MarkAsPaymentFailed()
+		{
+			if (Status == OrderStatusEnum.Pending)
+			{
+				Status = OrderStatusEnum.PaymentFailed;
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
+		}
+		public void Cancel()
+		{
+			if (Status == OrderStatusEnum.Paid)
+			{
+				throw new InvalidOperationException("Refund not implemented yet");
+			}
+			else if (Status == OrderStatusEnum.PaymentFailed)
+			{
+				Status = OrderStatusEnum.Cancelled;
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
 
-		//}
+		}
 	}
 }
