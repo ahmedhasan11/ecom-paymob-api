@@ -1,5 +1,6 @@
 ﻿using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,10 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		public async Task AddOrderAsync(Order order)
 		{
 			await _db.Orders.AddAsync(order);
+		}
+		public async Task<Order?> GetOrderByIdAsync(Guid orderId)
+		{
+			return await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
 		}
 	}
 }

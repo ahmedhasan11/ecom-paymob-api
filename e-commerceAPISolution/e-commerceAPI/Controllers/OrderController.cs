@@ -1,0 +1,28 @@
+﻿using Ecom.Application.DTOs.Order;
+using Ecom.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace e_commerceAPI.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class OrderController : ControllerBase
+	{
+		private readonly IOrderService _orderService;
+		public OrderController(IOrderService orderService) { _orderService = orderService; }
+
+		[Authorize(Policy = "AdminOnly")]
+		[HttpPatch("{orderId}/status")]
+		public async Task<ActionResult<OrderResult>> UpdateOrderStatus(Guid orderId,OrderStatusRequestDto dto)
+		{
+			if (orderId==Guid.Empty)
+			{
+				return BadRequest("Order Id cannot be empty.");
+			}
+			OrderResult result = await _orderService.UpdateOrderStatusAsync(orderId, dto);
+			return Ok(result);
+		}
+	}
+}
