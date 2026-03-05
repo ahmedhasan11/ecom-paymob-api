@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ecom.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,30 +27,30 @@ namespace Ecom.Domain.Entities
 
 		private OrderItem() { }
 
-		public OrderItem(Guid productId, string productName , decimal unitPrice , int quantity)
+		public OrderItem(CreateOrderItemData item)
 		{
-			if (productId==Guid.Empty)
+			if (item.ProductId==Guid.Empty)
 			{
-				throw new ArgumentException(nameof(productId));
+				throw new ArgumentException(nameof(item.ProductId));
 			}
-			if (string.IsNullOrWhiteSpace(productName))
+			if (string.IsNullOrWhiteSpace(item.ProductName))
 			{
-				throw new ArgumentException(nameof(productName));
+				throw new ArgumentException(nameof(item.ProductName));
 			}
-			if (unitPrice<=0)
+			if (item.UnitPrice<=0)
 			{
-				throw new ArgumentException(nameof(unitPrice));
+				throw new ArgumentException(nameof(item.UnitPrice));
 			}
-			if (quantity <= 0)
+			if (item.Quantity <= 0)
 			{
-				throw new ArgumentException(nameof(quantity));
+				throw new ArgumentException(nameof(item.Quantity));
 			}
 			Id = Guid.NewGuid();
-			ProductId = productId;
-			ProductName= productName;
-			UnitPrice= unitPrice;
-			Quantity= quantity;
-			LineTotal = unitPrice* quantity;
+			ProductId = item.ProductId;
+			ProductName= item.ProductName;
+			UnitPrice= item.UnitPrice;
+			Quantity= item.Quantity;
+			LineTotal = item.UnitPrice * item.Quantity;
 		}
 
 		

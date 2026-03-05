@@ -69,7 +69,7 @@ namespace Ecom.Domain.Entities
 				{
 					throw new ArgumentException(nameof(item.Quantity));
 				}
-				OrderItem orderItem = new OrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.Quantity);
+				OrderItem orderItem = new OrderItem(item);
 				order._privateList.Add(orderItem);
 				order.SubTotal += orderItem.LineTotal;
 			}
