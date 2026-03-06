@@ -11,5 +11,6 @@ namespace Ecom.Application.Interfaces
 	{
 		Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto);
 		Task<List<OrderResult>> GetUserOrdersSummaryAsync(Guid userId);
+		Task<OrderDetailsResult> GetOrderDetails(Guid userId, Guid orderId);
 	}
 }

@@ -26,7 +26,7 @@ namespace e_commerceAPI.Controllers
 			return Ok(result);
 		}
 
-		[HttpGet("/my")]
+		[HttpGet("my")]
 		public async Task<ActionResult<List<OrderResult>>> GetUserOrders()
 		{
 			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
@@ -36,6 +36,23 @@ namespace e_commerceAPI.Controllers
 			}
 			var orders= await _orderService.GetUserOrdersSummaryAsync(userId);
 			return Ok(orders);
+		}
+
+		[HttpGet("{orderId}")]
+		public async Task<ActionResult<OrderDetailsResult>> GetOrderDetails(Guid orderId)
+		{
+			if (orderId==Guid.Empty)
+			{
+				return BadRequest("Order Id cannot be empty.");
+			}
+			var id =User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+			if (!Guid.TryParse(id, out var userId))
+			{
+				return Unauthorized();
+			}
+			var order = await _orderService.GetOrderDetails(userId, orderId);
+			return Ok(order);
+
 		}
 	}
 }

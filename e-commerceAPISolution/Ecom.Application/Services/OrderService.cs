@@ -71,5 +71,48 @@ namespace Ecom.Application.Services
 
 			return orders;
 		}
+
+		public async Task<OrderDetailsResult> GetOrderDetails(Guid userId , Guid orderId)
+		{
+			if (userId==Guid.Empty)
+			{
+				throw new ArgumentException("user id cannot be empty",nameof(userId));
+			}
+			if (orderId == Guid.Empty)
+			{
+				throw new ArgumentException("order id cannot be empty", nameof(orderId));
+			}
+			var query = _orderRepository.GetOrderDetailsQuery(userId, orderId);
+			OrderDetailsResult? order = await query.Select(o=>new OrderDetailsResult
+			{
+			  OrderId= o.Id,
+			  Status = o.Status,
+			  Total = o.TotalAmount,
+			  CreatedAt = o.CreatedAt,
+			  Address= new ShippingAddressDto
+			  {
+				  BuildingNumber=o.Address.BuildingNumber,
+				  City=o.Address.City,
+				  PostalCode=o.Address.PostalCode,
+				  PhoneNumber=o.Address.PhoneNumber,
+				  RecipientName=o.Address.RecipientName,
+				  Street=o.Address.Street,
+			  },
+			  OrderItems= o.Items.Select(oi=>new OrderItemDto
+			  {
+				 ItemId= oi.Id,
+				 LineTotal=oi.LineTotal,
+				 ProductName=oi.ProductName,
+				 Quantity=oi.Quantity,
+				 UnitPrice=oi.UnitPrice,
+			  }).ToList()		  
+			}).FirstOrDefaultAsync();
+
+			if (order==null)
+			{
+				throw new NotFoundException("Order not found");
+			}
+			return order;
+		}
 	}
 }
