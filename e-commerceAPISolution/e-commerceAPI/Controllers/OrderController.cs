@@ -1,4 +1,5 @@
-﻿using Ecom.Application.DTOs.Order;
+﻿using Ecom.Application.Common.Pagination;
+using Ecom.Application.DTOs.Order;
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,14 +28,14 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[HttpGet("my")]
-		public async Task<ActionResult<List<OrderResult>>> GetUserOrders()
+		public async Task<ActionResult<List<OrderResult>>> GetUserOrders(OrdersPaginationOptions dtoOptions)
 		{
 			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if (!Guid.TryParse(id, out var userId))
 			{
 				return Unauthorized();
 			}
-			var orders= await _orderService.GetUserOrdersSummaryAsync(userId);
+			var orders= await _orderService.GetUserOrdersSummaryAsync(userId, dtoOptions);
 			return Ok(orders);
 		}
 

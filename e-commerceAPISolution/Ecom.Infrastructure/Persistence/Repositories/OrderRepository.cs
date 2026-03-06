@@ -1,4 +1,6 @@
-﻿using Ecom.Domain.Entities;
+﻿using Ecom.Application.Common.Pagination;
+using Ecom.Domain.Common.Queries;
+using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

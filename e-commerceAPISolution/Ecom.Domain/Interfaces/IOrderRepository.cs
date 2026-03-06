@@ -1,4 +1,5 @@
-﻿using Ecom.Domain.Entities;
+﻿using Ecom.Domain.Common.Queries;
+using Ecom.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,7 @@ namespace Ecom.Domain.Interfaces
 	{
 		Task AddOrderAsync(Order order);
 		Task<Order?> GetOrderByIdAsync(Guid orderId); // for changing order status , you dont need to return OrderItems 
-
 		IQueryable<Order> GetUserOrdersQuery(Guid userId);
-
 		IQueryable<Order> GetOrderDetailsQuery(Guid userId, Guid orderId);
 	}
 }

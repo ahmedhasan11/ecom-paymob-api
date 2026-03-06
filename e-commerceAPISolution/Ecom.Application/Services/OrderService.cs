@@ -1,10 +1,12 @@
-﻿using Ecom.Application.DTOs.Order;
+﻿using Ecom.Application.Common.Pagination;
+using Ecom.Application.DTOs.Order;
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Enums;
 using Ecom.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,15 +55,19 @@ namespace Ecom.Application.Services
 			await _unitOfWork.SaveChangesAsync();
 			return new OrderResult {OrderId=orderId, Status=order.Status , Total= order.TotalAmount, CreatedAt= order.CreatedAt};
 		}
-		public async Task<List<OrderResult>> GetUserOrdersSummaryAsync(Guid userId)
+		public async Task<PagedResult<OrderResult>> GetUserOrdersSummaryAsync(Guid userId, OrdersPaginationOptions paginationOptions)
 		{
 			if (userId==Guid.Empty) 
 			{
 				throw new ArgumentException("user id cannot be empty.", nameof(userId));
 			}
-			var query = _orderRepository.GetUserOrdersQuery(userId);
+			var query = _orderRepository.GetUserOrdersQuery(userId).AsNoTracking();
 
-			List<OrderResult> orders = await query.OrderByDescending(o=>o.CreatedAt).Select(o => new OrderResult()
+			var totalCount = await query.CountAsync();
+
+			IReadOnlyList<OrderResult> orders = await query.OrderByDescending(o=>o.CreatedAt).Skip((paginationOptions.PageNumber - 1) * paginationOptions.PageSize)
+				.Take(paginationOptions.PageSize)
+				.Select(o => new OrderResult()
 			{
 				OrderId = o.Id,
 				Status = o.Status,
@@ -69,7 +75,16 @@ namespace Ecom.Application.Services
 				CreatedAt = o.CreatedAt,
 			}).ToListAsync();
 
-			return orders;
+
+			var pagedOrders = new PagedResult<OrderResult>
+			{
+				Items = orders,
+			    PageNumber = paginationOptions.PageNumber,
+				PageSize = paginationOptions.PageSize,
+				TotalCount=totalCount,
+			    TotalPages= (int)Math.Ceiling((double)totalCount/paginationOptions.PageSize)		    
+			};
+			return pagedOrders;
 		}
 
 		public async Task<OrderDetailsResult> GetOrderDetails(Guid userId , Guid orderId)
@@ -82,7 +97,7 @@ namespace Ecom.Application.Services
 			{
 				throw new ArgumentException("order id cannot be empty", nameof(orderId));
 			}
-			var query = _orderRepository.GetOrderDetailsQuery(userId, orderId);
+			var query = _orderRepository.GetOrderDetailsQuery(userId, orderId).AsNoTracking();
 			OrderDetailsResult? order = await query.Select(o=>new OrderDetailsResult
 			{
 			  OrderId= o.Id,
