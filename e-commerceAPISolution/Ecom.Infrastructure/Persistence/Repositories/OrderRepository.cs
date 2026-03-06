@@ -24,5 +24,9 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			return await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
 		}
+		public IQueryable<Order> GetUserOrdersQuery(Guid userId)
+		{
+			return _db.Orders.Where(o=>o.UserId==userId);
+		}
 	}
 }

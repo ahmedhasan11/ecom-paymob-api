@@ -4,6 +4,7 @@ using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Enums;
 using Ecom.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Ecom.Application.Services
 			_orderRepository = orderRepository;
 			_unitOfWork = unitOfWork;
 		}
+
 		public async Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto)
 		{
 			if (orderId==Guid.Empty)
@@ -49,7 +51,25 @@ namespace Ecom.Application.Services
 				throw new ArgumentException("Invalid order status");
 			}
 			await _unitOfWork.SaveChangesAsync();
-			return new OrderResult {OrderId=orderId, Status=order.Status , Total= order.TotalAmount};
+			return new OrderResult {OrderId=orderId, Status=order.Status , Total= order.TotalAmount, CreatedAt= order.CreatedAt};
+		}
+		public async Task<List<OrderResult>> GetUserOrdersSummaryAsync(Guid userId)
+		{
+			if (userId==Guid.Empty) 
+			{
+				throw new ArgumentException("user id cannot be empty.", nameof(userId));
+			}
+			var query = _orderRepository.GetUserOrdersQuery(userId);
+
+			List<OrderResult> orders = await query.OrderByDescending(o=>o.CreatedAt).Select(o => new OrderResult()
+			{
+				OrderId = o.Id,
+				Status = o.Status,
+				Total = o.TotalAmount,
+				CreatedAt = o.CreatedAt,
+			}).ToListAsync();
+
+			return orders;
 		}
 	}
 }

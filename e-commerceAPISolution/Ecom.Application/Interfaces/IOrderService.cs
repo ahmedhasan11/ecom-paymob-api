@@ -10,5 +10,6 @@ namespace Ecom.Application.Interfaces
 	public interface IOrderService
 	{
 		Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto);
+		Task<List<OrderResult>> GetUserOrdersSummaryAsync(Guid userId);
 	}
 }
