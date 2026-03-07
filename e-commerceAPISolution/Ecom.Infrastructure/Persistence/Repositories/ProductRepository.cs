@@ -38,13 +38,13 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 
 			return query;
 		}
-		public async Task AddProductAsync(Product product)
+		public async Task AddProductAsync(Product product, CancellationToken cancellationToken)
 		{
 			 await _dbContext.Products
-				.AddAsync(product);
+				.AddAsync(product, cancellationToken);
 			 //await _dbContext.SaveChangesAsync();
 		}
-		public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions)
+		public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken)
 		{
 
 			var query = _dbContext.Products.AsQueryable();
@@ -98,22 +98,22 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 					break;				
 			}
 
-			return await query.Where(product => !product.IsDeleted).Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync();
+			return await query.Where(product => !product.IsDeleted).Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync(cancellationToken);
 		}
-		public async Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions)
+		public async Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken)
 		{
 			var query = _dbContext.Products.AsQueryable();
 			query= ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
-			return await query.Where(product => !product.IsDeleted).CountAsync();
+			return await query.Where(product => !product.IsDeleted).CountAsync(cancellationToken);
 		}
-		public async Task<Product?> GetProductByIdAsync(Guid id)
+		public async Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
 		{
-			return await _dbContext.Products.Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id);
+			return await _dbContext.Products.Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 		}
 
-		public async Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id)
+		public async Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id, CancellationToken cancellationToken)
 		{
-			return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+			return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 		}
 	}
 }

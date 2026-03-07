@@ -40,7 +40,7 @@ namespace Ecom.Application.Services
 			await _cacheService.RemoveByPrefixAsync("products:");
 			_logger.LogInformation("Products cache invalidated. Reason: {Reason}", reason);
 		}
-		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto)
+		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto, CancellationToken cancellationToken)
 		{
 			if (requestAddProductDto == null)
 			{
@@ -61,8 +61,8 @@ namespace Ecom.Application.Services
 			//أي فلوس تدخل الدومين لازم تعدّي على Money.From عشان أتأكد إنها فلوس صح، مش رقم وخلاص
 			//_logger.LogInformation("going inside Repo"); 
 			#endregion
-			await _productRepository.AddProductAsync(product);
-			await _unitOfWork.SaveChangesAsync();
+			await _productRepository.AddProductAsync(product, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Product Added");
 
 			_logger.LogInformation("Product created successfully with Id={ProductId}", product.Id);
@@ -70,7 +70,7 @@ namespace Ecom.Application.Services
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt
 				, Description= product.Description, ImageUrl= product.ImageUrl, IsAvailable= product.IsAvailable, IsInStock= product.IsInStock };
 		}
-		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams)
+		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken)
 		{
 			#region Paging vars
 			int maxAllowed = 50;
@@ -192,9 +192,9 @@ namespace Ecom.Application.Services
 			 sortOrder=sortOrder,
 			};
 
-			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(productQueryOptions);
+			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(productQueryOptions, cancellationToken);
 
-			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(productQueryOptions);
+			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(productQueryOptions, cancellationToken);
 
 			_logger.LogInformation("Fetched {Count} products from database", products.Count);
 
@@ -215,7 +215,7 @@ namespace Ecom.Application.Services
 
 			return pagedResult;
 		}	 
-		public async Task<ProductDto?> GetProductByIdAsync(Guid id)
+		public async Task<ProductDto?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
 		{
 			if (id == Guid.Empty)
 			{
@@ -243,7 +243,7 @@ namespace Ecom.Application.Services
 				"Cache MISS for product. ProductId={ProductId}. Fetching from database",
 				id);
 
-			Product? product = await _productRepository.GetProductByIdAsync(id);
+			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product == null)
 			{
 				//throw new ArgumentException("there is no product with this id"); 
@@ -276,7 +276,7 @@ namespace Ecom.Application.Services
 			return productdto;
 
 		}
-		public async Task<ProductDto?> UpdateProductAsync(Guid id, RequestUpdateProductDto requestupdateProductDto)
+		public async Task<ProductDto?> UpdateProductAsync(Guid id, RequestUpdateProductDto requestupdateProductDto, CancellationToken cancellationToken)
 		{
 
 			if (id==Guid.Empty)
@@ -295,7 +295,7 @@ namespace Ecom.Application.Services
 			_logger.LogInformation(
 			"Starting UpdateProduct operation. ProductId={ProductId}", id);
 
-			Product? product = await _productRepository.GetProductByIdAsync(id);
+			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 
 			#region Values Checks
 			if (product == null)
@@ -321,7 +321,7 @@ namespace Ecom.Application.Services
 			} 
 			#endregion
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Product Updated");
 
 			_logger.LogInformation(
@@ -330,7 +330,7 @@ namespace Ecom.Application.Services
 			return new ProductDto() { Id= product.Id, Name= product.Name ,Price= product.Price.Amount, CreatedAt = product.CreatedAt , ImageUrl= product.ImageUrl , Description= product.Description, IsAvailable = product.IsAvailable, IsInStock = product.IsInStock };
 
 		}
-		public async Task<bool> DeleteProductAsync(Guid id)
+		public async Task<bool> DeleteProductAsync(Guid id, CancellationToken cancellationToken)
 		{
 			if (id==Guid.Empty)
 			{
@@ -341,7 +341,7 @@ namespace Ecom.Application.Services
 			_logger.LogInformation(
 			"Starting DeleteProduct operation. ProductId={ProductId}", id);
 
-			Product? product = await _productRepository.GetProductByIdAsync(id);
+			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product==null)
 			{
 				_logger.LogWarning("Product not found for deletion. ProductId={ProductId}", id);
@@ -354,7 +354,7 @@ namespace Ecom.Application.Services
 				product.Id, product.Name);
 
 			product.SoftDelete();
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 			await InvalidateProductsCacheAsync("Product Soft Deleted");
 
@@ -362,7 +362,7 @@ namespace Ecom.Application.Services
 
 			return true;
 		}
-		public async Task IncreaseStockAsync(Guid id,UpdateStockDto dto)
+		public async Task IncreaseStockAsync(Guid id,UpdateStockDto dto, CancellationToken cancellationToken)
 		{
 			if (id == Guid.Empty)
 			{
@@ -370,20 +370,20 @@ namespace Ecom.Application.Services
 			}
 			_logger.LogInformation(	"Starting IncreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
 			id, dto.Quantity);
-			Product? product = await _productRepository.GetProductByIdAsync(id);
+			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product==null)
 			{
 				_logger.LogWarning("Product not found for Increase stock. ProductId={ProductId}", id);
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
 			product.IncreaseStock(dto.Quantity);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Product Stock Increase");
 			_logger.LogInformation(	"Stock increased successfully. ProductId={ProductId}, NewStock={Stock}",
 				product.Id, product.StockQuantity);
 			return;
 		}
-		public async Task DecreaseStockAsync(Guid id, UpdateStockDto dto)
+		public async Task DecreaseStockAsync(Guid id, UpdateStockDto dto, CancellationToken cancellationToken)
 		{
 			if (id == Guid.Empty)
 			{
@@ -391,20 +391,20 @@ namespace Ecom.Application.Services
 			}
 			_logger.LogInformation("Starting DecreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
 			id, dto.Quantity);
-			Product? product = await _productRepository.GetProductByIdAsync(id);
+			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product == null)
 			{
 				_logger.LogWarning("Product not found for Decrease stock. ProductId={ProductId}", id);
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
 			product.DecreaseStock(dto.Quantity);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Product Stock Decrease");
 			_logger.LogInformation("Stock decreased successfully. ProductId={ProductId}, NewStock={Stock}",
 			product.Id, product.StockQuantity);
 			return;
 		}
-		public async Task ToggleAvailabilityAsync(Guid id, ToggleAvailabilityDto dto)
+		public async Task ToggleAvailabilityAsync(Guid id, ToggleAvailabilityDto dto, CancellationToken cancellationToken)
 		{
 			if (id == Guid.Empty)
 			{
@@ -412,7 +412,7 @@ namespace Ecom.Application.Services
 			}
 			_logger.LogInformation("Starting ToggleAvailability operation. ProductId={ProductId}, RequestedAvailability={Availability}",
 			id, dto.Available);
-			Product? product = await _productRepository.GetProductByIdAsync(id);
+			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product == null)
 			{
 				_logger.LogWarning("Product not found for Toggle Availability. ProductId={ProductId}", id);
@@ -432,20 +432,20 @@ namespace Ecom.Application.Services
 				product.MakeUnavailable();
 
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Toggle Product Availability");
 			_logger.LogInformation("Product availability updated successfully. ProductId={ProductId}, NewAvailability={Availability}",
 			product.Id, product.IsAvailable);
 			return;
 		}
-		public async Task RestoreProductAsync(Guid id)
+		public async Task RestoreProductAsync(Guid id, CancellationToken cancellationToken)
 		{
 			if (id == Guid.Empty)
 			{
 				throw new ArgumentException("Id cannot be empty.");
 			}
 			_logger.LogInformation(	"Starting RestoreProduct operation. ProductId={ProductId}",	id);
-			Product? product = await _productRepository.GetProductByIdIncludingDeletedAsync(id);
+			Product? product = await _productRepository.GetProductByIdIncludingDeletedAsync(id, cancellationToken);
 			if (product == null)
 			{
 				_logger.LogWarning("Product not found for Restore. ProductId={ProductId}", id);
@@ -457,7 +457,7 @@ namespace Ecom.Application.Services
 				return;
 			}
 			product.Restore();
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Restore Product");
 			_logger.LogInformation(	"Product restored successfully. ProductId={ProductId}",	product.Id);
 			return;

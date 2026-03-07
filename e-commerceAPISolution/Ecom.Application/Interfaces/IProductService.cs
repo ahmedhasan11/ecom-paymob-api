@@ -12,21 +12,21 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IProductService
 	{
-		Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto);
+		Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto, CancellationToken cancellationToken);
 
-		Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams);
+		Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken);
 
-		Task<ProductDto?> GetProductByIdAsync(Guid id);
+		Task<ProductDto?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
 
-		Task<ProductDto?> UpdateProductAsync(Guid id ,RequestUpdateProductDto requestupdateProductDto );
+		Task<ProductDto?> UpdateProductAsync(Guid id ,RequestUpdateProductDto requestupdateProductDto, CancellationToken cancellationToken);
 
-		Task<bool> DeleteProductAsync(Guid id);
+		Task<bool> DeleteProductAsync(Guid id, CancellationToken cancellationToken);
 
-		Task IncreaseStockAsync(Guid id, UpdateStockDto dto);
-		Task DecreaseStockAsync(Guid id, UpdateStockDto dto);
+		Task IncreaseStockAsync(Guid id, UpdateStockDto dto, CancellationToken cancellationToken);
+		Task DecreaseStockAsync(Guid id, UpdateStockDto dto, CancellationToken cancellationToken);
 
-		Task ToggleAvailabilityAsync(Guid id, ToggleAvailabilityDto dto);
+		Task ToggleAvailabilityAsync(Guid id, ToggleAvailabilityDto dto, CancellationToken cancellationToken);
 
-		Task RestoreProductAsync(Guid id);
+		Task RestoreProductAsync(Guid id, CancellationToken cancellationToken);
 	}
 }

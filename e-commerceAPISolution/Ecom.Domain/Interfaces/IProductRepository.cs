@@ -10,13 +10,13 @@ namespace Ecom.Domain.Interfaces
 {
 	public interface IProductRepository
 	{
-		Task AddProductAsync(Product product); //we didnt return the product because this is add thing in repo ,return in Service
+		Task AddProductAsync(Product product, CancellationToken cancellationToken); //we didnt return the product because this is add thing in repo ,return in Service
 
-		Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions); 
+		Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken); 
 
-		Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions);
+		Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken);
 
-		Task<Product?> GetProductByIdAsync(Guid id);//we returned because its a read things so its normal to return
-		Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id); //to make the soft delete thing 
+		Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);//we returned because its a read things so its normal to return
+		Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id, CancellationToken cancellationToken); //to make the soft delete thing 
 	}
 }
