@@ -18,13 +18,13 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			_db= db;
 		}
-		public async Task AddOrderAsync(Order order)
+		public async Task AddOrderAsync(Order order, CancellationToken cancellationToken)
 		{
-			await _db.Orders.AddAsync(order);
+			await _db.Orders.AddAsync(order, cancellationToken);
 		}
-		public async Task<Order?> GetOrderByIdAsync(Guid orderId)
+		public async Task<Order?> GetOrderByIdAsync(Guid orderId, CancellationToken cancellationToken)
 		{
-			return await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+			return await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
 		}
 		public IQueryable<Order> GetUserOrdersQuery(Guid userId)
 		{

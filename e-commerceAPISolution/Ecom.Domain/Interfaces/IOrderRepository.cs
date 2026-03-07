@@ -10,8 +10,8 @@ namespace Ecom.Domain.Interfaces
 {
 	public interface IOrderRepository
 	{
-		Task AddOrderAsync(Order order);
-		Task<Order?> GetOrderByIdAsync(Guid orderId); // for changing order status , you dont need to return OrderItems 
+		Task AddOrderAsync(Order order, CancellationToken cancellationToken);
+		Task<Order?> GetOrderByIdAsync(Guid orderId, CancellationToken cancellationToken); // for changing order status , you dont need to return OrderItems 
 		IQueryable<Order> GetUserOrdersQuery(Guid userId);
 		IQueryable<Order> GetOrderDetailsQuery(Guid userId, Guid orderId);
 	}

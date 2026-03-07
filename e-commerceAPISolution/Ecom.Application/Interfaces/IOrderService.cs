@@ -10,8 +10,8 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IOrderService
 	{
-		Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto);
-		Task<PagedResult<OrderResult>> GetUserOrdersSummaryAsync(Guid userId, OrdersPaginationOptions paginationOptions);
-		Task<OrderDetailsResult> GetOrderDetails(Guid userId, Guid orderId);
+		Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto, CancellationToken cancellationToken);
+		Task<PagedResult<OrderResult>> GetUserOrdersSummaryAsync(Guid userId, OrdersPaginationOptions paginationOptions, CancellationToken cancellationToken);
+		Task<OrderDetailsResult> GetOrderDetails(Guid userId, Guid orderId, CancellationToken cancellationToken);
 	}
 }

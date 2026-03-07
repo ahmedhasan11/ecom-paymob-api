@@ -25,13 +25,13 @@ namespace Ecom.Application.Services
 			_unitOfWork = unitOfWork;
 		}
 
-		public async Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto)
+		public async Task<OrderResult> UpdateOrderStatusAsync(Guid orderId, OrderStatusRequestDto dto, CancellationToken cancellationToken)
 		{
 			if (orderId==Guid.Empty)
 			{
 				throw new ArgumentException("OrderId cannot be empty", nameof(orderId));
 			}
-			Order? order = await _orderRepository.GetOrderByIdAsync(orderId);
+			Order? order = await _orderRepository.GetOrderByIdAsync(orderId,cancellationToken);
 			if (order==null)
 			{
 				throw new NotFoundException("order with this id not found");
@@ -52,10 +52,10 @@ namespace Ecom.Application.Services
 			{
 				throw new ArgumentException("Invalid order status");
 			}
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			return new OrderResult {OrderId=orderId, Status=order.Status , Total= order.TotalAmount, CreatedAt= order.CreatedAt};
 		}
-		public async Task<PagedResult<OrderResult>> GetUserOrdersSummaryAsync(Guid userId, OrdersPaginationOptions paginationOptions)
+		public async Task<PagedResult<OrderResult>> GetUserOrdersSummaryAsync(Guid userId, OrdersPaginationOptions paginationOptions, CancellationToken cancellationToken)
 		{
 			if (userId==Guid.Empty) 
 			{
@@ -63,7 +63,7 @@ namespace Ecom.Application.Services
 			}
 			var query = _orderRepository.GetUserOrdersQuery(userId).AsNoTracking();
 
-			var totalCount = await query.CountAsync();
+			var totalCount = await query.CountAsync(cancellationToken);
 
 			IReadOnlyList<OrderResult> orders = await query.OrderByDescending(o=>o.CreatedAt).Skip((paginationOptions.PageNumber - 1) * paginationOptions.PageSize)
 				.Take(paginationOptions.PageSize)
@@ -73,7 +73,7 @@ namespace Ecom.Application.Services
 				Status = o.Status,
 				Total = o.TotalAmount,
 				CreatedAt = o.CreatedAt,
-			}).ToListAsync();
+			}).ToListAsync(cancellationToken);
 
 
 			var pagedOrders = new PagedResult<OrderResult>
@@ -87,7 +87,7 @@ namespace Ecom.Application.Services
 			return pagedOrders;
 		}
 
-		public async Task<OrderDetailsResult> GetOrderDetails(Guid userId , Guid orderId)
+		public async Task<OrderDetailsResult> GetOrderDetails(Guid userId , Guid orderId, CancellationToken cancellationToken)
 		{
 			if (userId==Guid.Empty)
 			{
@@ -121,7 +121,7 @@ namespace Ecom.Application.Services
 				 Quantity=oi.Quantity,
 				 UnitPrice=oi.UnitPrice,
 			  }).ToList()		  
-			}).FirstOrDefaultAsync();
+			}).FirstOrDefaultAsync(cancellationToken);
 
 			if (order==null)
 			{

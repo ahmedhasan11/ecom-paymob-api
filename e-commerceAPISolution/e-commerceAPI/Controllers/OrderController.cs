@@ -17,30 +17,30 @@ namespace e_commerceAPI.Controllers
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{orderId}/status")]
-		public async Task<ActionResult<OrderResult>> UpdateOrderStatus(Guid orderId,OrderStatusRequestDto dto)
+		public async Task<ActionResult<OrderResult>> UpdateOrderStatus(Guid orderId,OrderStatusRequestDto dto,CancellationToken cancellationToken)
 		{
 			if (orderId==Guid.Empty)
 			{
 				return BadRequest("Order Id cannot be empty.");
 			}
-			OrderResult result = await _orderService.UpdateOrderStatusAsync(orderId, dto);
+			OrderResult result = await _orderService.UpdateOrderStatusAsync(orderId, dto,cancellationToken);
 			return Ok(result);
 		}
 
 		[HttpGet("my")]
-		public async Task<ActionResult<List<OrderResult>>> GetUserOrders(OrdersPaginationOptions dtoOptions)
+		public async Task<ActionResult<PagedResult<OrderResult>>> GetUserOrders(OrdersPaginationOptions dtoOptions, CancellationToken cancellationToken)
 		{
 			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if (!Guid.TryParse(id, out var userId))
 			{
 				return Unauthorized();
 			}
-			var orders= await _orderService.GetUserOrdersSummaryAsync(userId, dtoOptions);
+			var orders= await _orderService.GetUserOrdersSummaryAsync(userId, dtoOptions, cancellationToken);
 			return Ok(orders);
 		}
 
 		[HttpGet("{orderId}")]
-		public async Task<ActionResult<OrderDetailsResult>> GetOrderDetails(Guid orderId)
+		public async Task<ActionResult<OrderDetailsResult>> GetOrderDetails(Guid orderId, CancellationToken cancellationToken)
 		{
 			if (orderId==Guid.Empty)
 			{
@@ -51,7 +51,7 @@ namespace e_commerceAPI.Controllers
 			{
 				return Unauthorized();
 			}
-			var order = await _orderService.GetOrderDetails(userId, orderId);
+			var order = await _orderService.GetOrderDetails(userId, orderId, cancellationToken);
 			return Ok(order);
 
 		}
