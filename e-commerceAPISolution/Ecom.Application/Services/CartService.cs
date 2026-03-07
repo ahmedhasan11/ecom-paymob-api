@@ -27,7 +27,7 @@ namespace Ecom.Application.Services
 			_productRepository=productRepository;
 			_unitOfWork=unitOfWork;
 		}
-		public async Task<CartResultDto> GetMyCartAsync(Guid userId)
+		public async Task<CartResultDto> GetMyCartAsync(Guid userId, CancellationToken cancellationToken)
 		{
 			if (userId==Guid.Empty)
 			{
@@ -52,7 +52,7 @@ namespace Ecom.Application.Services
 					 AvailableStock =(!ci.Product.IsDeleted && ci.Product.IsAvailable)? ci.Product.StockQuantity: 0,
 					 IsAvailable = (ci.Product.IsAvailable&& !ci.Product.IsDeleted && ci.Product.StockQuantity>0 && ci.Product.StockQuantity >= ci.Quantity)
 				}).ToList()			
-			}).FirstOrDefaultAsync();
+			}).FirstOrDefaultAsync(cancellationToken);
 
 			if (cart==null)
 			{
@@ -62,25 +62,25 @@ namespace Ecom.Application.Services
 			return cart;
 		}
 
-		public async Task<CartResultDto> AddItemToCartAsync(Guid userId , RequestAddToCartDto dto)
+		public async Task<CartResultDto> AddItemToCartAsync(Guid userId , RequestAddToCartDto dto, CancellationToken cancellationToken)
 		{
 			if (userId == Guid.Empty)
 				throw new ArgumentException("Invalid userId.", nameof(userId));
 			if (dto.Quantity <= 0)
 				throw new ArgumentException("Quantity must be greater than zero.");
-			Product? product =await _productRepository.GetProductByIdAsync(dto.ProductId);
+			Product? product =await _productRepository.GetProductByIdAsync(dto.ProductId, cancellationToken);
 
 			if (product is null)
 				throw new NotFoundException("Product not found.");
 			if (product.IsDeleted || !product.IsAvailable)
 				throw new InvalidOperationException("Product is not available.");
 
-			Cart? cart = await _cartRepository.GetMyCartAsync(userId);
+			Cart? cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			
 			if (cart is null)
 			{
 				cart = new Cart(userId);
-				await _cartRepository.AddCartAsync(cart);
+				await _cartRepository.AddCartAsync(cart, cancellationToken);
 			}
 			var existingQuantity= cart.CartItems.Where(x=>x.ProductId==product.Id).Select(x=>x.Quantity).FirstOrDefault();
 
@@ -93,11 +93,11 @@ namespace Ecom.Application.Services
 
 
 			cart.AddItem(product.Id, dto.Quantity);
-			await _unitOfWork.SaveChangesAsync();
-			return await GetMyCartAsync(userId);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			return await GetMyCartAsync(userId, cancellationToken);
 		}
 
-		public async Task<CartResultDto> RemoveItemFromCartAsync(Guid userId, Guid productId)
+		public async Task<CartResultDto> RemoveItemFromCartAsync(Guid userId, Guid productId, CancellationToken cancellationToken)
 		{
 			if (userId==Guid.Empty)
 			{
@@ -108,18 +108,18 @@ namespace Ecom.Application.Services
 				throw new ArgumentException(nameof(productId));
 			}
 
-			var cart = await _cartRepository.GetMyCartAsync(userId);
+			var cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			if (cart is null)
 			{
 				return new CartResultDto();
 			}
 			cart.RemoveItem(productId);
-			await _unitOfWork.SaveChangesAsync();
-			return await GetMyCartAsync(userId);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			return await GetMyCartAsync(userId, cancellationToken);
 
 		}
 
-		public async Task<CartResultDto> UpdateCartItemQuantityAsync(Guid userId, Guid productId, UpdateCartItemQuantityDto dto)
+		public async Task<CartResultDto> UpdateCartItemQuantityAsync(Guid userId, Guid productId, UpdateCartItemQuantityDto dto, CancellationToken cancellationToken)
 		{
 			if (userId == Guid.Empty)
 			{
@@ -133,7 +133,7 @@ namespace Ecom.Application.Services
 			{
 				throw new ArgumentException(nameof(dto.Quantity));
 			}
-			var product = await _productRepository.GetProductByIdAsync(productId);
+			var product = await _productRepository.GetProductByIdAsync(productId, cancellationToken);
 			if (product is null)
 				throw new NotFoundException("Product not found.");
 			if (product.IsDeleted || !product.IsAvailable)
@@ -146,31 +146,31 @@ namespace Ecom.Application.Services
 
 				throw new InvalidOperationException("Requested quantity exceeds available stock.");
 			}
-			var cart = await _cartRepository.GetMyCartAsync(userId);
+			var cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			if (cart is null)
 			{
 				throw new NotFoundException("Cart not found.");
 			}
 
 			cart.UpdateQuantity(productId, dto.Quantity);
-			await _unitOfWork.SaveChangesAsync();
-			return await GetMyCartAsync(userId);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			return await GetMyCartAsync(userId, cancellationToken);
 
 		}
 
-		public async Task ClearCartAsync(Guid userId)
+		public async Task ClearCartAsync(Guid userId, CancellationToken cancellationToken)
 		{
 			if (userId==Guid.Empty)
 			{
 				throw new ArgumentException("Invalid userId.", nameof(userId));
 			}
-			var cart = await _cartRepository.GetMyCartAsync(userId);
+			var cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			if (cart is null)
 			{
 				return;
 			}
 			cart.ClearCart();
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 	}
 }
