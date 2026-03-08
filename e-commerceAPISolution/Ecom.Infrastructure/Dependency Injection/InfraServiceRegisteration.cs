@@ -50,6 +50,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IProductRepository, ProductRepository>();
 			services.AddScoped<ICartRepository, CartRepository>();
+			services.AddScoped<IOrderRepository, OrderRepository>();
 			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();

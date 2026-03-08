@@ -17,73 +17,73 @@ namespace e_commerceAPI.Controllers
 
 		[AllowAnonymous]
 		[HttpGet("{id}")]
-		public async Task<ActionResult<ProductDto>> GetProductById(Guid id)
+		public async Task<ActionResult<ProductDto>> GetProductById(Guid id, CancellationToken cancellationToken)
 		{
-			ProductDto? productDto = await _productservice.GetProductByIdAsync(id);
+			ProductDto? productDto = await _productservice.GetProductByIdAsync(id, cancellationToken);
 			return Ok(productDto);
 		}
 
 		[AllowAnonymous]
 		[HttpGet]
-		public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery]ProductQueryParams productQueryParams)
+		public async Task<ActionResult<PagedResult<ProductsSummaryDto>>> GetProducts([FromQuery]ProductQueryParams productQueryParams, CancellationToken cancellationToken)
 		{
-			PagedResult<ProductDto> pagedResult = await _productservice.GetProductsAsync(productQueryParams);
+			PagedResult<ProductsSummaryDto> pagedResult = await _productservice.GetProductsSummaryAsync(productQueryParams, cancellationToken);
 			return Ok(pagedResult);
 		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPost]
-		public async Task<ActionResult<ProductDto>> AddProduct(RequestAddProductDto requestAddProductDto)
+		public async Task<ActionResult<ProductDto>> AddProduct(RequestAddProductDto requestAddProductDto, CancellationToken cancellationToken)
 		{
-			ProductDto productDto = await _productservice.AddProductAsync(requestAddProductDto);
+			ProductDto productDto = await _productservice.AddProductAsync(requestAddProductDto, cancellationToken);
 			return CreatedAtAction(nameof(GetProductById), new { id= productDto.Id}, productDto);
 		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{id}")]
-		public async Task<ActionResult<ProductDto>> UpdateProduct(Guid id , RequestUpdateProductDto requestUpdateProductDto)
+		public async Task<ActionResult<ProductDto>> UpdateProduct(Guid id , RequestUpdateProductDto requestUpdateProductDto, CancellationToken cancellationToken)
 		{
-			ProductDto? productDto = await _productservice.UpdateProductAsync(id, requestUpdateProductDto);
+			ProductDto? productDto = await _productservice.UpdateProductAsync(id, requestUpdateProductDto, cancellationToken);
 			return Ok(productDto);
 		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteProduct(Guid id )
+		public async Task<IActionResult> DeleteProduct(Guid id, CancellationToken cancellationToken)
 		{
-			await _productservice.DeleteProductAsync(id);
+			await _productservice.DeleteProductAsync(id, cancellationToken);
 			return NoContent();
 		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{id}/stock/increase")]
-		public async Task<IActionResult> IncreaseStock(Guid id,UpdateStockDto dto)
+		public async Task<IActionResult> IncreaseStock(Guid id,UpdateStockDto dto, CancellationToken cancellationToken)
 		{
-			await _productservice.IncreaseStockAsync(id,dto);
+			await _productservice.IncreaseStockAsync(id,dto, cancellationToken);
 			return NoContent();
 		}
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{id}/stock/decrease")]
-		public async Task<IActionResult> DecreaseStock(Guid id, UpdateStockDto dto)
+		public async Task<IActionResult> DecreaseStock(Guid id, UpdateStockDto dto, CancellationToken cancellationToken)
 		{
-			await _productservice.DecreaseStockAsync(id,dto);
+			await _productservice.DecreaseStockAsync(id,dto, cancellationToken);
 			return NoContent();
 		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{id}/availability")]
-		public async Task<IActionResult> ToggleAvailability(Guid id, ToggleAvailabilityDto dto)
+		public async Task<IActionResult> ToggleAvailability(Guid id, ToggleAvailabilityDto dto, CancellationToken cancellationToken)
 		{
 
-			await _productservice.ToggleAvailabilityAsync(id,dto);
+			await _productservice.ToggleAvailabilityAsync(id,dto, cancellationToken);
 			return NoContent();
 		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{id}/restore")]
-		public async Task<IActionResult> RestoreProduct(Guid id)
+		public async Task<IActionResult> RestoreProduct(Guid id, CancellationToken cancellationToken)
 		{
-			await _productservice.RestoreProductAsync(id);
+			await _productservice.RestoreProductAsync(id, cancellationToken);
 			return NoContent();
 		}
 	}

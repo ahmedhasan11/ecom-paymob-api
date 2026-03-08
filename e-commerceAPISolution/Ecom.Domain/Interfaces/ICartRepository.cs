@@ -10,7 +10,7 @@ namespace Ecom.Domain.Interfaces
 	public interface ICartRepository
 	{
 		IQueryable<Cart> GetCartQuery(Guid userId);
-		Task<Cart?> GetMyCartAsync(Guid userId);
-		Task AddCartAsync(Cart cart);
+		Task<Cart?> GetMyCartAsync(Guid userId, CancellationToken cancellationToken);
+		Task AddCartAsync(Cart cart, CancellationToken cancellationToken);
 	}
 }

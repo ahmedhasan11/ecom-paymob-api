@@ -18,19 +18,19 @@ namespace e_commerceAPI.Controllers
 			_cartService = cartService;
 		}
 		[HttpGet]
-		public async Task<ActionResult<CartResultDto>> GetCart()
+		public async Task<ActionResult<CartResultDto>> GetCart( CancellationToken cancellationToken)
 		{
 			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if (!Guid.TryParse(Id, out var userId))
 			{
 				return Unauthorized();
 			}
-			CartResultDto cart = await _cartService.GetMyCartAsync(userId);
+			CartResultDto cart = await _cartService.GetMyCartAsync(userId, cancellationToken);
 			return Ok(cart);
 		}
 
 		[HttpPost("items/add")]
-		public async Task<ActionResult<CartResultDto>> AddItemToCart(RequestAddToCartDto dto)
+		public async Task<ActionResult<CartResultDto>> AddItemToCart(RequestAddToCartDto dto, CancellationToken cancellationToken)
 		{
 			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if (!Guid.TryParse(Id, out var userId))
@@ -38,13 +38,13 @@ namespace e_commerceAPI.Controllers
 				return Unauthorized();
 			}
 
-			CartResultDto cart = await _cartService.AddItemToCartAsync(userId, dto);
+			CartResultDto cart = await _cartService.AddItemToCartAsync(userId, dto,cancellationToken);
 
 			return Ok(cart);
 		}
 
 		[HttpDelete("items/{productId}")]
-		public async Task<ActionResult<CartResultDto>> RemoveItemFromCart(Guid productId)
+		public async Task<ActionResult<CartResultDto>> RemoveItemFromCart(Guid productId, CancellationToken cancellationToken)
 		{
 			if (productId==Guid.Empty)
 			{
@@ -55,11 +55,11 @@ namespace e_commerceAPI.Controllers
 			{
 				return Unauthorized();
 			}
-			CartResultDto cart = await _cartService.RemoveItemFromCartAsync(userId,productId );
+			CartResultDto cart = await _cartService.RemoveItemFromCartAsync(userId,productId,cancellationToken );
 			return Ok(cart);
 		}
 		[HttpPatch("items/{productId}")]
-		public async Task<ActionResult<CartResultDto>> UpdateCartItemQuantity(Guid productId, UpdateCartItemQuantityDto dto)
+		public async Task<ActionResult<CartResultDto>> UpdateCartItemQuantity(Guid productId, UpdateCartItemQuantityDto dto, CancellationToken cancellationToken)
 		{
 			if (productId == Guid.Empty)
 			{
@@ -75,19 +75,19 @@ namespace e_commerceAPI.Controllers
 				return Unauthorized();
 			}
 
-			CartResultDto cart = await _cartService.UpdateCartItemQuantityAsync(userId, productId, dto);
+			CartResultDto cart = await _cartService.UpdateCartItemQuantityAsync(userId, productId, dto,cancellationToken);
 			return Ok(cart);
 		}
 
 		[HttpDelete("items")]
-		public async Task<IActionResult> ClearCart()
+		public async Task<IActionResult> ClearCart(CancellationToken cancellationToken)
 		{
 			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if(!Guid.TryParse(id, out var userId))
 			{
 				return Unauthorized();
 			}
-			await _cartService.ClearCartAsync(userId);
+			await _cartService.ClearCartAsync(userId, cancellationToken);
 			return NoContent();
 		}
 	}
