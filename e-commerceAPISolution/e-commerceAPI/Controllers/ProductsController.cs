@@ -25,9 +25,9 @@ namespace e_commerceAPI.Controllers
 
 		[AllowAnonymous]
 		[HttpGet]
-		public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery]ProductQueryParams productQueryParams, CancellationToken cancellationToken)
+		public async Task<ActionResult<PagedResult<ProductsSummaryDto>>> GetProducts([FromQuery]ProductQueryParams productQueryParams, CancellationToken cancellationToken)
 		{
-			PagedResult<ProductDto> pagedResult = await _productservice.GetProductsAsync(productQueryParams, cancellationToken);
+			PagedResult<ProductsSummaryDto> pagedResult = await _productservice.GetProductsSummaryAsync(productQueryParams, cancellationToken);
 			return Ok(pagedResult);
 		}
 

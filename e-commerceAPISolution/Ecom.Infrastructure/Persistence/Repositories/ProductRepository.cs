@@ -44,62 +44,62 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 				.AddAsync(product, cancellationToken);
 			 //await _dbContext.SaveChangesAsync();
 		}
-		public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken)
-		{
+		//public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken)
+		//{
 
-			var query = _dbContext.Products.AsQueryable();
-			query = ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
+		//	var query = _dbContext.Products.AsQueryable();
+		//	query = ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
 
-			switch (productQueryOptions.sortBy)
-			{
-				case "price":
-					if (productQueryOptions.sortOrder == "asc")
-					{
-						 query = query.OrderBy(p => p.Price.Amount);
-					}
-					else
-					{ 
-						query= query.OrderByDescending(p => p.Price.Amount);
-					}
+		//	switch (productQueryOptions.sortBy)
+		//	{
+		//		case "price":
+		//			if (productQueryOptions.sortOrder == "asc")
+		//			{
+		//				 query = query.OrderBy(p => p.Price.Amount);
+		//			}
+		//			else
+		//			{ 
+		//				query= query.OrderByDescending(p => p.Price.Amount);
+		//			}
 
-					break;
+		//			break;
 
-				case "name":
-					if (productQueryOptions.sortOrder == "asc")
-					{
-						 query= query.OrderBy(p => p.Name);
-					}
-					else
-					{
-						query= query.OrderByDescending(p => p.Name);
-					}
-					break;
+		//		case "name":
+		//			if (productQueryOptions.sortOrder == "asc")
+		//			{
+		//				 query= query.OrderBy(p => p.Name);
+		//			}
+		//			else
+		//			{
+		//				query= query.OrderByDescending(p => p.Name);
+		//			}
+		//			break;
 
-				case "createdat":
-					if (productQueryOptions.sortOrder == "asc")
-					{
-						query= query.OrderBy(p => p.CreatedAt);
-					}
-					else
-					{
-						query= query.OrderByDescending(p => p.CreatedAt);
-					}
-					break;
+		//		case "createdat":
+		//			if (productQueryOptions.sortOrder == "asc")
+		//			{
+		//				query= query.OrderBy(p => p.CreatedAt);
+		//			}
+		//			else
+		//			{
+		//				query= query.OrderByDescending(p => p.CreatedAt);
+		//			}
+		//			break;
 
-				default:
-					if (productQueryOptions.sortOrder == "asc")
-					{
-						query = query.OrderBy(p => p.CreatedAt);
-					}
-					else
-					{
-						query = query.OrderByDescending(p => p.CreatedAt);
-					}
-					break;				
-			}
+		//		default:
+		//			if (productQueryOptions.sortOrder == "asc")
+		//			{
+		//				query = query.OrderBy(p => p.CreatedAt);
+		//			}
+		//			else
+		//			{
+		//				query = query.OrderByDescending(p => p.CreatedAt);
+		//			}
+		//			break;				
+		//	}
 
-			return await query.Where(product => !product.IsDeleted).Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync(cancellationToken);
-		}
+		//	return await query.Where(product => !product.IsDeleted).Skip((productQueryOptions.pageNumber - 1) * productQueryOptions.pageSize).Take(productQueryOptions.pageSize).ToListAsync(cancellationToken);
+		//}
 		public async Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken)
 		{
 			var query = _dbContext.Products.AsQueryable();
@@ -108,12 +108,19 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		}
 		public async Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
 		{
-			return await _dbContext.Products.Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+			return await _dbContext.Products.AsNoTracking().Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 		}
 
 		public async Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id, CancellationToken cancellationToken)
 		{
 			return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+		}
+
+		public IQueryable<Product> GetProductsSummaryAsync(ProductQueryOptions productQueryOptions)
+		{
+			var query = _dbContext.Products.AsQueryable();
+			query =ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
+			return query.Where(product => !product.IsDeleted);
 		}
 	}
 }

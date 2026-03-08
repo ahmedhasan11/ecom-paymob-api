@@ -12,7 +12,9 @@ namespace Ecom.Domain.Interfaces
 	{
 		Task AddProductAsync(Product product, CancellationToken cancellationToken); //we didnt return the product because this is add thing in repo ,return in Service
 
-		Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken); 
+		//Task<IReadOnlyList<Product>> GetProductsAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken);
+
+		IQueryable<Product> GetProductsSummaryAsync(ProductQueryOptions productQueryOptions);
 
 		Task<int> GetTotalProductsCountAsync(ProductQueryOptions productQueryOptions, CancellationToken cancellationToken);
 

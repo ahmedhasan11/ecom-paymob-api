@@ -14,8 +14,9 @@ namespace Ecom.Application.Interfaces
 	{
 		Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto, CancellationToken cancellationToken);
 
-		Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken);
+		//Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken);
 
+		Task<PagedResult<ProductsSummaryDto>> GetProductsSummaryAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken);
 		Task<ProductDto?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
 
 		Task<ProductDto?> UpdateProductAsync(Guid id ,RequestUpdateProductDto requestupdateProductDto, CancellationToken cancellationToken);

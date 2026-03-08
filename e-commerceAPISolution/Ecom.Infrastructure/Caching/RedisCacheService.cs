@@ -13,18 +13,17 @@ namespace Ecom.Infrastructure.Caching
 {
 	public class RedisCacheService : ICacheService
 	{
-		private readonly IDatabase _db;
+		private readonly IDatabase? _db;
 		private readonly IMemoryCache _fallbackCache;
 		private readonly bool _redisAvailable;
 
 		public RedisCacheService(RedisConnectionFactory connectionFactory , IMemoryCache memoryCache)
 		{
-			_db = connectionFactory.GetDatabase();
-			_db.Ping();
 			_fallbackCache = memoryCache;
 			try
 			{
 				_db = connectionFactory.GetDatabase();
+				_db.Ping();
 				_redisAvailable = true;
 			}
 			catch
@@ -33,13 +32,13 @@ namespace Ecom.Infrastructure.Caching
 			}
 		}
 
-		public async Task<T?> GetAsync<T>(string key)
+		public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken)
 		{
 			if (_redisAvailable)
 			{
 				try
 				{
-					var value = await _db!.StringGetAsync(key);
+					var value = await _db!.StringGetAsync(key).WaitAsync(cancellationToken);
 					if (!value.HasValue) return default;
 
 					return JsonSerializer.Deserialize<T>(value!);
@@ -54,14 +53,14 @@ namespace Ecom.Infrastructure.Caching
 			return cached;
 		}
 
-		public async Task SetAsync<T>(string key , T value , TimeSpan expiry)
+		public async Task SetAsync<T>(string key , T value , TimeSpan expiry, CancellationToken cancellationToken)
 		{
 			if (_redisAvailable)
 			{
 				try
 				{
 					var json = JsonSerializer.Serialize(value);
-					await _db!.StringSetAsync(key, json, expiry);
+					await _db!.StringSetAsync(key, json, expiry).WaitAsync(cancellationToken);
 					return;
 				}
 				catch
@@ -73,13 +72,13 @@ namespace Ecom.Infrastructure.Caching
 			_fallbackCache.Set(key, value, expiry);
 		}
 
-		public async Task RemoveAsync(string key)
+		public async Task RemoveAsync(string key, CancellationToken cancellationToken)
 		{
 			if (_redisAvailable)
 			{
 				try
 				{
-					await _db!.KeyDeleteAsync(key);
+					await _db!.KeyDeleteAsync(key).WaitAsync(cancellationToken);
 					return;
 				}
 				catch
@@ -90,7 +89,7 @@ namespace Ecom.Infrastructure.Caching
 			_fallbackCache.Remove(key);
 		}
 
-		public  async Task RemoveByPrefixAsync(string prefix)
+		public  async Task RemoveByPrefixAsync(string prefix, CancellationToken cancellationToken)
 		{
 			if (_redisAvailable)
 			{
@@ -101,7 +100,7 @@ namespace Ecom.Infrastructure.Caching
 
 					foreach (var key in keys) 
 					{
-						await _db.KeyDeleteAsync(key);
+						await _db.KeyDeleteAsync(key).WaitAsync(cancellationToken);
 					}
 					return;
 				}

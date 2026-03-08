@@ -7,6 +7,7 @@ using Ecom.Domain.Common.Queries;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
 using Ecom.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,9 @@ namespace Ecom.Application.Services
 			_logger = logger;
 		}
 
-		private async Task InvalidateProductsCacheAsync(string reason)
+		private async Task InvalidateProductsCacheAsync(string reason,CancellationToken cancellationToken)
 		{
-			await _cacheService.RemoveByPrefixAsync("products:");
+			await _cacheService.RemoveByPrefixAsync("products:",cancellationToken);
 			_logger.LogInformation("Products cache invalidated. Reason: {Reason}", reason);
 		}
 		public async Task<ProductDto> AddProductAsync(RequestAddProductDto requestAddProductDto, CancellationToken cancellationToken)
@@ -63,46 +64,166 @@ namespace Ecom.Application.Services
 			#endregion
 			await _productRepository.AddProductAsync(product, cancellationToken);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await InvalidateProductsCacheAsync("Product Added");
+			await InvalidateProductsCacheAsync("Product Added", cancellationToken);
 
 			_logger.LogInformation("Product created successfully with Id={ProductId}", product.Id);
 
 			return new ProductDto() { Id = product.Id, Name = product.Name, Price = product.Price.Amount, CreatedAt = product.CreatedAt
 				, Description= product.Description, ImageUrl= product.ImageUrl, IsAvailable= product.IsAvailable, IsInStock= product.IsInStock };
 		}
-		public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken)
+
+		//public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken)
+		//{
+		//	#region Paging vars
+		//	int maxAllowed = 50;
+		//	int defaultpageSize = 10;
+		//	int pageNumber = productQueryParams.pageNumber;
+		//	int pageSize = productQueryParams.pageSize;
+		//	#endregion
+		//	#region Filtering vars
+		//	string? search = productQueryParams.search;
+		//	decimal? minPrice = productQueryParams.MinPrice;
+		//	decimal? maxPrice = productQueryParams.MaxPrice;
+		//	#endregion
+		//	#region Sorting vars
+		//	string? sortBy = productQueryParams.sortBy;
+		//	string? sortOrder = productQueryParams.sortOrder;
+		//	#endregion
+
+		//	#region Filtering Conditions
+		//	if (minPrice.HasValue && minPrice.Value < 0)
+		//	{
+		//		minPrice = null;
+		//	}
+		//	if (maxPrice.HasValue && maxPrice.Value < 0)
+		//	{
+		//		maxPrice = null;
+		//	}
+		//	if (minPrice.HasValue && maxPrice.HasValue && minPrice.Value > maxPrice.Value)
+		//	{
+		//		var temp = minPrice;
+		//		minPrice = maxPrice;
+		//		maxPrice = temp;
+		//	}
+		//	#endregion
+		//	#region Paging Conditions
+		//	if (pageNumber < 1)
+		//	{
+		//		//throw new ArgumentException("pageNumber or pageSize values are Invalid");
+		//		//pagination doesnt throw an exception its a show logic
+		//		pageNumber = 1;
+		//	}
+		//	if (pageSize > maxAllowed)
+		//	{
+		//		pageSize = maxAllowed;
+		//	}
+		//	if (pageSize < 1)
+		//	{
+		//		pageSize = defaultpageSize;
+		//	}
+		//	#endregion
+		//	#region Sorting Conditions
+		//	//SortBy
+		//	if (!string.IsNullOrWhiteSpace(sortBy))
+		//	{
+		//		sortBy = sortBy.ToLower();
+		//	}
+		//	switch (sortBy)
+		//	{
+		//		case "price":
+		//			break;
+		//		case "name":
+		//			break;
+		//		case "createdat":
+		//			break;
+		//		default:
+		//			sortBy = "createdat";
+		//			break;
+		//	}
+		//	//SortOrder
+		//	if (!string.IsNullOrWhiteSpace(sortOrder))
+		//	{
+		//		sortOrder = sortOrder.ToLower();
+		//	}
+		//	if (string.IsNullOrWhiteSpace(sortOrder))
+		//	{
+		//		if (sortBy == "createdat")
+		//		{
+		//			sortOrder = "desc";
+		//		}
+		//		else
+		//		{
+		//			sortOrder = "asc";
+		//		}
+
+		//	}
+		//	else if (sortOrder.Equals("desc"))
+		//	{
+		//		sortOrder = "desc";
+		//	}
+		//	else
+		//	{
+		//		sortOrder = "asc";
+		//	}
+		//	#endregion
+
+		//	_logger.LogInformation("Fetching products with filters: Search={Search}, MinPrice={Min}, MaxPrice={Max}, Page={Page}, Size={Size}, SortBy={SortBy}, SortOrder={SortOrder}",
+		//	search, minPrice, maxPrice, pageNumber, pageSize,sortBy,sortOrder);
+
+		//	#region Redis Caching
+		//	var key = $"products:search={search}" +
+		//$":min={minPrice}:max={maxPrice}:sort={sortBy}:order={sortOrder}:page={pageNumber}:size={pageSize}";
+
+		//	var cachedJson = await _cacheService.GetAsync<PagedResult<ProductDto>>(key, cancellationToken);
+		//	if (cachedJson != null)
+		//	{
+		//			_logger.LogInformation("Cache HIT for products list. Key={CacheKey}", key);
+		//			return cachedJson;
+				
+		//	}
+		//	#endregion
+		//	_logger.LogInformation("Cache MISS for products list. Key={CacheKey}. Fetching from database...", key);
+		//	ProductQueryOptions productQueryOptions = new ProductQueryOptions()
+		//	{
+		//	 search= search,
+		//	 minPrice= minPrice,
+		//	 maxPrice= maxPrice,
+		//	 pageNumber= pageNumber,
+		//	 pageSize= pageSize,
+		//	 sortBy=sortBy,
+		//	 sortOrder=sortOrder,
+		//	};
+
+		//	int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(productQueryOptions, cancellationToken);
+
+		//	IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(productQueryOptions, cancellationToken);
+
+		//	_logger.LogInformation("Fetched {Count} products from database", products.Count);
+
+		//	IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description, IsAvailable = p.IsAvailable, IsInStock = p.IsInStock }).ToList();
+
+		//	PagedResult<ProductDto> pagedResult = new PagedResult<ProductDto>() 
+		//	{
+		//		Items = productDtos,
+		//		PageNumber = pageNumber,
+		//		PageSize = pageSize,
+		//		TotalCount = TotalProductsCount,
+		//		TotalPages = (int)Math.Ceiling((double)TotalProductsCount / pageSize) 
+		//	};
+
+
+		//	await _cacheService.SetAsync(key, pagedResult, TimeSpan.FromMinutes(1), cancellationToken);
+		//	_logger.LogInformation("Products list cached successfully. Key={CacheKey}", key);
+
+		//	return pagedResult;
+		//}
+		public async Task<PagedResult<ProductsSummaryDto>> GetProductsSummaryAsync(ProductQueryParams productQueryParams, CancellationToken cancellationToken)
 		{
 			#region Paging vars
 			int maxAllowed = 50;
 			int defaultpageSize = 10;
 			int pageNumber = productQueryParams.pageNumber;
 			int pageSize = productQueryParams.pageSize;
-			#endregion
-			#region Filtering vars
-			string? search = productQueryParams.search;
-			decimal? minPrice = productQueryParams.MinPrice;
-			decimal? maxPrice = productQueryParams.MaxPrice;
-			#endregion
-			#region Sorting vars
-			string? sortBy = productQueryParams.sortBy;
-			string? sortOrder = productQueryParams.sortOrder;
-			#endregion
-
-			#region Filtering Conditions
-			if (minPrice.HasValue && minPrice.Value < 0)
-			{
-				minPrice = null;
-			}
-			if (maxPrice.HasValue && maxPrice.Value < 0)
-			{
-				maxPrice = null;
-			}
-			if (minPrice.HasValue && maxPrice.HasValue && minPrice.Value > maxPrice.Value)
-			{
-				var temp = minPrice;
-				minPrice = maxPrice;
-				maxPrice = temp;
-			}
 			#endregion
 			#region Paging Conditions
 			if (pageNumber < 1)
@@ -119,6 +240,33 @@ namespace Ecom.Application.Services
 			{
 				pageSize = defaultpageSize;
 			}
+			#endregion
+
+			#region Filtering Variables
+			string? search = productQueryParams.search;
+			decimal? minPrice = productQueryParams.MinPrice;
+			decimal? maxPrice = productQueryParams.MaxPrice;
+			#endregion
+			#region Filtering Conditions
+			if (minPrice.HasValue && minPrice.Value < 0)
+			{
+				minPrice = null;
+			}
+			if (maxPrice.HasValue && maxPrice.Value < 0)
+			{
+				maxPrice = null;
+			}
+			if (minPrice.HasValue && maxPrice.HasValue && minPrice.Value > maxPrice.Value)
+			{
+				var temp = minPrice;
+				minPrice = maxPrice;
+				maxPrice = temp;
+			}
+			#endregion
+
+			#region Sorting vars
+			string? sortBy = productQueryParams.sortBy;
+			string? sortOrder = productQueryParams.sortOrder;
 			#endregion
 			#region Sorting Conditions
 			//SortBy
@@ -166,55 +314,104 @@ namespace Ecom.Application.Services
 			#endregion
 
 			_logger.LogInformation("Fetching products with filters: Search={Search}, MinPrice={Min}, MaxPrice={Max}, Page={Page}, Size={Size}, SortBy={SortBy}, SortOrder={SortOrder}",
-			search, minPrice, maxPrice, pageNumber, pageSize,sortBy,sortOrder);
+				search, minPrice, maxPrice, pageNumber, pageSize, sortBy, sortOrder);
 
 			#region Redis Caching
 			var key = $"products:search={search}" +
 		$":min={minPrice}:max={maxPrice}:sort={sortBy}:order={sortOrder}:page={pageNumber}:size={pageSize}";
 
-			var cachedJson = await _cacheService.GetAsync<PagedResult<ProductDto>>(key);
+			var cachedJson = await _cacheService.GetAsync<PagedResult<ProductsSummaryDto>>(key, cancellationToken);
 			if (cachedJson != null)
 			{
-					_logger.LogInformation("Cache HIT for products list. Key={CacheKey}", key);
-					return cachedJson;
-				
+				_logger.LogInformation("Cache HIT for products list. Key={CacheKey}", key);
+				return cachedJson;
+
 			}
 			#endregion
 			_logger.LogInformation("Cache MISS for products list. Key={CacheKey}. Fetching from database...", key);
+
 			ProductQueryOptions productQueryOptions = new ProductQueryOptions()
 			{
-			 search= search,
-			 minPrice= minPrice,
-			 maxPrice= maxPrice,
-			 pageNumber= pageNumber,
-			 pageSize= pageSize,
-			 sortBy=sortBy,
-			 sortOrder=sortOrder,
+				search = search,
+				minPrice = minPrice,
+				maxPrice = maxPrice,
+				pageNumber = pageNumber,
+				pageSize = pageSize,
+				sortBy = sortBy,
+				sortOrder = sortOrder,
 			};
 
-			int TotalProductsCount = await _productRepository.GetTotalProductsCountAsync(productQueryOptions, cancellationToken);
+			var query = _productRepository.GetProductsSummaryAsync(productQueryOptions);
 
-			IReadOnlyList<Product> products= await _productRepository.GetProductsAsync(productQueryOptions, cancellationToken);
+			int TotalProductCount = await query.CountAsync(cancellationToken);
 
-			_logger.LogInformation("Fetched {Count} products from database", products.Count);
-
-			IReadOnlyList<ProductDto> productDtos= products.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price.Amount, CreatedAt = p.CreatedAt, ImageUrl= p.ImageUrl, Description=p.Description, IsAvailable = p.IsAvailable, IsInStock = p.IsInStock }).ToList();
-
-			PagedResult<ProductDto> pagedResult = new PagedResult<ProductDto>() 
+			switch (productQueryOptions.sortBy)
 			{
-				Items = productDtos,
-				PageNumber = pageNumber,
-				PageSize = pageSize,
-				TotalCount = TotalProductsCount,
-				TotalPages = (int)Math.Ceiling((double)TotalProductsCount / pageSize) 
+				case "price":
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						query = query.OrderBy(p => p.Price.Amount);
+					}
+					else
+					{
+						query = query.OrderByDescending(p => p.Price.Amount);
+					}
+
+					break;
+				case "name":
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						query = query.OrderBy(p => p.Name);
+					}
+					else
+					{
+						query = query.OrderByDescending(p => p.Name);
+					}
+					break;
+				case "createdat":
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						query = query.OrderBy(p => p.CreatedAt);
+					}
+					else
+					{
+						query = query.OrderByDescending(p => p.CreatedAt);
+					}
+					break;
+				default:
+					if (productQueryOptions.sortOrder == "asc")
+					{
+						query = query.OrderBy(p => p.CreatedAt);
+					}
+					else
+					{
+						query = query.OrderByDescending(p => p.CreatedAt);
+					}
+					break;
+			}
+			var products = await query.Skip((pageNumber-1)*pageSize).Take(pageSize).Select(p => new ProductsSummaryDto
+			{
+				Id=p.Id,
+				Name=p.Name,
+				Price=p.Price.Amount,
+				ImageUrl=p.ImageUrl,
+				IsAvailable=p.IsAvailable, 
+				IsInStock=p.IsInStock,
+			}).ToListAsync(cancellationToken);
+
+			var pagedProducts = new PagedResult<ProductsSummaryDto>()
+			{
+				Items= products,
+				PageNumber=pageNumber,
+				PageSize=pageSize,
+				TotalCount= TotalProductCount,
+				TotalPages= (int) Math.Ceiling((double)TotalProductCount/pageSize)
 			};
 
-
-			await _cacheService.SetAsync(key, pagedResult, TimeSpan.FromMinutes(1));
+			await _cacheService.SetAsync(key, pagedProducts, TimeSpan.FromMinutes(1), cancellationToken);
 			_logger.LogInformation("Products list cached successfully. Key={CacheKey}", key);
-
-			return pagedResult;
-		}	 
+			return pagedProducts;
+		}
 		public async Task<ProductDto?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
 		{
 			if (id == Guid.Empty)
@@ -228,7 +425,7 @@ namespace Ecom.Application.Services
 
 			#region RedisCaching
 			var key = $"products:{id}";
-			var cachedJson = await _cacheService.GetAsync<ProductDto>(key);
+			var cachedJson = await _cacheService.GetAsync<ProductDto>(key, cancellationToken);
 			if (cachedJson != null)
 			{
 					_logger.LogInformation(
@@ -268,7 +465,7 @@ namespace Ecom.Application.Services
 				IsInStock = product.IsInStock
 			};
 
-			await _cacheService.SetAsync(key,productdto,TimeSpan.FromMinutes(2));
+			await _cacheService.SetAsync(key,productdto,TimeSpan.FromMinutes(2), cancellationToken);
 			_logger.LogInformation(
 				"Product cached successfully. ProductId={ProductId}, CacheKey={CacheKey}",
 				id, key);
@@ -322,7 +519,7 @@ namespace Ecom.Application.Services
 			#endregion
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await InvalidateProductsCacheAsync("Product Updated");
+			await InvalidateProductsCacheAsync("Product Updated", cancellationToken);
 
 			_logger.LogInformation(
 			"Product updated successfully. ProductId={ProductId}", product.Id);
@@ -356,7 +553,7 @@ namespace Ecom.Application.Services
 			product.SoftDelete();
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-			await InvalidateProductsCacheAsync("Product Soft Deleted");
+			await InvalidateProductsCacheAsync("Product Soft Deleted", cancellationToken);
 
 			_logger.LogInformation("Product deleted successfully. ProductId={ProductId}", id);
 
@@ -378,7 +575,7 @@ namespace Ecom.Application.Services
 			}
 			product.IncreaseStock(dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await InvalidateProductsCacheAsync("Product Stock Increase");
+			await InvalidateProductsCacheAsync("Product Stock Increase", cancellationToken);
 			_logger.LogInformation(	"Stock increased successfully. ProductId={ProductId}, NewStock={Stock}",
 				product.Id, product.StockQuantity);
 			return;
@@ -399,7 +596,7 @@ namespace Ecom.Application.Services
 			}
 			product.DecreaseStock(dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await InvalidateProductsCacheAsync("Product Stock Decrease");
+			await InvalidateProductsCacheAsync("Product Stock Decrease", cancellationToken);
 			_logger.LogInformation("Stock decreased successfully. ProductId={ProductId}, NewStock={Stock}",
 			product.Id, product.StockQuantity);
 			return;
@@ -433,7 +630,7 @@ namespace Ecom.Application.Services
 
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await InvalidateProductsCacheAsync("Toggle Product Availability");
+			await InvalidateProductsCacheAsync("Toggle Product Availability", cancellationToken);
 			_logger.LogInformation("Product availability updated successfully. ProductId={ProductId}, NewAvailability={Availability}",
 			product.Id, product.IsAvailable);
 			return;
@@ -458,9 +655,11 @@ namespace Ecom.Application.Services
 			}
 			product.Restore();
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await InvalidateProductsCacheAsync("Restore Product");
+			await InvalidateProductsCacheAsync("Restore Product", cancellationToken);
 			_logger.LogInformation(	"Product restored successfully. ProductId={ProductId}",	product.Id);
 			return;
 		}
+
+
 	}
 }
