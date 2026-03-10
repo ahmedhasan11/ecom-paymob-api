@@ -16,19 +16,19 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 		 _db = db;
 		}
-		public async Task AddRefreshTokenAsync(RefreshToken refreshToken)
+		public async Task AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
 		{
-			await _db.RefreshTokens.AddAsync(refreshToken);
+			await _db.RefreshTokens.AddAsync(refreshToken,cancellationToken);
 		}
 
-		public async Task<List<RefreshToken>> GetAllUserTokensAsync(Guid userId)
+		public async Task<List<RefreshToken>> GetAllUserTokensAsync(Guid userId, CancellationToken cancellationToken)
 		{
-			return await _db.RefreshTokens.Where(token => token.UserId == userId).ToListAsync();
+			return await _db.RefreshTokens.Where(token => token.UserId == userId).ToListAsync(cancellationToken);
 		}
 
-		public async Task<RefreshToken?> GetByHashedTokenAsync(string hashedToken)
+		public async Task<RefreshToken?> GetByHashedTokenAsync(string hashedToken, CancellationToken cancellationToken)
 		{
-			return await _db.RefreshTokens.FirstOrDefaultAsync(token => token.HashedToken == hashedToken);
+			return await _db.RefreshTokens.FirstOrDefaultAsync(token => token.HashedToken == hashedToken, cancellationToken);
 		}
 	}
 }

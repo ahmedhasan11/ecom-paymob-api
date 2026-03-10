@@ -33,7 +33,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 		private readonly IEmailService _emailService;
 		private readonly ILogger<AuthService> _logger;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService
+		public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService
 			, IRefreshTokenRepository refreshTokenRepository, IRefreshTokenService refreshTokenService, IConfiguration configuration, IUnitOfWork unitOfWork, IEmailService emailService,
 			ILogger<AuthService> logger, IHttpContextAccessor httpContextAccessor)
 		{
@@ -49,10 +49,10 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_httpContextAccessor = httpContextAccessor;
 		}
 	
-		public async Task<RegisterResponseDto> RegisterAsync(RegisterDto dto)
+		public async Task<RegisterResponseDto> RegisterAsync(RegisterDto dto, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Registration attempt started for Email: {Email}", dto.Email);
-			if (await IsEmailAlreadyRegistered(dto.Email!))
+			if (await IsEmailAlreadyRegistered(dto.Email!, cancellationToken))
 			{
 				_logger.LogWarning("Registration failed. Email already registered: {Email}", dto.Email);
 				return new RegisterResponseDto() { IsSuccess=false , Message=  "Email Is Already Registered" };
@@ -69,10 +69,10 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			_logger.LogInformation("User created successfully. UserId: {UserId}, Email: {Email}",user.Id,user.Email);
 			await _userManager.AddToRoleAsync(user, "User");
-			await SendEmailConfirmationAsync(user.Email!);
+			await SendEmailConfirmationAsync(user.Email!, cancellationToken);
 			return new RegisterResponseDto() { IsSuccess = true, Message = "Registration successful. Please check your email to confirm your account." };
 		}
-		public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+		public async Task<AuthResponseDto> LoginAsync(LoginDto dto, CancellationToken cancellationToken)
 		{
 			var ip = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 			var user = await _userManager.FindByEmailAsync(dto.Email!);
@@ -116,12 +116,12 @@ namespace Ecom.Infrastructure.Authentication_Services
 			};
 			JwtResultDto TokenDto = await _jwtService.GenerateTokenAsync(jwtUserData);
 
-			var session = await IssueNewSessionAsync(user.Id);
+			var session = await IssueNewSessionAsync(user.Id, cancellationToken);
 			_logger.LogInformation("User {UserId} logged in successfully from IP {IP}", user.Id, ip);
 			return new AuthResponseDto() {IsSuccess=true, Token=TokenDto.Token, RefreshToken= session.RawToken, ExpiresAt= TokenDto.ExpiresAt };
 
 		}
-		private async Task<bool> IsEmailAlreadyRegistered(string email)
+		private async Task<bool> IsEmailAlreadyRegistered(string email, CancellationToken cancellationToken)
 		{
 			var result =await _userManager.FindByEmailAsync(email);
 			if (result !=null)
@@ -130,7 +130,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			return false;
 		}
-		private async Task<RefreshTokenResultDto> IssueNewSessionAsync(Guid userId)
+		private async Task<RefreshTokenResultDto> IssueNewSessionAsync(Guid userId, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Issuing new session for UserId: {UserId}", userId);
 			int lifetimeDays = _configuration.GetValue<int>("RefreshToken:RefreshTokenLifetimeDays");
@@ -139,12 +139,12 @@ namespace Ecom.Infrastructure.Authentication_Services
 			RefreshTokenResultDto refreshTokenresult =  _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
 
 			RefreshToken refreshEntity = new RefreshToken(userId, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
-			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
-			await _unitOfWork.SaveChangesAsync();
+			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity, cancellationToken);
+			await _unitOfWork.SaveChangesAsync( cancellationToken);
 			_logger.LogInformation("New refresh token issued for UserId: {UserId}", userId);
 			return refreshTokenresult;
 		}
-		public async Task<AuthResponseDto> RefreshSessionAsync(string refreshToken)
+		public async Task<AuthResponseDto> RefreshSessionAsync(string refreshToken, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Refresh session attempt started");
 			if (string.IsNullOrWhiteSpace(refreshToken))
@@ -160,7 +160,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			string hashedtoken=  _refreshTokenService.HashToken(refreshToken);
 
 			#region RefreshToken Validations
-			var refreshtokenfrom_db = await _refreshTokenRepository.GetByHashedTokenAsync(hashedtoken);
+			var refreshtokenfrom_db = await _refreshTokenRepository.GetByHashedTokenAsync(hashedtoken,cancellationToken);
 			if (refreshtokenfrom_db == null)
 			{
 				_logger.LogWarning("Refresh failed: token not found");
@@ -173,12 +173,12 @@ namespace Ecom.Infrastructure.Authentication_Services
 			if (refreshtokenfrom_db.IsRevoked == true)
 			{
 				_logger.LogWarning("Refresh failed: revoked token detected for UserId: {UserId}", refreshtokenfrom_db.UserId);
-				var user_tokens = await _refreshTokenRepository.GetAllUserTokensAsync(refreshtokenfrom_db.UserId);
+				var user_tokens = await _refreshTokenRepository.GetAllUserTokensAsync(refreshtokenfrom_db.UserId, cancellationToken);
 				foreach (var token in user_tokens)
 				{
 					token.Revoke();
 				}
-				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 				return new AuthResponseDto
 				{
@@ -219,14 +219,14 @@ namespace Ecom.Infrastructure.Authentication_Services
 			RefreshTokenResultDto refreshTokenresult =  _refreshTokenService.GenerateRefreshTokenAsync(absoluteExpirationTime);
 			refreshtokenfrom_db.Revoke();
 			RefreshToken refreshEntity = new RefreshToken(user.Id, refreshTokenresult.HashedToken, refreshTokenresult.ExpiresAt);
-			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity);
-			await _unitOfWork.SaveChangesAsync();
+			await _refreshTokenRepository.AddRefreshTokenAsync(refreshEntity, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			_logger.LogInformation("Refresh session completed successfully for UserId: {UserId}", user.Id);
 
 			return new AuthResponseDto() { IsSuccess = true, Token = jwtresult.Token, RefreshToken = refreshTokenresult.RawToken, ExpiresAt = jwtresult.ExpiresAt };
 		}
 
-		public async Task<bool> LogoutDeviceAsync(string refreshToken)
+		public async Task<bool> LogoutDeviceAsync(string refreshToken, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Logout device attempt started");
 			if (string.IsNullOrWhiteSpace(refreshToken))
@@ -235,7 +235,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 				return false;
 			}
 			string HashedToken =_refreshTokenService.HashToken(refreshToken);
-			RefreshToken? tokenfromdb = await _refreshTokenRepository.GetByHashedTokenAsync(HashedToken);
+			RefreshToken? tokenfromdb = await _refreshTokenRepository.GetByHashedTokenAsync(HashedToken, cancellationToken);
 
 			if (tokenfromdb==null)
 			{
@@ -243,12 +243,12 @@ namespace Ecom.Infrastructure.Authentication_Services
 				return false;
 			}
 			tokenfromdb.Revoke();
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			_logger.LogInformation("Device logged out successfully for UserId: {UserId}", tokenfromdb.UserId);
 			return true;
 		}
 
-		public async Task<bool> LogoutAllDevicesAsync(Guid userId)
+		public async Task<bool> LogoutAllDevicesAsync(Guid userId, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Logout all devices started for UserId: {UserId}", userId);
 
@@ -257,17 +257,17 @@ namespace Ecom.Infrastructure.Authentication_Services
 				_logger.LogWarning("Logout all failed: empty userId");
 				return false;
 			}
-			var tokens = await _refreshTokenRepository.GetAllUserTokensAsync(userId);
+			var tokens = await _refreshTokenRepository.GetAllUserTokensAsync(userId, cancellationToken);
 			foreach (var token in tokens)
 			{
 				token.Revoke();
 			}
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			_logger.LogInformation("All devices logged out for UserId: {UserId}", userId);
 			return true;
 		}
 
-		public async Task<bool> ChangePasswordAsync(Guid userId , ChangePasswordDto dto)
+		public async Task<bool> ChangePasswordAsync(Guid userId , ChangePasswordDto dto, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Change password attempt started for UserId: {UserId}", userId);
 			ApplicationUser? user = await _userManager.FindByIdAsync(userId.ToString());
@@ -283,8 +283,8 @@ namespace Ecom.Infrastructure.Authentication_Services
 				_logger.LogWarning("Change password failed for UserId: {UserId}. Errors: {Errors}",	userId,	string.Join(", ", identityResult.Errors.Select(e => e.Description)));
 				return false;
 			}
-			await _unitOfWork.SaveChangesAsync();
-			var logoutResult =await LogoutAllDevicesAsync(user.Id);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			var logoutResult =await LogoutAllDevicesAsync(user.Id,cancellationToken);
 			if (logoutResult==false)
 			{
 				return false;
@@ -294,7 +294,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 		}
 
-		public async Task ForgotPasswordAsync(string email) 
+		public async Task ForgotPasswordAsync(string email, CancellationToken cancellationToken) 
 		{
 			_logger.LogInformation("Forgot password requested for Email: {Email}", email);
 			if (string.IsNullOrWhiteSpace(email))
@@ -317,7 +317,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			string Body = $"Click the link below to reset your password:\r\n<{resetlink}>\r\n";
 			try 
 			{
-				await _emailService.SendEmailAsync(to, Subject, Body);
+				await _emailService.SendEmailAsync(to, Subject, Body,cancellationToken);
 				_logger.LogInformation("Reset password email sent to {Email}", email);
 			}
 			catch (EmailSendingException ex)
@@ -326,7 +326,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 			return;
 		}
-		public async Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto)
+		public async Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Reset password attempt started for Email: {Email}", dto.Email);
 			var DecodedToken = WebUtility.UrlDecode(dto.Token);
@@ -343,12 +343,12 @@ namespace Ecom.Infrastructure.Authentication_Services
 				return new ResetPasswordResultDto() { IsSuccess = false, Errors = result.Errors.Select(e=>e.Description).ToList() };
 			}
 
-			await LogoutAllDevicesAsync(user.Id);
+			await LogoutAllDevicesAsync(user.Id, cancellationToken);
 			_logger.LogInformation("Password reset successfully for UserId: {UserId}", user.Id);
 			return new ResetPasswordResultDto() {IsSuccess=true };
 		}
 
-		public async Task SendEmailConfirmationAsync( string email)
+		public async Task SendEmailConfirmationAsync( string email, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Email confirmation requested for Email: {Email}", email);
 
@@ -372,7 +372,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			string Body = $"Click the link below to Confirm your Email:\r\n<{confirmlink}>\r\n";
 			try
 			{
-				await _emailService.SendEmailAsync(to, Subject, Body);
+				await _emailService.SendEmailAsync(to, Subject, Body, cancellationToken);
 				_logger.LogInformation("Confirmation email sent to {Email}", email);
 			}
 			catch (EmailSendingException ex)
@@ -382,7 +382,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			return;
 		}
 
-		public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto)
+		public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Email confirmation attempt for Email: {Email}", dto.Email);
 

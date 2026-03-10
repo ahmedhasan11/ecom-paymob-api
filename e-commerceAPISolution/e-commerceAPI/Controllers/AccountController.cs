@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Threading;
 
 namespace e_commerceAPI.Controllers
 {
@@ -20,10 +21,10 @@ namespace e_commerceAPI.Controllers
 
 		[AllowAnonymous]
 		[HttpPost("register")]
-		public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto)
+		public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto, CancellationToken cancellationToken)
 		{
 
-			var result = await _authService.RegisterAsync(dto);
+			var result = await _authService.RegisterAsync(dto, cancellationToken);
 			if (result.IsSuccess==false)
 			{
 				return BadRequest(result);
@@ -34,10 +35,10 @@ namespace e_commerceAPI.Controllers
 		[EnableRateLimiting("LoginPolicy")]
 		[AllowAnonymous]
 		[HttpPost("login")]
-		public async Task<ActionResult<AuthResponseDto>> Login (LoginDto dto)
+		public async Task<ActionResult<AuthResponseDto>> Login (LoginDto dto, CancellationToken cancellationToken)
 		{
 
-			var result = await _authService.LoginAsync(dto);
+			var result = await _authService.LoginAsync(dto, cancellationToken);
 			if (result.IsSuccess==false)
 			{
 				return Unauthorized(result);
@@ -48,9 +49,9 @@ namespace e_commerceAPI.Controllers
 
 		[AllowAnonymous]
 		[HttpPost("refresh")]
-		public async Task<ActionResult<AuthResponseDto>> RefreshSession(RefreshRequestDto dto)
+		public async Task<ActionResult<AuthResponseDto>> RefreshSession(RefreshRequestDto dto, CancellationToken cancellationToken)
 		{
-			AuthResponseDto result= await _authService.RefreshSessionAsync(dto.RefreshToken);
+			AuthResponseDto result= await _authService.RefreshSessionAsync(dto.RefreshToken, cancellationToken);
 			if (!result.IsSuccess)
 			{
 				return Unauthorized(result);
@@ -60,9 +61,9 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[HttpPost("logout")]
-		public async Task<IActionResult> Logout(LogoutRequestDto dto)
+		public async Task<IActionResult> Logout(LogoutRequestDto dto, CancellationToken cancellationToken)
 		{
-			bool result = await _authService.LogoutDeviceAsync(dto.refreshToken);
+			bool result = await _authService.LogoutDeviceAsync(dto.refreshToken, cancellationToken);
 			if (result==false)
 			{
 				return Unauthorized(result);
@@ -71,14 +72,14 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[HttpPost("logout-all")]
-		public async Task<IActionResult> LogoutAll()
+		public async Task<IActionResult> LogoutAll( CancellationToken cancellationToken)
 		{
 			var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value; //byrg3 string , method el service mstnya Guid
 			if (!Guid.TryParse(userIdClaim, out var userId)) //TryParse 3shan lw Guid.Parse lw wrong value --> exception
 			{
 				return Unauthorized();
 			}
-			var result = await _authService.LogoutAllDevicesAsync(userId);
+			var result = await _authService.LogoutAllDevicesAsync(userId, cancellationToken);
 			if (result==false)
 			{
 				return Unauthorized(result);
@@ -88,14 +89,14 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[HttpPost("change-password")]
-		public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+		public async Task<IActionResult> ChangePassword(ChangePasswordDto dto, CancellationToken cancellationToken)
 		{
 			var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if(!Guid.TryParse(userIdClaim, out var userId))
 			{
 				return Unauthorized();
 			}
-			bool result = await _authService.ChangePasswordAsync(userId, dto);
+			bool result = await _authService.ChangePasswordAsync(userId, dto, cancellationToken);
 			if (result==false)
 			{
 				return BadRequest("Old password is incorrect.");
@@ -107,9 +108,9 @@ namespace e_commerceAPI.Controllers
 		[EnableRateLimiting("ForgotPolicy")]
 		[AllowAnonymous]
 		[HttpPost("forgot-password")]
-		public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto, CancellationToken cancellationToken)
 		{
-			await _authService.ForgotPasswordAsync(dto.Email);
+			await _authService.ForgotPasswordAsync(dto.Email, cancellationToken);
 			return Ok(new
 			{
 				message = "If your email exists, you will receive a reset link."
@@ -118,9 +119,9 @@ namespace e_commerceAPI.Controllers
 
 		[AllowAnonymous]
 		[HttpPost("reset-password")]
-		public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+		public async Task<IActionResult> ResetPassword(ResetPasswordDto dto, CancellationToken cancellationToken)
 		{
-			ResetPasswordResultDto result=  await _authService.ResetPasswordAsync(dto);
+			ResetPasswordResultDto result=  await _authService.ResetPasswordAsync(dto, cancellationToken);
 			if (!result.IsSuccess)
 			{
 				return BadRequest(result);
@@ -133,9 +134,9 @@ namespace e_commerceAPI.Controllers
 
 		[AllowAnonymous]
 		[HttpPost("confirm-email")]
-		public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto dto)
+		public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto dto, CancellationToken cancellationToken)
 		{
-			bool isconfirmed = await _authService.ConfirmEmailAsync(dto);
+			bool isconfirmed = await _authService.ConfirmEmailAsync(dto, cancellationToken);
 			if (isconfirmed==false)
 			{
 				return BadRequest(new
