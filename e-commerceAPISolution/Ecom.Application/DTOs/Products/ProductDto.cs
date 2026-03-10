@@ -13,6 +13,8 @@ namespace Ecom.Application.DTOs.Products
 		public DateTime CreatedAt { get; set; }
 		public decimal Price { get; set; }
 		public bool IsAvailable { get; set; }
+
+		public int Stock { get; set; }
 		public bool IsInStock { get; set; }
 		public string? ImageUrl { get; set; }
 

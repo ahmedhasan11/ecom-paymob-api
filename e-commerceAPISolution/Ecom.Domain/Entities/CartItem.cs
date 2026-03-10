@@ -28,6 +28,14 @@ namespace Ecom.Domain.Entities
 
 		public CartItem(Guid productId, int quantity/*, decimal unitPrice*/)
 		{
+			if (productId==Guid.Empty)
+			{
+				throw new ArgumentException(nameof(productId));
+			}
+			if (quantity <= 0)
+			{
+				throw new ArgumentException(nameof(quantity));
+			}
 			ProductId = productId;
 			Quantity = quantity;
 			//UnitPrice = unitPrice;

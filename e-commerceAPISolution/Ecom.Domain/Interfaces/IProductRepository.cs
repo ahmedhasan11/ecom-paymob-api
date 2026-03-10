@@ -20,5 +20,7 @@ namespace Ecom.Domain.Interfaces
 
 		Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);//we returned because its a read things so its normal to return
 		Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id, CancellationToken cancellationToken); //to make the soft delete thing 
+
+		Task<List<Product>> GetProductsInBulkAsync(List<Guid> productIds, CancellationToken cancellationToken);
 	}
 }

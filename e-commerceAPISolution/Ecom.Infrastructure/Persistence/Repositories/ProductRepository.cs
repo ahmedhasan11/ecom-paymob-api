@@ -122,5 +122,10 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 			query =ApplyFilters(query, productQueryOptions.search, productQueryOptions.minPrice, productQueryOptions.maxPrice);
 			return query.Where(product => !product.IsDeleted);
 		}
+
+		public async Task<List<Product>> GetProductsInBulkAsync(List<Guid> productIds, CancellationToken cancellationToken)
+		{
+			return await _dbContext.Products.Where(p=>productIds.Contains(p.Id)).ToListAsync(cancellationToken);
+		}
 	}
 }

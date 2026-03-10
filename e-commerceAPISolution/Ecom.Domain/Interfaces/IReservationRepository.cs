@@ -15,6 +15,8 @@ namespace Ecom.Domain.Interfaces
 
 		Task<int> GetActiveReservedQuantityByProductId(Guid productId, CancellationToken cancellationToken);
 
+		Task<Dictionary<Guid,int>> GetActiveReservedQuantityBulkAsync(List<Guid> productIds, CancellationToken cancellationToken);
+
 		//Task GetExpiredReservationAsync();
 	}
 }

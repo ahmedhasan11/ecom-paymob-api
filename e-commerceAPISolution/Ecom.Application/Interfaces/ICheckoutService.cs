@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ecom.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Ecom.Application.Interfaces
 {
 	public interface ICheckoutService
 	{
-		Task CheckoutAsync(Guid userId);
+		Task<Guid> CheckoutAsync(Guid userId, CancellationToken cancellationToken, ShippingAddress address);
 	}
 }
