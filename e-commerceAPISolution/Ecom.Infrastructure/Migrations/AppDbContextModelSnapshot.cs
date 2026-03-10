@@ -42,7 +42,7 @@ namespace Ecom.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.CartItem", b =>
@@ -66,7 +66,7 @@ namespace Ecom.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.Category", b =>
@@ -102,7 +102,7 @@ namespace Ecom.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.InventoryReservation", b =>
@@ -145,7 +145,7 @@ namespace Ecom.Infrastructure.Migrations
                     b.HasIndex("OrderId", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("InventoryReservations");
+                    b.ToTable("InventoryReservations", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.Order", b =>
@@ -185,7 +185,7 @@ namespace Ecom.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.OrderItem", b =>
@@ -220,7 +220,7 @@ namespace Ecom.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.Product", b =>
@@ -263,7 +263,7 @@ namespace Ecom.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Domain.Entities.RefreshToken", b =>
@@ -293,7 +293,7 @@ namespace Ecom.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Infrastructure.Identity.ApplicationRole", b =>
@@ -555,7 +555,7 @@ namespace Ecom.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("Ecom.Domain.ValueObjects.ShippingAddress", "Address", b1 =>
+                    b.OwnsOne("Ecom.Domain.Entities.Order.Address#Ecom.Domain.ValueObjects.ShippingAddress", "Address", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uniqueidentifier");
@@ -590,7 +590,7 @@ namespace Ecom.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders");
+                            b1.ToTable("Orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
@@ -617,7 +617,7 @@ namespace Ecom.Infrastructure.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CategoryId");
 
-                    b.OwnsOne("Ecom.Domain.ValueObjects.Money", "Price", b1 =>
+                    b.OwnsOne("Ecom.Domain.Entities.Product.Price#Ecom.Domain.ValueObjects.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uniqueidentifier");
@@ -629,7 +629,7 @@ namespace Ecom.Infrastructure.Migrations
 
                             b1.HasKey("ProductId");
 
-                            b1.ToTable("Products");
+                            b1.ToTable("Products", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");

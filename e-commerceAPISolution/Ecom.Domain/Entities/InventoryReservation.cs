@@ -22,6 +22,7 @@ namespace Ecom.Domain.Entities
 
 		public DateTime ExpiresAt { get; private set; }
 
+		public bool IsExpired => DateTime.UtcNow >= ExpiresAt;
 		private InventoryReservation() { }
 		public InventoryReservation(Guid orderId , Guid productId, int quantity)
 		{
@@ -44,18 +45,34 @@ namespace Ecom.Domain.Entities
 			Status = ReservationStatusEnum.Active;
 			ExpiresAt = DateTime.UtcNow.AddMinutes(15);
 		}
-		//public void Confirm(Guid userId,Guid reservationId)
-		//{
+		public void Confirm()
+		{
+			//payment succeed
+			//lazm mn active
+			if (Status != ReservationStatusEnum.Active)
+				throw new InvalidOperationException("Only active reservations can be confirmed.");
 
-		//}
-		//public void Realease(Guid userId, Guid reservationId)
-		//{
+			Status = ReservationStatusEnum.Confirmed;
 
-		//}
-		//public void Expire(Guid userId, Guid reservationId)
-		//{
+		}
+		public void Release()
+		{
+			//payment failed || Order Canceled
+			//lazm mn active
+			if (Status != ReservationStatusEnum.Active)
+				throw new InvalidOperationException("Only active reservations can be Released.");
+			Status = ReservationStatusEnum.Released;
+			
+		}
+		public void Expire()
+		{
+			//background detected en time Expired
+			//lazm mn active
+			if (Status != ReservationStatusEnum.Active)
+				throw new InvalidOperationException("Only active reservations can be Expired.");
+			Status = ReservationStatusEnum.Expired;
 
-		//}
+		}
 
 
 
