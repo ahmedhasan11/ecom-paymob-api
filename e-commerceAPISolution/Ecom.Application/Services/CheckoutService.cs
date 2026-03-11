@@ -1,4 +1,5 @@
 ﻿using Ecom.Application.DTOs.Cart;
+using Ecom.Application.DTOs.Order;
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
@@ -36,7 +37,7 @@ namespace Ecom.Application.Services
 			_productService = productService;
 			_orderRepository = orderRepository;
 		}
-		public async Task<Guid> CheckoutAsync(Guid userId, CancellationToken cancellationToken, ShippingAddress address)
+		public async Task<Guid> CheckoutAsync(Guid userId, CancellationToken cancellationToken, ShippingAddressDto addressdto)
 		{
 			if (userId == Guid.Empty)
 				throw new ArgumentException("userId cannot be empty.", nameof(userId));
@@ -90,6 +91,8 @@ namespace Ecom.Application.Services
 			}
 			#endregion
 			#region CreateOrder
+			ShippingAddress address = new ShippingAddress( addressdto.RecipientName, addressdto.PhoneNumber,
+				addressdto.City, addressdto.Street, addressdto.BuildingNumber, addressdto.PostalCode);
 			Order order = Order.Create(userId,address,requestedItems);
 			await _orderRepository.AddOrderAsync(order, cancellationToken);
 			#endregion
