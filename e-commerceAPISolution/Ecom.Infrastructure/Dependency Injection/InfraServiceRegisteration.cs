@@ -57,6 +57,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 			services.AddScoped<IEmailService, EmailService>();
+			services.AddScoped<IReservationRepository, ReservationRepository>();
 			services.AddScoped<IdentityDbInitializer>();
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));

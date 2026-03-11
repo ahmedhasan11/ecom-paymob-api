@@ -9,10 +9,10 @@ namespace Ecom.Domain.Interfaces
 {
 	public interface IRefreshTokenRepository
 	{
-		Task AddRefreshTokenAsync(RefreshToken refreshToken);
+		Task AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken);
 
-		Task<RefreshToken?> GetByHashedTokenAsync(string hashedToken);
+		Task<RefreshToken?> GetByHashedTokenAsync(string hashedToken, CancellationToken cancellationToken);
 
-		Task<List<RefreshToken>> GetAllUserTokensAsync(Guid userId);
+		Task<List<RefreshToken>> GetAllUserTokensAsync(Guid userId, CancellationToken cancellationToken);
 	}
 }

@@ -15,7 +15,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			_emailSettings=emailsettings.Value;
 		}
 
-		public async Task SendEmailAsync(string to, string subject, string body)
+		public async Task SendEmailAsync(string to, string subject, string body, CancellationToken cancellationToken)
 		{
 			using var message = new MailMessage();
 			message.From = new MailAddress(_emailSettings.Username);
@@ -28,7 +28,7 @@ namespace Ecom.Infrastructure.Authentication_Services
 			smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
 			smtp.EnableSsl = true;
 			try{
-				await smtp.SendMailAsync(message);
+				await smtp.SendMailAsync(message,cancellationToken);
 			}
 			catch (Exception ex)
 			{

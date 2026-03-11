@@ -462,7 +462,9 @@ namespace Ecom.Application.Services
 				Description = product.Description,
 				ImageUrl = product.ImageUrl,
 				IsAvailable = product.IsAvailable,
-				IsInStock = product.IsInStock
+				IsInStock = product.IsInStock,
+				Stock= product.StockQuantity
+				
 			};
 
 			await _cacheService.SetAsync(key,productdto,TimeSpan.FromMinutes(2), cancellationToken);

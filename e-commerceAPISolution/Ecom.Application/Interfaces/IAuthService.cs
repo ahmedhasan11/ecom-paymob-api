@@ -9,17 +9,17 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IAuthService
 	{
-		Task<RegisterResponseDto> RegisterAsync(RegisterDto dto);
-		Task<AuthResponseDto> LoginAsync(LoginDto dto);
-		Task<AuthResponseDto> RefreshSessionAsync(string refreshToken);
-		Task<bool> LogoutDeviceAsync(string refreshToken);
-		Task<bool> LogoutAllDevicesAsync(Guid userId);
+		Task<RegisterResponseDto> RegisterAsync(RegisterDto dto, CancellationToken cancellationToken );
+		Task<AuthResponseDto> LoginAsync(LoginDto dto, CancellationToken cancellationToken);
+		Task<AuthResponseDto> RefreshSessionAsync(string refreshToken, CancellationToken cancellationToken);
+		Task<bool> LogoutDeviceAsync(string refreshToken, CancellationToken cancellationToken);
+		Task<bool> LogoutAllDevicesAsync(Guid userId, CancellationToken cancellationToken);
 
-		Task<bool> ChangePasswordAsync(Guid userId,ChangePasswordDto dto);
-		Task ForgotPasswordAsync(string email);
-		Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto);
+		Task<bool> ChangePasswordAsync(Guid userId,ChangePasswordDto dto, CancellationToken cancellationToken);
+		Task ForgotPasswordAsync(string email, CancellationToken cancellationToken);
+		Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto, CancellationToken cancellationToken);
 
-		Task SendEmailConfirmationAsync( string email);
-		Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto);
+		Task SendEmailConfirmationAsync( string email, CancellationToken cancellationToken);
+		Task<bool> ConfirmEmailAsync(ConfirmEmailDto dto, CancellationToken cancellationToken);
 	}
 }
