@@ -2,6 +2,7 @@
 using Ecom.Domain.Common.Queries;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
+using Ecom.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,11 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		public IQueryable<Order> GetOrderDetailsQuery(Guid userId, Guid orderId)
 		{
 			return _db.Orders.Where(o => o.UserId == userId && o.Id == orderId);
+		}
+
+		public async Task<Order?> GetPendingOrderForUser(Guid userId, CancellationToken cancellationToken)
+		{
+			return await _db.Orders.Where(o => o.UserId == userId && o.Status ==OrderStatusEnum.Pending).FirstOrDefaultAsync(cancellationToken);
 		}
 	}
 }

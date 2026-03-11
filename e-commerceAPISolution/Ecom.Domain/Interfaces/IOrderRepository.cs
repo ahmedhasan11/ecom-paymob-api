@@ -14,5 +14,7 @@ namespace Ecom.Domain.Interfaces
 		Task<Order?> GetOrderByIdAsync(Guid orderId, CancellationToken cancellationToken); // for changing order status , you dont need to return OrderItems 
 		IQueryable<Order> GetUserOrdersQuery(Guid userId);
 		IQueryable<Order> GetOrderDetailsQuery(Guid userId, Guid orderId);
+
+		Task<Order?> GetPendingOrderForUser(Guid userId, CancellationToken cancellationToken);
 	}
 }

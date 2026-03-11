@@ -40,7 +40,9 @@ namespace Ecom.Application.Services
 		{
 			if (userId == Guid.Empty)
 				throw new ArgumentException("userId cannot be empty.", nameof(userId));
-
+			var pendingOrder = await _orderRepository.GetPendingOrderForUser(userId, cancellationToken);
+			if(pendingOrder is not null) 
+				return pendingOrder.Id;
 			#region Load Cart
 			var cart = await _cartService.GetMyCartAsync(userId, cancellationToken);
 			#endregion
