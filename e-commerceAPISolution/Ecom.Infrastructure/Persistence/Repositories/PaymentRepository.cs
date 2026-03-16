@@ -21,5 +21,9 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			await _db.Payments.AddAsync(payment, cancellationToken);
 		}
+		public async Task<Payment?> GetPaymentByPaymentId(Guid paymentId, CancellationToken cancellationToken)
+		{
+			return await _db.Payments.Where(p=>p.Id==paymentId).FirstOrDefaultAsync(cancellationToken);
+		}
 	}
 }
