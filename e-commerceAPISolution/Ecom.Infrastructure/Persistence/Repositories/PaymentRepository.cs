@@ -1,5 +1,6 @@
 ﻿using Ecom.Domain.Entities;
 using Ecom.Domain.Interfaces;
+using Ecom.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,11 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		public async Task<Payment?> GetPaymentByPaymentId(Guid paymentId, CancellationToken cancellationToken)
 		{
 			return await _db.Payments.Where(p=>p.Id==paymentId).FirstOrDefaultAsync(cancellationToken);
+		}
+
+		public async Task<Payment?> GetPendingPaymentByOrderId(Guid orderId, CancellationToken cancellationToken)
+		{
+			return await _db.Payments.AsNoTracking().Where(p => p.OrderId == orderId && p.Status == PaymentStatusEnum.Pending).FirstOrDefaultAsync(cancellationToken);
 		}
 	}
 }

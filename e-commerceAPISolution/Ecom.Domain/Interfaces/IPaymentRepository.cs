@@ -11,11 +11,13 @@ namespace Ecom.Domain.Interfaces
 	{
 		Task CreatePaymentAsync(Payment payment, CancellationToken cancellationToken);
 
+		Task<Payment?> GetPaymentByPaymentId(Guid paymentId, CancellationToken cancellationToken);
+
 		Task<Payment?> GetPendingPaymentByOrderId(Guid orderId, CancellationToken cancellationToken);
 
 		Task<Payment?> GetPaymentByPaymobOrderIdAsync(long paymobOrderId, CancellationToken cancellationToken);
 
-		Task<Payment?> GetPaymentByPaymentId(Guid paymentId, CancellationToken cancellationToken);
+
 
 
 	}
