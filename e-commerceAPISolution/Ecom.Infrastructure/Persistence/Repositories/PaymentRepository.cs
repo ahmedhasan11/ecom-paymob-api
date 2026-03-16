@@ -24,12 +24,15 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		}
 		public async Task<Payment?> GetPaymentByPaymentId(Guid paymentId, CancellationToken cancellationToken)
 		{
-			return await _db.Payments.Where(p=>p.Id==paymentId).FirstOrDefaultAsync(cancellationToken);
+			return await _db.Payments.FirstOrDefaultAsync(p => p.Id == paymentId, cancellationToken);
 		}
-
 		public async Task<Payment?> GetPendingPaymentByOrderId(Guid orderId, CancellationToken cancellationToken)
 		{
-			return await _db.Payments.AsNoTracking().Where(p => p.OrderId == orderId && p.Status == PaymentStatusEnum.Pending).FirstOrDefaultAsync(cancellationToken);
+			return await _db.Payments.AsNoTracking().FirstOrDefaultAsync(p => p.OrderId == orderId && p.Status == PaymentStatusEnum.Pending,cancellationToken);
+		}
+		public async Task<Payment?> GetPaymentByPaymobOrderIdAsync(long paymobOrderId, CancellationToken cancellationToken)
+		{
+			return await _db.Payments.FirstOrDefaultAsync(p => p.PaymobOrderId == paymobOrderId, cancellationToken);
 		}
 	}
 }
