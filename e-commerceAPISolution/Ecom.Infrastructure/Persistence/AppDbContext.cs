@@ -27,6 +27,8 @@ namespace Ecom.Infrastructure.Persistence
 		public DbSet<OrderItem> OrderItems { get; set; }
 
 		public DbSet<InventoryReservation> InventoryReservations { get; set; }
+
+		public DbSet<Payment> Payments { get; set; }
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
 		{
 			var entries = ChangeTracker	.Entries<AuditableEntity>();
