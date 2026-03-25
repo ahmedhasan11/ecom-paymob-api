@@ -4,6 +4,7 @@ using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Authentication_Services;
 using Ecom.Infrastructure.Caching;
 using Ecom.Infrastructure.Identity;
+using Ecom.Infrastructure.Payments;
 using Ecom.Infrastructure.Persistence;
 using Ecom.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -58,6 +59,8 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IReservationRepository, ReservationRepository>();
+			services.AddScoped<IPaymentGateway, PaymentGateway>();
+			services.AddScoped<IPaymentRepository, PaymentRepository>();
 			services.AddScoped<IdentityDbInitializer>();
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));

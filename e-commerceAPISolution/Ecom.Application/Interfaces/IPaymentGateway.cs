@@ -9,6 +9,6 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IPaymentGateway
 	{
-		Task<PaymentSessionResult> CreatePaymentSessionAsync(decimal amount, string currency, CancellationToken cancellationToken);
+		Task<PaymentSessionResult> CreatePaymentSessionAsync(CreatePaymentSessionRequest req, CancellationToken cancellationToken);
 	}
 }

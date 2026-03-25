@@ -10,7 +10,7 @@ namespace Ecom.Infrastructure.Payments
 {
 	public class PaymentGateway : IPaymentGateway
 	{
-		public async Task<PaymentSessionResult> CreatePaymentSessionAsync(decimal amount, string currency, CancellationToken cancellationToken)
+		public async Task<PaymentSessionResult> CreatePaymentSessionAsync(CreatePaymentSessionRequest req,  CancellationToken cancellationToken)
 		{
 			throw new NotImplementedException();
 		}
