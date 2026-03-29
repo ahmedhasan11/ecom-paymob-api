@@ -64,6 +64,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IdentityDbInitializer>();
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));
+			services.Configure<PaymobSettings>(configuration.GetSection("Paymob"));
 			return services;
 		}
 	}
