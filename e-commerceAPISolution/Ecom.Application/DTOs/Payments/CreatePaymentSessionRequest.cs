@@ -13,7 +13,9 @@ namespace Ecom.Application.DTOs.Payments
 		public Guid PaymentId { get; set; }
 
 		public Guid OrderId { get; set; }
-		public List<CreatePaymentItem> Items { get; set; } = []; 
+		public List<CreatePaymentItem> Items { get; set; } = [];
+
+		public BillingDataDto BillingData { get; set; } = default!;
 
 	}
 }

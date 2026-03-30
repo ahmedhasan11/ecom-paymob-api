@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -71,6 +72,8 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddHttpClient<PaymentGateway>(client =>
 			{
 				client.BaseAddress = new Uri(configuration["Paymob:BaseUrl"]!);
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token",	configuration["Paymob:SecretKey"]
+		);
 			});
 			return services;
 		}

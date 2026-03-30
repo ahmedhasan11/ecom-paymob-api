@@ -12,7 +12,7 @@ namespace Ecom.Infrastructure.Common.Settings
 
 		public string PublicKey { get; set; } = default!;
 
-		public int PaymentMethodId { get; set; }
+		public int IntegrationId { get; set; }
 
 		public string BaseUrl { get; set; } = default!;
 
