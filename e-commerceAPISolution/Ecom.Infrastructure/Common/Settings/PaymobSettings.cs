@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ecom.Application.Common.Settings
+namespace Ecom.Infrastructure.Common.Settings
 {
 	public class PaymobSettings
 	{
@@ -15,5 +15,11 @@ namespace Ecom.Application.Common.Settings
 		public int PaymentMethodId { get; set; }
 
 		public string BaseUrl { get; set; } = default!;
+
+		public string NotificationUrl { get; set; } = default!;
+
+		public string RedirectUrl { get; set; } = default!;
+
+		public int ExpirationSeconds { get; set; }
 	}
 }

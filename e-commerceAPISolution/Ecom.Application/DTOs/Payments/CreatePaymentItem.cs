@@ -11,5 +11,7 @@ namespace Ecom.Application.DTOs.Payments
 		public string Name { get; set; } = default!;
 		public decimal UnitPrice { get; set; }
 		public int Quantity { get; set; }
+
+		public string? Description { get; set; }
 	}
 }

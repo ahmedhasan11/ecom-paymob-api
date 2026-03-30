@@ -3,6 +3,7 @@ using Ecom.Application.Interfaces;
 using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Authentication_Services;
 using Ecom.Infrastructure.Caching;
+using Ecom.Infrastructure.Common.Settings;
 using Ecom.Infrastructure.Identity;
 using Ecom.Infrastructure.Payments;
 using Ecom.Infrastructure.Persistence;

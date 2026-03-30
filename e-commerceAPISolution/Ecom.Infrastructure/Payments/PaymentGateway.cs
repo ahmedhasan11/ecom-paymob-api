@@ -1,6 +1,7 @@
 ﻿using Ecom.Application.Common.Settings;
 using Ecom.Application.DTOs.Payments;
 using Ecom.Application.Interfaces;
+using Ecom.Infrastructure.Common.Settings;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,7 @@ namespace Ecom.Infrastructure.Payments
 	public class PaymentGateway : IPaymentGateway
 	{
 		private readonly HttpClient _httpClient;
-		private readonly PaymobSettings _paymob;
-
-		
+		private readonly PaymobSettings _paymob;	
 		public PaymentGateway(IOptions<PaymobSettings> paymob, HttpClient httpClient) 
 		{
 			_paymob = paymob.Value;

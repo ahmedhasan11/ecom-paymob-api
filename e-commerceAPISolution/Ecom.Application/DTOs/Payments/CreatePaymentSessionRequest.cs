@@ -11,6 +11,9 @@ namespace Ecom.Application.DTOs.Payments
 		public decimal Amount { get; set; }
 		public string Currency { get; set; }
 		public Guid PaymentId { get; set; }
-		public List<CreatePaymentItem> Items { get; set; } = [];
+
+		public Guid OrderId { get; set; }
+		public List<CreatePaymentItem> Items { get; set; } = []; 
+
 	}
 }
