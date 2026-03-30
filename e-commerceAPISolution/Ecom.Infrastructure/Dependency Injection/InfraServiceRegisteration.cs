@@ -52,19 +52,25 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IProductRepository, ProductRepository>();
 			services.AddScoped<ICartRepository, CartRepository>();
 			services.AddScoped<IOrderRepository, OrderRepository>();
-			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
+			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IReservationRepository, ReservationRepository>();
-			services.AddScoped<IPaymentGateway, PaymentGateway>();
-			services.AddScoped<IPaymentRepository, PaymentRepository>();
 			services.AddScoped<IdentityDbInitializer>();
+
+			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));
+
+			services.AddScoped<IPaymentGateway, PaymentGateway>();
+			services.AddScoped<IPaymentRepository, PaymentRepository>();
 			services.Configure<PaymobSettings>(configuration.GetSection("Paymob"));
+			services.AddHttpClient<PaymentGateway>(client =>
+			{
+				client.BaseAddress = new Uri(configuration["Paymob:BaseUrl"]!);
+			});
 			return services;
 		}
 	}

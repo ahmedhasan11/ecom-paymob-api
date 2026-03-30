@@ -12,11 +12,14 @@ namespace Ecom.Infrastructure.Payments
 {
 	public class PaymentGateway : IPaymentGateway
 	{
+		private readonly HttpClient _httpClient;
 		private readonly PaymobSettings _paymob;
+
 		
-		public PaymentGateway(IOptions<PaymobSettings> paymob) 
+		public PaymentGateway(IOptions<PaymobSettings> paymob, HttpClient httpClient) 
 		{
 			_paymob = paymob.Value;
+			_httpClient = httpClient;
 		}
 		public async Task<PaymentSessionResult> CreatePaymentSessionAsync(CreatePaymentSessionRequest req,  CancellationToken cancellationToken)
 		{
