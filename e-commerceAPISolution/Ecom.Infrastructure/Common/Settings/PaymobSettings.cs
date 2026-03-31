@@ -21,5 +21,7 @@ namespace Ecom.Infrastructure.Common.Settings
 		public string RedirectUrl { get; set; } = default!;
 
 		public int ExpirationSeconds { get; set; }
+
+		public string CheckoutBaseUrl { get; set; } = default!;
 	}
 }

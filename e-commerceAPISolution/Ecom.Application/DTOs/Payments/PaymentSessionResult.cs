@@ -10,6 +10,6 @@ namespace Ecom.Application.DTOs.Payments
 	{
 		public long PaymobOrderId { get; set; }
 
-		public string PaymentUrl { get; set; } = default!;
+		public string CheckoutUrl { get; set; } = default!;
 	}
 }

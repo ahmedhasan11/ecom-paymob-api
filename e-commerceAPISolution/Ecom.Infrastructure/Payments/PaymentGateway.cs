@@ -64,10 +64,14 @@ namespace Ecom.Infrastructure.Payments
 			}
 
 			PaymobCreateIntentionResponse? paymobResponse = await response.Content.ReadFromJsonAsync<PaymobCreateIntentionResponse>(cancellationToken);
-			if (paymobResponse is null)
+			if (paymobResponse == null)
 			{
 				throw new Exception("Paymob returned empty response");
 			}
+
+			var checkoutUrl = $"{_paymob.CheckoutBaseUrl}?publicKey={_paymob.PublicKey}&clientSecret={paymobResponse.ClientSecret}";
+
+			return new PaymentSessionResult {CheckoutUrl= checkoutUrl, PaymobOrderId= paymobResponse.PaymobOrderId };
 		}
 	}
 }
