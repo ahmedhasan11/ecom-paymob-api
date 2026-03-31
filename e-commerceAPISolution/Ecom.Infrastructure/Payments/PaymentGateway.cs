@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ecom.Infrastructure.Payments
@@ -24,6 +25,10 @@ namespace Ecom.Infrastructure.Payments
 		}
 		public async Task<PaymentSessionResult> CreatePaymentSessionAsync(CreatePaymentSessionRequest req,  CancellationToken cancellationToken)
 		{
+			if (req==null)
+			{
+				throw new ArgumentNullException(nameof(req));
+			}
 			var amountInCents = (int)(req.Amount * 100); //Amount
 			List<PaymobItem> items = req.Items.Select(item => new PaymobItem
 			{
@@ -53,6 +58,15 @@ namespace Ecom.Infrastructure.Payments
 			   billing_data=billingData
 			}; //Request
 
+			var paymobResponse = await CallPaymobAPI(paymobRequest, cancellationToken);
+
+			var checkoutUrl = $"{_paymob.CheckoutBaseUrl}?publicKey={_paymob.PublicKey}&clientSecret={paymobResponse.ClientSecret}";
+
+			return new PaymentSessionResult {CheckoutUrl= checkoutUrl, PaymobOrderId= paymobResponse.PaymobOrderId };
+		}
+
+		private async Task<PaymobCreateIntentionResponse> CallPaymobAPI(PaymobCreateIntentionRequest paymobRequest, CancellationToken cancellationToken)
+		{
 			//var content = JsonSerializer.Serialize(paymobRequest);
 			var content = JsonContent.Create(paymobRequest); //make serializing + set content type = application/json   // convert obj --> JSON
 			var response = await _httpClient.PostAsync("/v1/intention", content, cancellationToken);
@@ -68,10 +82,7 @@ namespace Ecom.Infrastructure.Payments
 			{
 				throw new Exception("Paymob returned empty response");
 			}
-
-			var checkoutUrl = $"{_paymob.CheckoutBaseUrl}?publicKey={_paymob.PublicKey}&clientSecret={paymobResponse.ClientSecret}";
-
-			return new PaymentSessionResult {CheckoutUrl= checkoutUrl, PaymobOrderId= paymobResponse.PaymobOrderId };
+			return paymobResponse;
 		}
 	}
 }

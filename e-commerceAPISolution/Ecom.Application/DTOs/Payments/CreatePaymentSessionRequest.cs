@@ -9,7 +9,7 @@ namespace Ecom.Application.DTOs.Payments
 	public class CreatePaymentSessionRequest
 	{
 		public decimal Amount { get; set; }
-		public string Currency { get; set; }
+		public string Currency { get; set; } = default!;
 		public Guid PaymentId { get; set; }
 
 		public Guid OrderId { get; set; }

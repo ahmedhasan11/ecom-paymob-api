@@ -12,9 +12,15 @@ namespace Ecom.Application.Validators.Payments
 	{
 		public PaymentSessionRequestValidator() 
 		{
-			RuleFor(x => x.Amount).NotEmpty().GreaterThan(0);
-			RuleFor(x => x.Currency).NotEmpty();
+			RuleFor(x => x.Amount).GreaterThan(0);
+			RuleFor(x => x.Currency).NotEmpty().MaximumLength(10);
 			RuleFor(x=>x.PaymentId).NotEmpty();
+			RuleFor(x => x.OrderId).NotEmpty();
+			RuleFor(x=>x.Items).NotEmpty();
+			RuleForEach(x => x.Items).SetValidator(new CreatePaymentItemValidator());
+
+			RuleFor(x => x.BillingData).NotNull().SetValidator(new BillingDataDtoValidator());
+
 		}
 	}
 }
