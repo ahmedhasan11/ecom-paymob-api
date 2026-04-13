@@ -2,6 +2,7 @@
 using Ecom.Application.DTOs.Payments;
 using Ecom.Application.Interfaces;
 using Ecom.Infrastructure.Common.Settings;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,13 @@ namespace Ecom.Infrastructure.Payments
 	public class PaymentGateway : IPaymentGateway
 	{
 		private readonly HttpClient _httpClient;
-		private readonly PaymobSettings _paymob;	
-		public PaymentGateway(IOptions<PaymobSettings> paymob, HttpClient httpClient) 
+		private readonly PaymobSettings _paymob;
+		private readonly ILogger<PaymentGateway> _logger;
+		public PaymentGateway(IOptions<PaymobSettings> paymob, HttpClient httpClient, ILogger<PaymentGateway> logger) 
 		{
 			_paymob = paymob.Value;
 			_httpClient = httpClient;
+			_logger = logger;
 		}
 		public async Task<PaymentSessionResult> CreatePaymentSessionAsync(CreatePaymentSessionRequest req,  CancellationToken cancellationToken)
 		{
@@ -55,7 +58,8 @@ namespace Ecom.Infrastructure.Payments
 			   merchant_order_id = req.PaymentId.ToString(),
 			   payment_methods = [ _paymob.IntegrationId ],
 			   special_reference= req.OrderId.ToString(),
-			   billing_data=billingData
+			   billing_data=billingData,
+			   expiration= _paymob.ExpirationSeconds
 			}; //Request
 
 			var paymobResponse = await CallPaymobAPI(paymobRequest, cancellationToken);
@@ -81,6 +85,10 @@ namespace Ecom.Infrastructure.Payments
 			if (paymobResponse == null)
 			{
 				throw new Exception("Paymob returned empty response");
+			}
+			if (paymobResponse.Expiration!= _paymob.ExpirationSeconds)
+			{
+				_logger.LogWarning("Paymob expiration mismatch");
 			}
 			return paymobResponse;
 		}

@@ -2,6 +2,7 @@
 using Ecom.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -22,6 +23,9 @@ namespace Ecom.Domain.Entities
 		public long? PaymobTransactionId { get; private set; }
 		public DateTime? PaidAt { get; private set; }
 		public DateTime? FailedAt { get; private set; }
+
+		public string? CheckoutUrl { get; private set; }
+		public DateTime? ExpiresAt { get; private set; }
 		private Payment() { }
 
 		public static Payment Create(Guid orderId, decimal amount, string currency)
@@ -50,19 +54,40 @@ namespace Ecom.Domain.Entities
 			return payment;
 		}
 
-		public void SetPaymobOrderId(long paymobOrderId)
+		public void SetPaymentSessionData(long paymobOrderId, string checkoutUrl, DateTime expiresAt)
 		{
+			if (string.IsNullOrWhiteSpace(checkoutUrl))
+			{
+				throw new ArgumentException("Invalid CheckoutUrl");
+			}
+			if (expiresAt <= DateTime.UtcNow)
+			{
+				throw new ArgumentException("Expiration must be in the future");
+			}
 			if (paymobOrderId <= 0)
 			{
 				throw new ArgumentException("paymobOrderId is not valid");
 			}
-			if (PaymobOrderId.HasValue)
+			if (CheckoutUrl != null || ExpiresAt.HasValue || PaymobOrderId.HasValue)
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException("Payment session already initialized");
 			}
-			PaymobOrderId = paymobOrderId;
-		}
+			if (Status != PaymentStatusEnum.Pending)
+			{
+				throw new InvalidOperationException("Cannot initialize session for non-pending payment");
+			}
 
+			PaymobOrderId = paymobOrderId;
+			CheckoutUrl = checkoutUrl;
+			ExpiresAt = expiresAt;
+		}
+		public bool IsExpired()
+		{
+			if (!ExpiresAt.HasValue)
+				return false;
+
+			return DateTime.UtcNow >= ExpiresAt.Value;
+		}
 		public void MarkAsSucceeded(long transactionId)
 		{
 			if (transactionId <= 0)

@@ -30,7 +30,7 @@ namespace Ecom.Infrastructure.Payments
 		[JsonPropertyName("created")]
 		public DateTime CreatedAt { get; set; }
 
-		[JsonPropertyName("created")]
+		[JsonPropertyName("expiration")]
 		public int Expiration { get; set; }
 
 
