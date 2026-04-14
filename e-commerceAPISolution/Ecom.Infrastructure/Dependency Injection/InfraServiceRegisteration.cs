@@ -68,6 +68,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 
 			services.AddScoped<IPaymentGateway, PaymentGateway>();
 			services.AddScoped<IPaymentRepository, PaymentRepository>();
+			services.AddScoped<IPaymentConfiguration, PaymentConfiguration>();
 			services.Configure<PaymobSettings>(configuration.GetSection("Paymob"));
 			services.AddHttpClient<PaymentGateway>(client =>
 			{

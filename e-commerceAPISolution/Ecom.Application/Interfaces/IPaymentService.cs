@@ -9,6 +9,6 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IPaymentService
 	{
-		Task<PaymentSessionResponse> CreatePaymentSessionAsync(Guid orderId, CancellationToken cancellationToken);
+		Task<PaymentSessionResponse> CreatePaymentSessionAsync(Guid orderId,Guid userId, CancellationToken cancellationToken);
 	}
 }
