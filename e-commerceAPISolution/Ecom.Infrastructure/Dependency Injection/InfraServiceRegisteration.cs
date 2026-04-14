@@ -65,7 +65,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));
-
+			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<IPaymentGateway, PaymentGateway>();
 			services.AddScoped<IPaymentRepository, PaymentRepository>();
 			services.AddScoped<IPaymentConfiguration, PaymentConfiguration>();

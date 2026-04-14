@@ -20,9 +20,17 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 			builder.Property(x=>x.Gateway).HasConversion<string>().HasMaxLength(50).IsRequired();
 			builder.Property(x => x.Currency).HasMaxLength(3).IsRequired();
 			builder.Property(x=>x.OrderId).IsRequired();
-			builder.HasIndex(x => x.PaymobOrderId);
-			builder.HasIndex(x => x.PaymobTransactionId);
+			builder.Property(x => x.CheckoutUrl).HasMaxLength(1000).IsRequired(false);
+			builder.Property(x => x.ExpiresAt).IsRequired(false);
+			builder.Property(x => x.PaidAt).IsRequired(false);
+			builder.Property(x => x.FailedAt).IsRequired(false);
+			builder.Property(x => x.PaymobOrderId).IsRequired(false);
+			builder.Property(x => x.PaymobTransactionId).IsRequired(false);
+			builder.HasIndex(x => x.PaymobOrderId).IsUnique().HasFilter("[PaymobOrderId] IS NOT NULL");
+			builder.HasIndex(x => x.PaymobTransactionId).IsUnique()	.HasFilter("[PaymobTransactionId] IS NOT NULL");
+			builder.HasIndex(x => x.ExpiresAt); //for the background jobs
 			builder.HasIndex(x => x.OrderId);
+			builder.HasIndex(x => x.Status);
 		}
 	}
 }
