@@ -61,7 +61,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IReservationRepository, ReservationRepository>();
 			services.AddScoped<IdentityDbInitializer>();
-
+			services.AddScoped<IPaymobHmacValidator, PaymobHmacValidator>();
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));

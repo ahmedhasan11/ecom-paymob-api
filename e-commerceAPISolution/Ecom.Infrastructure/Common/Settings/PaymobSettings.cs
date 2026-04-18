@@ -23,5 +23,7 @@ namespace Ecom.Infrastructure.Common.Settings
 		public int ExpirationSeconds { get; set; }
 
 		public string CheckoutBaseUrl { get; set; } = default!;
+
+		public string HmacSecret { get; set; } = default!;
 	}
 }

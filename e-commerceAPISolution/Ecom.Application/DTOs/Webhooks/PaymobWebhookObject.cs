@@ -12,10 +12,10 @@ namespace Ecom.Application.DTOs.Webhooks
 		//start hmac order
 		//amount_cents
 		[JsonPropertyName("amount_cents")]
-		public int AmountCents { get; set; }
+		public int AmountCents { get; set; } 
 		//created_at
 		[JsonPropertyName("created_at")]
-		public string? CreatedAt { get; set; }
+		public string? CreatedAt { get; set; } 
 		//currency
 		[JsonPropertyName("currency")]
 		public string? Currency { get; set; }
@@ -27,7 +27,7 @@ namespace Ecom.Application.DTOs.Webhooks
 		public bool HasParentTransaction { get; set; }
 		//obj.id
 		[JsonPropertyName("id")]
-		public long TransactionId { get; set; }
+		public long TransactionId { get; set; } 
 		//integration_id
 		[JsonPropertyName("integration_id")]
 		public int IntegrationId { get; set; }
@@ -51,10 +51,10 @@ namespace Ecom.Application.DTOs.Webhooks
 		public bool IsVoided { get; set; }
 		//order.id 
 		[JsonPropertyName("order")]
-		public PaymobWebhookOrder? Order { get; set; }
+		public PaymobWebhookOrder? Order { get; set; } 
 		//owner
 		[JsonPropertyName("owner")]
-		public int Owner { get; set; }
+		public long Owner { get; set; } 
 		//pending
 		[JsonPropertyName("pending")]
 		public bool Pending { get; set; }
