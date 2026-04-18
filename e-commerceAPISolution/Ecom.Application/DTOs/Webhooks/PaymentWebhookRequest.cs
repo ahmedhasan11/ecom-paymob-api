@@ -10,6 +10,6 @@ namespace Ecom.Application.DTOs.Webhooks
 	public class PaymentWebhookRequest
 	{
 		[JsonPropertyName("obj")]
-		public PaymobWebhookObject Obj { get; set; } = default!;
+		public PaymobWebhookObject? Obj { get; set; } 
 	}
 }
