@@ -35,7 +35,6 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			return _db.Orders.Where(o => o.UserId == userId && o.Id == orderId);
 		}
-
 		public async Task<Order?> GetPendingOrderForUser(Guid userId, CancellationToken cancellationToken)
 		{
 			return await _db.Orders.Where(o => o.UserId == userId && o.Status ==OrderStatusEnum.Pending).FirstOrDefaultAsync(cancellationToken);

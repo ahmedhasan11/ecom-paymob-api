@@ -158,7 +158,6 @@ namespace Ecom.Application.Services
 			return new PaymentSessionResponse { CheckoutUrl = paymobResponse.CheckoutUrl };
 
 		}
-
 		private BillingDataDto BuildBillingData(UserInfoForShiping user , Order order)
 		{
 			var fullName = user.FullName?.Trim();

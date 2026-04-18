@@ -17,7 +17,6 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			_db = db;
 		}
-
 		public async Task CreatePaymentAsync(Payment payment, CancellationToken cancellationToken)
 		{
 			await _db.Payments.AddAsync(payment, cancellationToken);
