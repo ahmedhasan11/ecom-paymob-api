@@ -9,6 +9,6 @@ namespace Ecom.Application.Interfaces
 {
 	public interface IPaymentWebhookService
 	{
-		Task HandleWebhookAsync(PaymentWebhookRequest request, CancellationToken cancellationToken);
+		Task HandleWebhookAsync(PaymentWebhookRequest request, string receivedHmac, CancellationToken cancellationToken);
 	}
 }
