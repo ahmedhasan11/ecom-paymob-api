@@ -37,7 +37,7 @@ namespace Ecom.Application.Services
 			#region 1- Validate request.Obj  
 			if (request.Obj == null)
 			{
-				_logger.LogError("Webhook request object is null");
+				_logger.LogWarning("Webhook request object is null");
 				return;
 			}
 
@@ -48,7 +48,7 @@ namespace Ecom.Application.Services
 			//call your method which validating hmac and pass to it the recieved and chekc the result
 			if (_paymobHmacValidator.IsValid(request.Obj, receivedHmac) == false)
 			{
-				_logger.LogError("Invalid HMAC for payment webhook. Received HMAC: {ReceivedHmac}", receivedHmac);
+				_logger.LogWarning("Invalid HMAC for payment webhook. Received HMAC: {ReceivedHmac}", receivedHmac);
 				return;
 			}
 			#endregion
@@ -91,7 +91,7 @@ namespace Ecom.Application.Services
 			var order = await _orderRepository.GetOrderByIdAsync(payment.OrderId, cancellationToken);
 			if (order == null)
 			{
-				_logger.LogError("Order not found for Order ID: {OrderId} associated with Paymob Order ID: {PaymobOrderId}", payment.OrderId, request.Obj.Order.Id);
+				_logger.LogWarning("Order not found for Order ID: {OrderId} associated with Paymob Order ID: {PaymobOrderId}", payment.OrderId, request.Obj.Order.Id);
 				return;
 			}
 			#endregion

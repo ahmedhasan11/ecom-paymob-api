@@ -39,17 +39,23 @@ namespace Ecom.Application.Services
 		}
 		public async Task<Guid> CheckoutAsync(Guid userId, CancellationToken cancellationToken, ShippingAddressDto addressdto)
 		{
-			if (userId == Guid.Empty)
+			_logger.LogInformation("Initiating checkout process for user {UserId}.", userId);
+			if (userId == Guid.Empty) { 
+				_logger.LogWarning("Checkout failed: userId is empty.");
 				throw new ArgumentException("userId cannot be empty.", nameof(userId));
+			}
 			var pendingOrder = await _orderRepository.GetPendingOrderForUser(userId, cancellationToken);
-			if(pendingOrder is not null) 
+			if(pendingOrder is not null) { 
+				_logger.LogInformation("Checkout skipped: User {UserId} has an existing pending order with ID {OrderId}. Returning existing order ID.", userId, pendingOrder.Id);
 				return pendingOrder.Id;
+			}
 			#region Load Cart
 			var cart = await _cartService.GetMyCartAsync(userId, cancellationToken);
 			#endregion
 			#region Validate Cart
 			if (cart.TotalItemsCount == 0)
 			{
+				_logger.LogWarning("Checkout failed for user {UserId}: cart is empty.", userId);
 				throw new InvalidOperationException("cannot create order for an empty cart");
 			}
 			#endregion
@@ -63,10 +69,12 @@ namespace Ecom.Application.Services
 			{
 				if (!productsDict.TryGetValue(cartItem.ProductId, out var product))
 				{
+					_logger.LogWarning("Product with ID {ProductId} not found for cart item. User ID: {UserId}", cartItem.ProductId, userId);
 					throw new NotFoundException("product not found");
 				}
 				if (product.IsDeleted || !product.IsAvailable)
 				{
+					_logger.LogWarning("Product with ID {ProductId} is unavailable (deleted or not available) for cart item. User ID: {UserId}", cartItem.ProductId, userId);
 					throw new InvalidOperationException("product is unavilable right now ");
 				}
 				//var reservedQuantity = activeReservations[product.Id]; //momkn trmy exception lw mfe4 reserve l el item
@@ -77,6 +85,7 @@ namespace Ecom.Application.Services
 
 				if (quantityRequested > AvailableStock)
 				{
+					_logger.LogWarning("Requested quantity {RequestedQuantity} for product ID {ProductId} exceeds available stock {AvailableStock}. User ID: {UserId}", quantityRequested, product.Id, AvailableStock, userId);
 					throw new InvalidOperationException("Requested Quantity is more than available stock ");
 				}
 
@@ -101,14 +110,18 @@ namespace Ecom.Application.Services
 			{
 				InventoryReservation reservation = new InventoryReservation(order.Id, cartItem.ProductId, cartItem.Quantity);
 				await _reservationRepository.CreateReservationAsync(reservation, cancellationToken);
+				_logger.LogDebug("Created inventory reservation for Order ID {OrderId}, Product ID {ProductId}, Quantity {Quantity}. Reservation ID: {ReservationId}", order.Id, cartItem.ProductId, cartItem.Quantity, reservation.Id);
 			}
 			#endregion
 			#region Clear Cart
 			await _cartService.ClearCartAsync(userId, cancellationToken);
+			_logger.LogInformation("Cleared cart for user {UserId} after successful checkout. Order ID: {OrderId}", userId, order.Id);
 			#endregion
 			#region Save
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			_logger.LogInformation("Saved checkout data to the database for user {UserId}. Order ID: {OrderId}", userId, order.Id);
 			#endregion
+			_logger.LogInformation("Checkout process completed successfully for user {UserId}. Created Order ID: {OrderId}", userId, order.Id);
 			return order.Id;
 		}
 
