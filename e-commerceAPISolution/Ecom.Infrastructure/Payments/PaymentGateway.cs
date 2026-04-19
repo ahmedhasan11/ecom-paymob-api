@@ -61,9 +61,9 @@ namespace Ecom.Infrastructure.Payments
 			   billing_data=billingData,
 			   expiration= _paymob.ExpirationSeconds
 			}; //Request
-
+			_logger.LogInformation("Sending request to Paymob API for PaymentId {PaymentId}", req.PaymentId);
 			var paymobResponse = await CallPaymobAPI(paymobRequest, cancellationToken);
-
+			_logger.LogInformation("Paymob API responded successfully for PaymentId {PaymentId}, PaymobOrderId {PaymobOrderId}", req.PaymentId, paymobResponse.PaymobOrderId);
 			var checkoutUrl = $"{_paymob.CheckoutBaseUrl}?publicKey={_paymob.PublicKey}&clientSecret={paymobResponse.ClientSecret}";
 
 			return new PaymentSessionResult {CheckoutUrl= checkoutUrl, PaymobOrderId= paymobResponse.PaymobOrderId };
