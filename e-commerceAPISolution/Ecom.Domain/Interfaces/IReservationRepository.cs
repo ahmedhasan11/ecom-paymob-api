@@ -17,6 +17,8 @@ namespace Ecom.Domain.Interfaces
 
 		Task<Dictionary<Guid,int>> GetActiveReservedQuantityBulkAsync(List<Guid> productIds, CancellationToken cancellationToken);
 
-		//Task GetExpiredReservationAsync();
+		Task<bool> HasActiveReservationsAsync(Guid orderId, CancellationToken cancellationToken);
+
+		Task<List<InventoryReservation>> GetActiveReservationsByOrderId(Guid orderId,CancellationToken cancellationToken );
 	}
 }

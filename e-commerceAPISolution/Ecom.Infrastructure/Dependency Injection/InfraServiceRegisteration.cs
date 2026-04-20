@@ -3,7 +3,9 @@ using Ecom.Application.Interfaces;
 using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Authentication_Services;
 using Ecom.Infrastructure.Caching;
+using Ecom.Infrastructure.Common.Settings;
 using Ecom.Infrastructure.Identity;
+using Ecom.Infrastructure.Payments;
 using Ecom.Infrastructure.Persistence;
 using Ecom.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,16 +54,28 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IProductRepository, ProductRepository>();
 			services.AddScoped<ICartRepository, CartRepository>();
 			services.AddScoped<IOrderRepository, OrderRepository>();
-			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
+			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IReservationRepository, ReservationRepository>();
 			services.AddScoped<IdentityDbInitializer>();
+			services.AddScoped<IPaymobHmacValidator, PaymobHmacValidator>();
+			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));
+			services.AddScoped<IUserRepository, UserRepository>();
+			services.AddScoped<IPaymentGateway, PaymentGateway>();
+			services.AddScoped<IPaymentRepository, PaymentRepository>();
+			services.AddScoped<IPaymentConfiguration, PaymentConfiguration>();
+			services.Configure<PaymobSettings>(configuration.GetSection("Paymob"));
+			services.AddHttpClient<PaymentGateway>(client =>
+			{
+				client.BaseAddress = new Uri(configuration["Paymob:BaseUrl"]!);
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token",	configuration["Paymob:SecretKey"]
+		);
+			});
 			return services;
 		}
 	}

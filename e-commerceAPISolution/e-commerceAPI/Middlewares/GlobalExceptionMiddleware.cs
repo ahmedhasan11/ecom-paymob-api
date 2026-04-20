@@ -69,7 +69,7 @@ namespace e_commerceAPI.Middlewares
 				{
 					Status = statusCode,
 					Title = title,
-					Detail = ex.Message,
+					Detail = statusCode == 500? "An unexpected error occurred": ex.Message,
 					Instance = context.Request.Path,										
 				};
 				Problem.Extensions["TraceId"] = context.TraceIdentifier;

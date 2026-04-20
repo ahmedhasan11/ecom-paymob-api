@@ -38,5 +38,16 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			return _db.InventoryReservations.Where(i=>i.OrderId==orderId).AsQueryable();
 		}
+
+		public async Task<bool> HasActiveReservationsAsync(Guid orderId , CancellationToken cancellationToken)
+		{
+			return await _db.InventoryReservations.AnyAsync(i => i.OrderId == orderId && i.Status == ReservationStatusEnum.Active&& i.ExpiresAt > DateTime.UtcNow);
+		}
+
+		public async Task<List<InventoryReservation>> GetActiveReservationsByOrderId(Guid orderId, CancellationToken cancellationToken)
+		{
+			return await _db.InventoryReservations.Where(r => r.OrderId == orderId && r.Status == ReservationStatusEnum.Active && r.ExpiresAt > DateTime.UtcNow).ToListAsync(cancellationToken);
+		}
+
 	}
 }

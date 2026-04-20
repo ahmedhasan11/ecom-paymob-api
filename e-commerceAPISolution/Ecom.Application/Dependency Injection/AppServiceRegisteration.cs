@@ -19,6 +19,7 @@ namespace Ecom.Application.Dependency_Injection
 			services.AddScoped<ICartService, CartService>();
 			services.AddScoped<IOrderService, OrderService>();
 			services.AddScoped<ICheckoutService, CheckoutService>();
+			services.AddScoped<IPaymentService, PaymentService>();
 			services.AddValidatorsFromAssembly(typeof(AddProductDtoValidator).Assembly);
 			
 
