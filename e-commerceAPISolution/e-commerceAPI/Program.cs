@@ -2,6 +2,7 @@ using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
 using Ecom.Infrastructure.Identity;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -152,10 +153,14 @@ namespace e_commerceAPI
 
             app.UseHttpsRedirection();
 			app.UseRateLimiter();
+			app.UseHangfireDashboard();
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+
 			app.MapControllers();
-            app.Run();
+
+			app.Run();
         }
     }
 }
