@@ -27,11 +27,26 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		}
 		public async Task<Payment?> GetPendingPaymentByOrderId(Guid orderId, CancellationToken cancellationToken)
 		{
-			return await _db.Payments.AsNoTracking().FirstOrDefaultAsync(p => p.OrderId == orderId && p.Status == PaymentStatusEnum.Pending,cancellationToken);
+			return await _db.Payments.FirstOrDefaultAsync(p => p.OrderId == orderId && p.Status == PaymentStatusEnum.Pending,cancellationToken);
 		}
 		public async Task<Payment?> GetPaymentByPaymobOrderIdAsync(long paymobOrderId, CancellationToken cancellationToken)
 		{
 			return await _db.Payments.FirstOrDefaultAsync(p => p.PaymobOrderId == paymobOrderId, cancellationToken);
+		}
+
+		public async Task<List<Payment>> GetExpiredPendingPaymentsAsync(CancellationToken cancellationToken)
+		{
+			var now = DateTime.UtcNow;
+			var tenMinutesAgo = now.AddMinutes(-10);
+			return await _db.Payments
+				.Where(p => p.Status == PaymentStatusEnum.Pending &&
+				(
+					(p.ExpiresAt.HasValue && p.ExpiresAt <= now) ||
+					(!p.ExpiresAt.HasValue && p.CreatedAt <= tenMinutesAgo)
+				))
+				.OrderBy(p=>p.CreatedAt)
+				.Take(100)
+				.ToListAsync(cancellationToken);
 		}
 	}
 }
