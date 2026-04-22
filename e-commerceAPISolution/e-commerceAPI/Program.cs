@@ -1,3 +1,4 @@
+using e_commerceAPI.Hangfire;
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
 using Ecom.Infrastructure.Identity;
@@ -136,6 +137,7 @@ namespace e_commerceAPI
 			});
 
 			var app = builder.Build();
+
 			using (var scope = app.Services.CreateScope())
 			{
 				var initializer = scope.ServiceProvider	.GetRequiredService<IdentityDbInitializer>();
@@ -154,6 +156,7 @@ namespace e_commerceAPI
             app.UseHttpsRedirection();
 			app.UseRateLimiter();
 			app.UseHangfireDashboard();
+			app.AddHangfireJobs();
 			app.UseAuthentication();
 			app.UseAuthorization();
 
