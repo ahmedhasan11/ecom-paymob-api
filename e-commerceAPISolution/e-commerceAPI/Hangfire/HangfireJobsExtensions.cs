@@ -11,6 +11,11 @@ namespace e_commerceAPI.Hangfire
 				"reservation-expiration-job",
 				service => service.ExpireReservationsAsync(CancellationToken.None),
 				Cron.Minutely);
+
+			RecurringJob.AddOrUpdate<IPaymentExpirationService>(
+				"payment-expiration-job",
+				service => service.ExpirePaymentsAsync(CancellationToken.None),
+				Cron.Minutely);
 		}
 	}
 }
