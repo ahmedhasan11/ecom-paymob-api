@@ -16,7 +16,7 @@ namespace Ecom.Domain.Interfaces
 		Task<Payment?> GetPendingPaymentByOrderId(Guid orderId, CancellationToken cancellationToken);
 
 		Task<Payment?> GetPaymentByPaymobOrderIdAsync(long paymobOrderId, CancellationToken cancellationToken);
-		Task<List<Payment>> GetExpiredPendingPaymentsAsync(CancellationToken cancellationToken);
+		Task<List<Payment>> GetExpiredPendingPaymentsAsync(DateTime now , DateTime threshold, CancellationToken cancellationToken);
 
 
 
