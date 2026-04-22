@@ -20,5 +20,7 @@ namespace Ecom.Domain.Interfaces
 		Task<bool> HasActiveReservationsAsync(Guid orderId, CancellationToken cancellationToken);
 
 		Task<List<InventoryReservation>> GetActiveReservationsByOrderId(Guid orderId,CancellationToken cancellationToken );
+
+		Task<List<InventoryReservation>> GetExpiredActiveReservationsForBackgroundJob(CancellationToken cancellationToken);
 	}
 }
