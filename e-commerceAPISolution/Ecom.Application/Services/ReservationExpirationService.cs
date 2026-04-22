@@ -1,5 +1,6 @@
 ﻿using Ecom.Application.Interfaces;
 using Ecom.Domain.Interfaces;
+using Ecom.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,19 +24,26 @@ namespace Ecom.Application.Services
 
 		public async Task ExpireReservationsAsync(CancellationToken cancellationToken)
 		{
-			//call repo method to get the reservations which is active and expired
-
-			//check if the repo method result is empty
-
-			//check that each reservation you got reservation.status==active
-
-			//getpendingpayment by reservation.OrderId
-
-			//chekc if payment is null
-
-			//expire reservation
-
-			//save changes
+			var reservations = await _reservationRepository.GetExpiredActiveReservationsForBackgroundJob(cancellationToken);
+			if (!reservations.Any())
+			{
+				return;
+			}
+			foreach (var reservation in reservations)
+			{
+				if (reservation.Status!=ReservationStatusEnum.Active)
+				{
+					continue;
+				}
+				//check payment status because of webhook race codnition (payment can be completed while the job is running)	
+				var payment = await _paymentRepository.GetPendingPaymentByOrderId(reservation.OrderId, cancellationToken);
+				if (payment == null)
+				{
+					continue; //(payment already succeeded/failed)
+				}
+				reservation.Expire();
+			}
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 	}
 }
