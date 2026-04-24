@@ -20,10 +20,12 @@ namespace Ecom.Application.Services
 		private readonly IPaymentRepository _paymentRepository;
 		private readonly IOrderRepository _orderRepository;
 		private readonly IReservationRepository _reservationRepository;
+		private readonly IProductRepository _productRepository;
 		private readonly IUnitOfWork _unitOfWork;
 
-		public PaymentWebhookService(IPaymobHmacValidator paymobHmacValidator, ILogger<PaymentWebhookService> logger, IPaymentRepository paymentRepository, IOrderRepository orderRepository
-			, IReservationRepository reservationRepository, IUnitOfWork unitOfWork)
+		public PaymentWebhookService(IPaymobHmacValidator paymobHmacValidator, ILogger<PaymentWebhookService> logger,
+			IPaymentRepository paymentRepository, IOrderRepository orderRepository
+			, IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IProductRepository productRepository)
 		{
 			_paymobHmacValidator = paymobHmacValidator;
 			_logger = logger;
@@ -31,6 +33,7 @@ namespace Ecom.Application.Services
 			_orderRepository = orderRepository;
 			_reservationRepository = reservationRepository;
 			_unitOfWork = unitOfWork;
+			_productRepository = productRepository;
 		}
 		public async Task HandleWebhookAsync(PaymentWebhookRequest request, string receivedHmac, CancellationToken cancellationToken)
 		{
@@ -116,10 +119,25 @@ namespace Ecom.Application.Services
 				}
 				else
 				{
+					var productIds=activeReservations.Select(r=>r.ProductId).ToList();
+					var products = await _productRepository.GetProductsInBulkAsync(productIds, cancellationToken);
+					var productsDict=products.ToDictionary(p=>p.Id);
 					foreach (var reservation in activeReservations)
 					{
+						if (!productsDict.TryGetValue(reservation.ProductId, out var product))
+						{
+							_logger.LogWarning("Product with ID {ProductId} not found while confirming reservation {ReservationId}",
+								reservation.ProductId, reservation.Id);
+
+							throw new InvalidOperationException("Product not found during payment confirmation");
+						}
+						_logger.LogInformation("Product with ID: {ProductId} has current stock quantity: {StockQuantity} before confirming reservation.", product.Id, product.StockQuantity);
+						product.DecreaseStock(reservation.Quantity);
+
 						reservation.Confirm();
 						_logger.LogInformation("Reservation with ID: {ReservationId} for Product ID: {ProductId} has been confirmed.", reservation.Id, reservation.ProductId);
+
+						_logger.LogInformation("Product with ID: {ProductId} stock quantity decreased by {Quantity}. New stock quantity: {StockQuantity}.", product.Id, reservation.Quantity, product.StockQuantity);
 					}
 					_logger.LogInformation("Reservations for Order ID: {OrderId} have been confirmed.", order.Id);
 
