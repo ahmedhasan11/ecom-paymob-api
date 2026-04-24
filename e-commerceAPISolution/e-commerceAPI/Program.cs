@@ -1,3 +1,4 @@
+using e_commerceAPI.Filters;
 using e_commerceAPI.Hangfire;
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
@@ -155,7 +156,12 @@ namespace e_commerceAPI
 
             app.UseHttpsRedirection();
 			app.UseRateLimiter();
-			app.UseHangfireDashboard();
+
+			app.UseHangfireDashboard("/hangfire", new DashboardOptions
+			{
+				Authorization = new[] { new HangfireAuthorizationFilter() }
+			});
+
 			app.AddHangfireJobs();
 			app.UseAuthentication();
 			app.UseAuthorization();
