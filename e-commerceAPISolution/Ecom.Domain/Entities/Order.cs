@@ -13,21 +13,15 @@ namespace Ecom.Domain.Entities
 	{
 		private List<OrderItem> _privateList= new List<OrderItem>();
 		public Guid Id { get; private set; }
-
 		public Guid UserId { get; private set; }
-
 		public OrderStatusEnum Status { get; private set; }
-
 		public decimal SubTotal { get; private set; }
 		public decimal TotalAmount { get; private set; }
 		public IReadOnlyList<OrderItem> Items => _privateList;
-
 		public string Currency { get; private set; }
-
 		public ShippingAddress Address { get; private set; }
-
+		public bool RequiresRefund { get; private set; }
 		private Order() {}
-
 		public static Order Create(Guid userId , ShippingAddress address , List<CreateOrderItemData> requestedItems)
 		{
 
@@ -49,7 +43,9 @@ namespace Ecom.Domain.Entities
 				UserId=userId,
 				Address=address,
 				Currency="EGP",
-				Status=OrderStatusEnum.Pending
+				Status=OrderStatusEnum.Pending,
+				RequiresRefund=false
+
 			};
 			foreach (var item in requestedItems)
 			{
@@ -99,21 +95,19 @@ namespace Ecom.Domain.Entities
 				throw new InvalidOperationException();
 			}
 		}
-		public void Cancel()
+		public void Cancel(bool requiresRefund = false)
 		{
-			if (Status == OrderStatusEnum.Paid)
+			if (Status == OrderStatusEnum.Pending)
 			{
-				throw new InvalidOperationException("Refund not implemented yet");
-			}
-			else if (Status == OrderStatusEnum.PaymentFailed)
-			{
-				Status = OrderStatusEnum.Cancelled;
-			}
-			else
-			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException("Cannot cancel pending order directly.");
 			}
 
+			if (requiresRefund)
+			{
+				RequiresRefund = true;
+			}
+
+			Status = OrderStatusEnum.Cancelled;
 		}
 	}
 }
