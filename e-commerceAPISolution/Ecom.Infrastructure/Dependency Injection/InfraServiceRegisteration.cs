@@ -93,6 +93,15 @@ namespace Ecom.Infrastructure.Dependency_Injection
 				.UseSimpleAssemblyNameTypeSerializer()
 				.UseRecommendedSerializerSettings()
 				.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnectionString")));
+
+			// Add global retry logic for Hangfire jobs
+			GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
+			{
+				Attempts = 1,
+				DelaysInSeconds = new[] { 60, 120 },
+				OnAttemptsExceeded = AttemptsExceededAction.Fail
+			});
+
 			services.AddHangfireServer();
 			return services;
 		}
