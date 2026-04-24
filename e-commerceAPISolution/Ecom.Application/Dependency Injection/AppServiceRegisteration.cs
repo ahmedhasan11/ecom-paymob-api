@@ -20,6 +20,8 @@ namespace Ecom.Application.Dependency_Injection
 			services.AddScoped<IOrderService, OrderService>();
 			services.AddScoped<ICheckoutService, CheckoutService>();
 			services.AddScoped<IPaymentService, PaymentService>();
+			services.AddScoped<IReservationExpirationService, ReservationExpirationService>();
+			services.AddScoped<IPaymentExpirationService, PaymentExpirationService>();
 			services.AddValidatorsFromAssembly(typeof(AddProductDtoValidator).Assembly);
 			
 

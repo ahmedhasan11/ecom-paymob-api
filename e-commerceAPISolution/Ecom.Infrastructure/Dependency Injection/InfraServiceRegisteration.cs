@@ -8,6 +8,7 @@ using Ecom.Infrastructure.Identity;
 using Ecom.Infrastructure.Payments;
 using Ecom.Infrastructure.Persistence;
 using Ecom.Infrastructure.Persistence.Repositories;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -51,31 +52,57 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddSingleton<RedisConnectionFactory>();
 			services.AddSingleton<ICacheService, RedisCacheService>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddScoped<IdentityDbInitializer>();
+
+			//Repositories
 			services.AddScoped<IProductRepository, ProductRepository>();
 			services.AddScoped<ICartRepository, CartRepository>();
 			services.AddScoped<IOrderRepository, OrderRepository>();
+			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+			services.AddScoped<IUserRepository, UserRepository>();
+			services.AddScoped<IReservationRepository, ReservationRepository>();
+			services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+			//External API Services
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
-			services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 			services.AddScoped<IEmailService, EmailService>();
-			services.AddScoped<IReservationRepository, ReservationRepository>();
-			services.AddScoped<IdentityDbInitializer>();
+
+			//Paymob Configurations
 			services.AddScoped<IPaymobHmacValidator, PaymobHmacValidator>();
+			services.AddScoped<IPaymentGateway, PaymentGateway>();
+			services.AddScoped<IPaymentConfiguration, PaymentConfiguration>();
+
+			//IOptions Settings Configurations
 			services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 			services.Configure<AdminUserSettings>(configuration.GetSection("AdminUser"));
-			services.AddScoped<IUserRepository, UserRepository>();
-			services.AddScoped<IPaymentGateway, PaymentGateway>();
-			services.AddScoped<IPaymentRepository, PaymentRepository>();
-			services.AddScoped<IPaymentConfiguration, PaymentConfiguration>();
 			services.Configure<PaymobSettings>(configuration.GetSection("Paymob"));
+
+			//Paymob Call Configure
 			services.AddHttpClient<PaymentGateway>(client =>
 			{
 				client.BaseAddress = new Uri(configuration["Paymob:BaseUrl"]!);
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token",	configuration["Paymob:SecretKey"]
 		);
 			});
+
+			//Hangfire Configuration
+			services.AddHangfire(config => config
+				.UseSimpleAssemblyNameTypeSerializer()
+				.UseRecommendedSerializerSettings()
+				.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnectionString")));
+
+			// Add global retry logic for Hangfire jobs
+			GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
+			{
+				Attempts = 1,
+				DelaysInSeconds = new[] { 60, 120 },
+				OnAttemptsExceeded = AttemptsExceededAction.Fail
+			});
+
+			services.AddHangfireServer();
 			return services;
 		}
 	}
