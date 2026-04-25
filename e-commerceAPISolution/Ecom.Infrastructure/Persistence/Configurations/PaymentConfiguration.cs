@@ -26,11 +26,14 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 			builder.Property(x => x.FailedAt).IsRequired(false);
 			builder.Property(x => x.PaymobOrderId).IsRequired(false);
 			builder.Property(x => x.PaymobTransactionId).IsRequired(false);
+
 			builder.HasIndex(x => x.PaymobOrderId).IsUnique().HasFilter("[PaymobOrderId] IS NOT NULL");
-			builder.HasIndex(x => x.PaymobTransactionId).IsUnique()	.HasFilter("[PaymobTransactionId] IS NOT NULL");
-			builder.HasIndex(x => x.ExpiresAt); //for the background jobs
+			builder.HasIndex(x => x.PaymobTransactionId).IsUnique().HasFilter("[PaymobTransactionId] IS NOT NULL");
+			//builder.HasIndex(x => x.ExpiresAt); //for the background jobs
 			builder.HasIndex(x => x.OrderId);
-			builder.HasIndex(x => x.Status);
+			//builder.HasIndex(x => x.Status);
+			builder.HasIndex(x => new { x.Status, x.ExpiresAt, x.CreatedAt }); //background job
+			builder.HasIndex(x => new { x.OrderId, x.Status });
 		}
 	}
 }

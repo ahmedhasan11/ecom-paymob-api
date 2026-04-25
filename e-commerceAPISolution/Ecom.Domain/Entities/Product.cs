@@ -14,16 +14,11 @@ namespace Ecom.Domain.Entities
 		public string Name { get; set; } = null!;
 		public string? Description { get; set; }
 		public Money Price { get; set; } = null!;
-
 		public string? ImageUrl { get; set; }
-
 		public Guid? CategoryId { get; set; }
 		public Category? Category { get; set; }
-
 		public bool IsAvailable { get; private set; }
-
 		public bool IsDeleted { get; private set; } 
-
 		public int StockQuantity { get; private set; }
 		public bool IsInStock => StockQuantity > 0;
 		private Product() { } // For EF Core
@@ -52,7 +47,6 @@ namespace Ecom.Domain.Entities
 			IsAvailable = true;
 			IsDeleted = false;
 		}
-
 		public void IncreaseStock(int quantity)
 		{
 			if (quantity<=0)
@@ -65,7 +59,6 @@ namespace Ecom.Domain.Entities
 			}
 			StockQuantity += quantity;
 		}
-
 		public void DecreaseStock(int quantity)
 		{
 			if (quantity <= 0)
@@ -82,7 +75,6 @@ namespace Ecom.Domain.Entities
 			}
 			StockQuantity -= quantity;
 		}
-
 		public void MakeAvailable() 
 		{
 			if (IsDeleted == true)
@@ -91,7 +83,6 @@ namespace Ecom.Domain.Entities
 			}
 			IsAvailable = true;
 		}
-
 		public void MakeUnavailable()
 		{
 			if (IsDeleted == true)
@@ -100,13 +91,11 @@ namespace Ecom.Domain.Entities
 			}
 			IsAvailable =false;
 		}
-
 		public void SoftDelete()
 		{
 			IsDeleted=true;
 			IsAvailable=false;
 		}
-
 		public void Restore()
 		{
 			IsDeleted = false;

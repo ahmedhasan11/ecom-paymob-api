@@ -20,10 +20,11 @@ namespace Ecom.Application.Services
 		private readonly IPaymentRepository _paymentRepository;
 		private readonly IOrderRepository _orderRepository;
 		private readonly IReservationRepository _reservationRepository;
+		private readonly IProductRepository _productRepository;
 		private readonly IUnitOfWork _unitOfWork;
-
-		public PaymentWebhookService(IPaymobHmacValidator paymobHmacValidator, ILogger<PaymentWebhookService> logger, IPaymentRepository paymentRepository, IOrderRepository orderRepository
-			, IReservationRepository reservationRepository, IUnitOfWork unitOfWork)
+		public PaymentWebhookService(IPaymobHmacValidator paymobHmacValidator, ILogger<PaymentWebhookService> logger,
+			IPaymentRepository paymentRepository, IOrderRepository orderRepository
+			, IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IProductRepository productRepository)
 		{
 			_paymobHmacValidator = paymobHmacValidator;
 			_logger = logger;
@@ -31,6 +32,7 @@ namespace Ecom.Application.Services
 			_orderRepository = orderRepository;
 			_reservationRepository = reservationRepository;
 			_unitOfWork = unitOfWork;
+			_productRepository = productRepository;
 		}
 		public async Task HandleWebhookAsync(PaymentWebhookRequest request, string receivedHmac, CancellationToken cancellationToken)
 		{
@@ -42,7 +44,6 @@ namespace Ecom.Application.Services
 			}
 
 			#endregion
-
 			#region 2- Validate Hmac
 			//validate hmac before doing any webhooc things 
 			//call your method which validating hmac and pass to it the recieved and chekc the result
@@ -52,7 +53,6 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 3- Validate request.Obj.Order && request.Obj.Order.Id
 			if (request.Obj.Order == null || request.Obj.Order.Id <= 0)
 			{
@@ -60,7 +60,6 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 4-  Check Pending attribute
 			if (request.Obj.Pending == true)
 			{
@@ -68,7 +67,6 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 5- GetPayment & validate if not found
 			//GetPayment & validate if not found
 			var payment = await _paymentRepository.GetPaymentByPaymobOrderIdAsync(request.Obj.Order.Id, cancellationToken);
@@ -78,7 +76,6 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 6- Idempotency Check if payment is not pending
 			if (payment.Status != PaymentStatusEnum.Pending)
 			{
@@ -86,7 +83,6 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 7-  Get Order & validate if not found
 			var order = await _orderRepository.GetOrderByIdAsync(payment.OrderId, cancellationToken);
 			if (order == null)
@@ -95,12 +91,10 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 8- Get Reservation bool && Reservations List
 			bool isActiveReservations = await _reservationRepository.HasActiveReservationsAsync(order.Id, cancellationToken);
 			List<InventoryReservation> activeReservations = await _reservationRepository.GetActiveReservationsByOrderId(order.Id, cancellationToken);
 			#endregion
-
 			#region 9- Success Flow 
 			if (request.Obj.Success == true)
 			{
@@ -108,18 +102,36 @@ namespace Ecom.Application.Services
 				_logger.LogInformation("Payment marked as succeeded for Paymob Order ID: {PaymobOrderId}, Transaction ID: {TransactionId}", request.Obj.Order.Id, request.Obj.TransactionId);
 				if (isActiveReservations == false)
 				{
-					order.Cancel();
-					_logger.LogInformation("Order with ID: {OrderId} has been cancelled due to no active reservations after successful payment.", order.Id);
+					order.MarkAsPaid();
+					_logger.LogInformation("Order with ID: {OrderId} has been marked as paid.", order.Id);
+
+					order.Cancel(true);
+					_logger.LogInformation("Order {OrderId} marked as cancelled and requires refund", order.Id);
 
 					//process Refund later
 					_logger.LogInformation("Refund process should be initiated for Order ID: {OrderId} due to successful payment but no active reservations.", order.Id);
 				}
 				else
 				{
+					var productIds=activeReservations.Select(r=>r.ProductId).ToList();
+					var products = await _productRepository.GetProductsInBulkAsync(productIds, cancellationToken);
+					var productsDict=products.ToDictionary(p=>p.Id);
 					foreach (var reservation in activeReservations)
 					{
+						if (!productsDict.TryGetValue(reservation.ProductId, out var product))
+						{
+							_logger.LogError("Product with ID {ProductId} not found while confirming reservation {ReservationId}",
+								reservation.ProductId, reservation.Id);
+
+							throw new InvalidOperationException("Product not found during payment confirmation");
+						}
+						_logger.LogInformation("Product with ID: {ProductId} has current stock quantity: {StockQuantity} before confirming reservation.", product.Id, product.StockQuantity);
+						product.DecreaseStock(reservation.Quantity);
+
 						reservation.Confirm();
 						_logger.LogInformation("Reservation with ID: {ReservationId} for Product ID: {ProductId} has been confirmed.", reservation.Id, reservation.ProductId);
+
+						_logger.LogInformation("Product with ID: {ProductId} stock quantity decreased by {Quantity}. New stock quantity: {StockQuantity}.", product.Id, reservation.Quantity, product.StockQuantity);
 					}
 					_logger.LogInformation("Reservations for Order ID: {OrderId} have been confirmed.", order.Id);
 
@@ -131,7 +143,6 @@ namespace Ecom.Application.Services
 				return;
 			}
 			#endregion
-
 			#region 10- Failure Flow		
 			if (request.Obj.Success == false)
 			{
