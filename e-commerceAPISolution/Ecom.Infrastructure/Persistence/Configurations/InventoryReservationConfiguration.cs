@@ -24,8 +24,9 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 
 			builder.HasIndex(x => x.ProductId);
 			builder.HasIndex(x => x.OrderId);
-			builder.HasIndex(x => x.Status);
+
 			builder.HasIndex(x => new { x.OrderId, x.ProductId }).IsUnique();
+			builder.HasIndex(x => new { x.Status, x.ExpiresAt });// for the background job to efficiently query expired reservations
 		}
 	}
 }
