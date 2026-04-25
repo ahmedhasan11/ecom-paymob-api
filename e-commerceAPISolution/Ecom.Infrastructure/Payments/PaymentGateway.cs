@@ -64,6 +64,15 @@ namespace Ecom.Infrastructure.Payments
 			_logger.LogInformation("Sending request to Paymob API for PaymentId {PaymentId}", req.PaymentId);
 			var paymobResponse = await CallPaymobAPI(paymobRequest, cancellationToken);
 			_logger.LogInformation("Paymob API responded successfully for PaymentId {PaymentId}, PaymobOrderId {PaymobOrderId}", req.PaymentId, paymobResponse.PaymobOrderId);
+			if (string.IsNullOrWhiteSpace(paymobResponse.ClientSecret))
+			{
+				_logger.LogError("Invalid Paymob response: missing client secret for PaymentId {PaymentId}", req.PaymentId);
+				throw new InvalidOperationException("Invalid Paymob response");
+			}
+			if (paymobResponse.PaymobOrderId <= 0)
+			{
+				throw new InvalidOperationException("Invalid Paymob response");
+			}
 			var checkoutUrl = $"{_paymob.CheckoutBaseUrl}?publicKey={_paymob.PublicKey}&clientSecret={paymobResponse.ClientSecret}";
 
 			return new PaymentSessionResult {CheckoutUrl= checkoutUrl, PaymobOrderId= paymobResponse.PaymobOrderId };
@@ -78,7 +87,8 @@ namespace Ecom.Infrastructure.Payments
 			if (!response.IsSuccessStatusCode)
 			{
 				var error = await response.Content.ReadAsStringAsync(cancellationToken);
-				throw new Exception($"Paymob intention creation failed: {error}");
+				_logger.LogError("Paymob API failed with status {StatusCode}: {Error}", response.StatusCode, error);
+				throw new InvalidOperationException($"Paymob intention creation failed: {error}");
 			}
 
 			PaymobCreateIntentionResponse? paymobResponse = await response.Content.ReadFromJsonAsync<PaymobCreateIntentionResponse>(cancellationToken);
