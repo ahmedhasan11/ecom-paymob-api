@@ -1,5 +1,6 @@
 ﻿using Ecom.Application.DTOs.Webhooks;
 using Ecom.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[HttpPost("paymob")]
+		[AllowAnonymous]
 		public async Task<IActionResult> HandlePaymentWebhook([FromBody]PaymentWebhookRequest req, [FromQuery(Name = "hmac")] string hmac, CancellationToken cancellationToken)
 		{
 			if (string.IsNullOrWhiteSpace(hmac))
