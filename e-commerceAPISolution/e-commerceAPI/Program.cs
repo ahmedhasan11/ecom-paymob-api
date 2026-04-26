@@ -1,5 +1,6 @@
 using e_commerceAPI.Filters;
 using e_commerceAPI.Hangfire;
+using e_commerceAPI.Middlewares;
 using Ecom.Application.Dependency_Injection;
 using Ecom.Infrastructure.Dependency_Injection;
 using Ecom.Infrastructure.Identity;
@@ -33,6 +34,9 @@ namespace e_commerceAPI
 				options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders
 					|
 					Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
+				// Security: Prevent sensitive header logging
+				options.RequestHeaders.Remove("Authorization");
+				options.RequestHeaders.Remove("Cookie");
 
 			});
 
@@ -41,6 +45,11 @@ namespace e_commerceAPI
             builder.Services.AddApplication();
 
 			var jwtSettings = builder.Configuration.GetSection("Jwt");
+			var secretKey = jwtSettings["Secret"];
+			if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 32)
+			{
+				throw new InvalidOperationException("JWT Secret is missing or too short (minimum 32 characters required for HS256).");
+			}
 
 			builder.Services.AddRateLimiter(options =>
 			{
@@ -96,7 +105,7 @@ namespace e_commerceAPI
 					ValidIssuer = jwtSettings["Issuer"],
 					ValidAudience = jwtSettings["Audience"],
 					IssuerSigningKey = new SymmetricSecurityKey(
-					Encoding.UTF8.GetBytes(jwtSettings["Secret"]))
+					Encoding.UTF8.GetBytes(secretKey))
 				};
 			});
 
@@ -138,7 +147,7 @@ namespace e_commerceAPI
 			});
 
 			var app = builder.Build();
-
+			//DB seeding
 			using (var scope = app.Services.CreateScope())
 			{
 				var initializer = scope.ServiceProvider	.GetRequiredService<IdentityDbInitializer>();
@@ -146,26 +155,34 @@ namespace e_commerceAPI
 				await initializer.SeedAdminUserAsync();
 			}
 
+			//Global Exception Handling
+			app.UseMiddleware<GlobalExceptionMiddleware>();
+
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseSwagger();
+				app.UseSwaggerUI();
+			}
+
+			//Logging
 			app.UseSerilogRequestLogging();
 			app.UseHttpLogging();
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+
 
             app.UseHttpsRedirection();
-			app.UseRateLimiter();
+			app.UseRouting();// Required for RateLimiter and Auth to acknowledge endpoints
+			app.UseRateLimiter();// Security: Throttling before Auth to prevent resource exhaustion
 
+			//Auth
+			app.UseAuthentication();
+			app.UseAuthorization();
+
+			//Hangfire
 			app.UseHangfireDashboard("/hangfire", new DashboardOptions
 			{
 				Authorization = new[] { new HangfireAuthorizationFilter() }
 			});
-
 			app.AddHangfireJobs();
-			app.UseAuthentication();
-			app.UseAuthorization();
-
 
 			app.MapControllers();
 
