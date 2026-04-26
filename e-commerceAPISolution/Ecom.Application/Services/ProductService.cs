@@ -491,6 +491,7 @@ namespace Ecom.Application.Services
 
 				throw new ArgumentNullException("dto is null", nameof(requestupdateProductDto));
 			}
+
 			_logger.LogInformation(
 			"Starting UpdateProduct operation. ProductId={ProductId}", id);
 
@@ -569,12 +570,14 @@ namespace Ecom.Application.Services
 			}
 			_logger.LogInformation(	"Starting IncreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
 			id, dto.Quantity);
+
 			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product==null)
 			{
 				_logger.LogWarning("Product not found for Increase stock. ProductId={ProductId}", id);
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
+
 			product.IncreaseStock(dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Product Stock Increase", cancellationToken);
@@ -590,12 +593,14 @@ namespace Ecom.Application.Services
 			}
 			_logger.LogInformation("Starting DecreaseStock operation. ProductId={ProductId}, Quantity={Quantity}",
 			id, dto.Quantity);
+
 			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
 			if (product == null)
 			{
 				_logger.LogWarning("Product not found for Decrease stock. ProductId={ProductId}", id);
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
+
 			product.DecreaseStock(dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await InvalidateProductsCacheAsync("Product Stock Decrease", cancellationToken);
@@ -609,9 +614,11 @@ namespace Ecom.Application.Services
 			{
 				throw new ArgumentException("Id cannot be empty.");
 			}
+
 			_logger.LogInformation("Starting ToggleAvailability operation. ProductId={ProductId}, RequestedAvailability={Availability}",
 			id, dto.Available);
 			Product? product = await _productRepository.GetProductByIdAsync(id, cancellationToken);
+
 			if (product == null)
 			{
 				_logger.LogWarning("Product not found for Toggle Availability. ProductId={ProductId}", id);
@@ -644,12 +651,14 @@ namespace Ecom.Application.Services
 				throw new ArgumentException("Id cannot be empty.");
 			}
 			_logger.LogInformation(	"Starting RestoreProduct operation. ProductId={ProductId}",	id);
+
 			Product? product = await _productRepository.GetProductByIdIncludingDeletedAsync(id, cancellationToken);
 			if (product == null)
 			{
 				_logger.LogWarning("Product not found for Restore. ProductId={ProductId}", id);
 				throw new NotFoundException($"Product with {id} was not found ");
 			}
+
 			if (product.IsDeleted==false)
 			{
 				_logger.LogInformation("Restore skipped. Product is not deleted. ProductId={ProductId}",product.Id);
