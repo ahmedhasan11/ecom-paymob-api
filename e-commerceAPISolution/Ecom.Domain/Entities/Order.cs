@@ -97,10 +97,8 @@ namespace Ecom.Domain.Entities
 		}
 		public void Cancel(bool requiresRefund = false)
 		{
-			if (Status == OrderStatusEnum.Pending)
-			{
-				throw new InvalidOperationException("Cannot cancel pending order directly.");
-			}
+			if (Status == OrderStatusEnum.Cancelled)
+				return;
 
 			if (requiresRefund)
 			{
