@@ -102,42 +102,50 @@ namespace Ecom.Application.Services
 				_logger.LogInformation("Payment marked as succeeded for Paymob Order ID: {PaymobOrderId}, Transaction ID: {TransactionId}", request.Obj.Order.Id, request.Obj.TransactionId);
 				if (isActiveReservations == false)
 				{
-					order.MarkAsPaid();
-					_logger.LogInformation("Order with ID: {OrderId} has been marked as paid.", order.Id);
-
-					order.Cancel(true);
+					order.Cancel(true); //refund
 					_logger.LogInformation("Order {OrderId} marked as cancelled and requires refund", order.Id);
-
-					//process Refund later
 					_logger.LogInformation("Refund process should be initiated for Order ID: {OrderId} due to successful payment but no active reservations.", order.Id);
+					await _unitOfWork.SaveChangesAsync(cancellationToken);
+					return;
 				}
-				else
-				{
-					var productIds=activeReservations.Select(r=>r.ProductId).ToList();
-					var products = await _productRepository.GetProductsInBulkAsync(productIds, cancellationToken);
-					var productsDict=products.ToDictionary(p=>p.Id);
+				var productIds = activeReservations.Select(r => r.ProductId).ToList();
+				var products = await _productRepository.GetProductsInBulkAsync(productIds, cancellationToken);
+				var productsDict = products.ToDictionary(p => p.Id);
+
 					foreach (var reservation in activeReservations)
 					{
-						if (!productsDict.TryGetValue(reservation.ProductId, out var product))
+						if (!productsDict.TryGetValue(reservation.ProductId, out var product) || product.IsDeleted || !product.IsAvailable)
 						{
-							_logger.LogError("Product with ID {ProductId} not found while confirming reservation {ReservationId}",
+							_logger.LogError("Product with ID {ProductId} not found or not available  while confirming reservation {ReservationId}",
 								reservation.ProductId, reservation.Id);
 
-							throw new InvalidOperationException("Product not found during payment confirmation");
+							//throw new InvalidOperationException("Product not found during payment confirmation");
+							order.Cancel(true); //refund
+							foreach (var res in activeReservations)
+							{
+								res.Release();
+							}
+							await _unitOfWork.SaveChangesAsync(cancellationToken);
+							return ;
 						}
-						_logger.LogInformation("Product with ID: {ProductId} has current stock quantity: {StockQuantity} before confirming reservation.", product.Id, product.StockQuantity);
-						product.DecreaseStock(reservation.Quantity);
+				} //check if any product invalid  
 
-						reservation.Confirm();
-						_logger.LogInformation("Reservation with ID: {ReservationId} for Product ID: {ProductId} has been confirmed.", reservation.Id, reservation.ProductId);
+					foreach (var reservation in activeReservations)
+					{
+					var product= productsDict[reservation.ProductId];
+					_logger.LogInformation("Product with ID: {ProductId} has current stock quantity: {StockQuantity} before confirming reservation.", product.Id, product.StockQuantity);
+					product.DecreaseStock(reservation.Quantity);
 
-						_logger.LogInformation("Product with ID: {ProductId} stock quantity decreased by {Quantity}. New stock quantity: {StockQuantity}.", product.Id, reservation.Quantity, product.StockQuantity);
-					}
+					reservation.Confirm();
+					_logger.LogInformation("Reservation with ID: {ReservationId} for Product ID: {ProductId} has been confirmed.", reservation.Id, reservation.ProductId);
+
+					_logger.LogInformation("Product with ID: {ProductId} stock quantity decreased by {Quantity}. New stock quantity: {StockQuantity}.", product.Id, reservation.Quantity, product.StockQuantity);
+					} //final execution
+
 					_logger.LogInformation("Reservations for Order ID: {OrderId} have been confirmed.", order.Id);
-
 					order.MarkAsPaid();
 					_logger.LogInformation("Order with ID: {OrderId} has been marked as paid.", order.Id);
-				}
+
 
 				await _unitOfWork.SaveChangesAsync(cancellationToken);
 				return;
