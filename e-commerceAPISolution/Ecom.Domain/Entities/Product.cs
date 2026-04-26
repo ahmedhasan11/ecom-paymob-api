@@ -21,6 +21,8 @@ namespace Ecom.Domain.Entities
 		public bool IsDeleted { get; private set; } 
 		public int StockQuantity { get; private set; }
 		public bool IsInStock => StockQuantity > 0;
+
+		public byte[] RowVersion { get; set; } = default!; // For concurrency control
 		private Product() { } // For EF Core
 		public Product(Decimal price , string name, int? InitialStock =null)
 		{

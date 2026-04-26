@@ -24,6 +24,7 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 			});
 
 			builder.Property(p => p.Description).HasMaxLength(200);
+			builder.Property(p => p.RowVersion).IsRowVersion();
 
 		}
 	}
