@@ -24,7 +24,8 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 
 		public async Task<Dictionary<Guid, int>> GetActiveReservedQuantityBulkAsync(List<Guid> productIds, CancellationToken cancellationToken)
 		{
-			return await _db.InventoryReservations.Where(r => productIds.Contains(r.ProductId) && r.Status == ReservationStatusEnum.Active)
+			var now = DateTime.UtcNow;
+			return await _db.InventoryReservations.Where(r => productIds.Contains(r.ProductId) && r.Status == ReservationStatusEnum.Active && r.ExpiresAt > now)
 				.GroupBy(r => r.ProductId)
 				.Select(g => new { ProductId = g.Key, ReservedQuantity = g.Sum(x => x.Quantity) }).ToDictionaryAsync(x=>x.ProductId, x=>x.ReservedQuantity, cancellationToken);
 		}
