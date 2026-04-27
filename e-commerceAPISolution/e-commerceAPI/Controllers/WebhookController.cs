@@ -1,4 +1,5 @@
 ﻿using Ecom.Application.DTOs.Webhooks;
+using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +12,11 @@ namespace e_commerceAPI.Controllers
 	public class WebhookController : ControllerBase
 	{
 		private readonly IPaymentWebhookService _paymentWebhookService;
-		public WebhookController(IPaymentWebhookService paymentWebhookService)
+		private readonly ILogger<WebhookController> _logger;
+		public WebhookController(IPaymentWebhookService paymentWebhookService, ILogger<WebhookController> logger)
 		{
 			_paymentWebhookService = paymentWebhookService;
+			_logger = logger;
 		}
 
 		[HttpPost("paymob")]
@@ -24,8 +27,16 @@ namespace e_commerceAPI.Controllers
 			{
 				return BadRequest("Missing hmac");
 			}
-			await _paymentWebhookService.HandleWebhookAsync(req, hmac, cancellationToken);
-			return Ok();
+			try
+			{
+				await _paymentWebhookService.HandleWebhookAsync(req, hmac, cancellationToken);
+				return Ok(); // ✅ success
+			}
+			catch (InvalidHmacException ex)
+			{
+				_logger.LogWarning(ex, "Invalid HMAC received");
+				return StatusCode(500);
+			}
 		}
 	}
 }
