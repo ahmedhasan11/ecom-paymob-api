@@ -55,7 +55,7 @@ namespace e_commerceAPI
 			{
 				options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
 					RateLimitPartition.GetSlidingWindowLimiter(
-						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						partitionKey: GetPartitionKey(context, allowUserId: true),
 						factory: _ => new SlidingWindowRateLimiterOptions
 						{
 							PermitLimit = 100,
@@ -64,9 +64,10 @@ namespace e_commerceAPI
 							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
 							QueueLimit = 0
 						}));
+
 				options.AddPolicy("LoginPolicy", context =>
 					RateLimitPartition.GetSlidingWindowLimiter(
-						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						partitionKey: GetPartitionKey(context, allowUserId: false),
 						factory: _ => new SlidingWindowRateLimiterOptions
 						{
 							PermitLimit = 5,
@@ -75,9 +76,10 @@ namespace e_commerceAPI
 							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
 							QueueLimit = 0
 						}));
+
 				options.AddPolicy("ForgotPolicy", context =>
 					RateLimitPartition.GetSlidingWindowLimiter(
-						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						partitionKey: GetPartitionKey(context, allowUserId: false),
 						factory: _ => new SlidingWindowRateLimiterOptions
 						{
 							PermitLimit = 3,
@@ -86,8 +88,27 @@ namespace e_commerceAPI
 							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
 							QueueLimit = 0
 						}));
+
 				options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 			});
+
+			static string GetPartitionKey(HttpContext context, bool allowUserId)
+			{
+				if (allowUserId)
+				{
+					// Use "sub" claim specifically as requested
+					var userId = context.User?.FindFirst("sub")?.Value;
+					if (!string.IsNullOrEmpty(userId))
+					{
+						return $"user:{userId}";
+					}
+				}
+
+				// Fallback to IP address
+				var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+				return $"ip:{ipAddress}";
+			}
+
 
 			builder.Services.AddAuthentication(options =>
 			{
