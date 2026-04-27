@@ -1,5 +1,6 @@
 ﻿using Ecom.Application.DTOs.Payments;
 using Ecom.Application.DTOs.Webhooks;
+using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
 using Ecom.Domain.Enums;
@@ -28,7 +29,8 @@ namespace Ecom.Application.Services
 		private readonly IUnitOfWork _unitOfWork;
 		public PaymentWebhookService(IPaymobHmacValidator paymobHmacValidator, ILogger<PaymentWebhookService> logger,
 			IPaymentRepository paymentRepository, IOrderRepository orderRepository
-			, IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IProductRepository productRepository)
+			, IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IProductRepository productRepository
+			,IEmailService emailService, IServiceProvider serviceProvider)
 		{
 			_paymobHmacValidator = paymobHmacValidator;
 			_logger = logger;
@@ -37,6 +39,8 @@ namespace Ecom.Application.Services
 			_reservationRepository = reservationRepository;
 			_unitOfWork = unitOfWork;
 			_productRepository = productRepository;
+			_emailService = emailService;
+			_serviceProvider = serviceProvider;
 		}
 		public async Task HandleWebhookAsync(PaymentWebhookRequest request, string receivedHmac, CancellationToken cancellationToken)
 		{
@@ -54,7 +58,7 @@ namespace Ecom.Application.Services
 			if (_paymobHmacValidator.IsValid(request.Obj, receivedHmac) == false)
 			{
 				_logger.LogWarning("Invalid HMAC for payment webhook. Received HMAC: {ReceivedHmac}", receivedHmac);
-				return;
+				throw new InvalidHmacException("Invalid HMAC"); // Consider using a more specific exception type for better error handling
 			}
 			#endregion
 			#region 3- Validate request.Obj.Order && request.Obj.Order.Id
