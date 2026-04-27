@@ -21,7 +21,7 @@ namespace Ecom.Infrastructure.Payments
 		public bool IsValid(PaymobWebhookObject obj, string receivedHmac)
 		{	
 			var hmacSecret = _paymobSettings.HmacSecret;
-			var hmacBytes= Encoding.UTF8.GetBytes(hmacSecret);
+			var hmacBytes= Encoding.UTF8.GetBytes(hmacSecret); //7wl el text(raw string) l bytes [3shan kda UTF8]
 			using var hmac = new HMACSHA512(hmacBytes);
 			var concatenatedString = string.Concat(obj.AmountCents, obj.CreatedAt ?? "", obj.Currency ?? ""
 			, obj.ErrorOccured.ToString().ToLower(), obj.HasParentTransaction.ToString().ToLower(), obj.TransactionId, obj.IntegrationId
@@ -34,7 +34,11 @@ namespace Ecom.Infrastructure.Payments
 			var hash = hmac.ComputeHash(dataBytes);
 			var result = BitConverter.ToString(hash).Replace("-", "").ToLower();
 
-			if (result!=receivedHmac)
+			var computedHmacBytes = Convert.FromHexString(result);
+			var receivedHmacBytes = Convert.FromHexString(receivedHmac);
+
+			var isValid = CryptographicOperations.FixedTimeEquals(computedHmacBytes, receivedHmacBytes);
+			if (!isValid)
 			{
 				return false;
 			}
