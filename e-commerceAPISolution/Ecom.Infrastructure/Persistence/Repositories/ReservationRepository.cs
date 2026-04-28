@@ -55,6 +55,7 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 			var now = DateTime.UtcNow;
 			//we get the reservations which is active and expired to release them
 			return await _db.InventoryReservations
+				.Include(r => r.Order)
 				.Where(r => r.Status == ReservationStatusEnum.Active && r.ExpiresAt <= now)
 				.OrderBy(r => r.ExpiresAt)
 				.Take(100)				

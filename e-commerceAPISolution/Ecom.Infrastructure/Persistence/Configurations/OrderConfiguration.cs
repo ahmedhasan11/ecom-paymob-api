@@ -22,6 +22,7 @@ namespace Ecom.Infrastructure.Persistence.Configurations
 			builder.HasMany(o => o.Items).WithOne(oi => oi.Order).HasForeignKey(oi => oi.OrderId).OnDelete(DeleteBehavior.Cascade);
 			builder.Property(o => o.Currency).IsRequired().HasMaxLength(10);
 			builder.Property(o=>o.Status).HasConversion<string>().IsRequired().HasMaxLength(50);//status order enum
+			builder.Property(o=>o.RowVersion).IsRowVersion();
 			builder.OwnsOne(o=>o.Address, address =>
 			{
 				address.Property(a => a.RecipientName).IsRequired().HasMaxLength(100);

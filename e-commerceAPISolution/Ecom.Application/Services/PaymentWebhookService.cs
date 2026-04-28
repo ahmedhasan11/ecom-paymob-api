@@ -151,8 +151,19 @@ namespace Ecom.Application.Services
 					} //final execution
 
 					_logger.LogInformation("Reservations for Order ID: {OrderId} have been confirmed.", order.Id);
+				//order.MarkAsPaid();
+				//_logger.LogInformation("Order with ID: {OrderId} has been marked as paid.", order.Id);
+				if (order.Status == OrderStatusEnum.Cancelled)
+				{
+					_logger.LogWarning("Order {OrderId} was cancelled by background job just before confirmation. Triggering refund.", order.Id);
+					order.Cancel(true); // Flag for refund since payment succeeded but order is cancelled
+				} //3shan momkn ykon background job 3ml expire l el order
+				else
+				{
 					order.MarkAsPaid();
 					_logger.LogInformation("Order with ID: {OrderId} has been marked as paid.", order.Id);
+				}
+
 
 				try
 				{
@@ -176,6 +187,11 @@ namespace Ecom.Application.Services
 						"❌ CRITICAL: Order Missing",
 						$"Order {order.Id} was not found during concurrency handling. Manual investigation required.",
 						cancellationToken);
+						return;
+					}
+					if (dbOrder.Status == OrderStatusEnum.Paid)
+					{
+						_logger.LogInformation("Order {OrderId} has already been marked as Paid. Skipping refund logic.", order.Id);
 						return;
 					}
 					dbOrder.Cancel(true); // requires refund

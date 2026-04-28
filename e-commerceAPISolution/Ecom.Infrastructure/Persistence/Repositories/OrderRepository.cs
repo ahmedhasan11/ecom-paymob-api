@@ -25,7 +25,7 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		}
 		public async Task<Order?> GetOrderByIdAsync(Guid orderId, CancellationToken cancellationToken)
 		{
-			return await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
+			return await _db.Orders.Include(o=>o.Items).FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
 		}
 		public IQueryable<Order> GetUserOrdersQuery(Guid userId)
 		{

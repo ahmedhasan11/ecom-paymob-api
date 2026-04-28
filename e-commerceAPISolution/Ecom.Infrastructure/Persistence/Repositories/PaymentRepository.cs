@@ -34,6 +34,10 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 			return await _db.Payments.FirstOrDefaultAsync(p => p.PaymobOrderId == paymobOrderId, cancellationToken);
 		}
 
+		public async Task<List<Payment>> GetPendingPaymentsByOrderIdsInBulk(List<Guid> orderIds, CancellationToken cancellationToken)
+		{
+			return await _db.Payments.Where(p => orderIds.Contains(p.OrderId) && p.Status == PaymentStatusEnum.Pending).ToListAsync(cancellationToken);
+		}
 		public async Task<List<Payment>> GetExpiredPendingPaymentsAsync(DateTime now , DateTime threshold,  CancellationToken cancellationToken)
 		{
 			return await _db.Payments
