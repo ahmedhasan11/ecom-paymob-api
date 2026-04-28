@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Ecom.Application.Services
 {
@@ -94,7 +96,7 @@ namespace Ecom.Application.Services
 
 			cart.AddItem(product.Id, dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return await GetMyCartAsync(userId, cancellationToken);
+			return MapToCartResult(cart);
 		}
 
 		public async Task<CartResultDto> RemoveItemFromCartAsync(Guid userId, Guid productId, CancellationToken cancellationToken)
@@ -115,7 +117,7 @@ namespace Ecom.Application.Services
 			}
 			cart.RemoveItem(productId);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return await GetMyCartAsync(userId, cancellationToken);
+			return MapToCartResult(cart);
 
 		}
 
@@ -154,7 +156,7 @@ namespace Ecom.Application.Services
 
 			cart.UpdateQuantity(productId, dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return await GetMyCartAsync(userId, cancellationToken);
+			return MapToCartResult(cart);
 
 		}
 
@@ -171,6 +173,36 @@ namespace Ecom.Application.Services
 			}
 			cart.ClearCart();
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
+		}
+
+		private CartResultDto MapToCartResult(Cart cart)
+		{
+			return new CartResultDto
+			{
+				CartId = cart.Id,
+				TotalItemsCount = cart.CartItems.Sum(ci => ci.Quantity),
+				SubTotal = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price.Amount),
+				HasUnavailableItems = cart.CartItems.Any(ci =>
+					ci.Product.IsDeleted ||
+					!ci.Product.IsAvailable ||
+					ci.Product.StockQuantity < ci.Quantity),
+
+				CartItems = cart.CartItems.Select(ci => new CartItemDto
+				{
+					ProductId = ci.ProductId,
+					Quantity = ci.Quantity,
+					ProductName = ci.Product.Name,
+					UnitPrice = ci.Product.Price.Amount,
+					Total = ci.Quantity * ci.Product.Price.Amount,
+					AvailableStock = (!ci.Product.IsDeleted && ci.Product.IsAvailable)
+						? ci.Product.StockQuantity : 0,
+					IsAvailable =
+						ci.Product.IsAvailable &&
+						!ci.Product.IsDeleted &&
+						ci.Product.StockQuantity > 0 &&
+						ci.Product.StockQuantity >= ci.Quantity
+				}).ToList()
+			};
 		}
 	}
 }

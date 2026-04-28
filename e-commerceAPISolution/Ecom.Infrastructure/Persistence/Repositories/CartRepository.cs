@@ -29,7 +29,7 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 
 		public async Task<Cart?> GetMyCartAsync(Guid userId, CancellationToken cancellationToken)
 		{
-			return await _db.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c=>c.UserId==userId,cancellationToken);
+			return await _db.Carts.Include(c => c.CartItems).ThenInclude(ci=>ci.Product).FirstOrDefaultAsync(c=>c.UserId==userId,cancellationToken);
 		}
 	}
 }
