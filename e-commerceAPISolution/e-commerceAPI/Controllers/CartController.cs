@@ -65,10 +65,6 @@ namespace e_commerceAPI.Controllers
 			{
 				return BadRequest();
 			}
-			if (dto.Quantity < 0)
-			{
-				return BadRequest();
-			}
 			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if (!Guid.TryParse(Id, out var userId))
 			{
