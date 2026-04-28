@@ -98,6 +98,11 @@ namespace Ecom.Domain.Entities
 		}
 		public void Cancel(bool requiresRefund = false)
 		{
+			if (Status == OrderStatusEnum.Paid)
+			{
+				RequiresRefund = true;
+			}
+
 			if (requiresRefund)
 			{
 				RequiresRefund = true;
