@@ -32,6 +32,9 @@ namespace Ecom.Application.Services
 			{
 				return;
 			}
+			var orderIds = reservations.Select(r => r.OrderId).Distinct().ToList();
+			var pendingPayments = await _paymentRepository.GetPendingPaymentsByOrderIdsInBulk(orderIds, cancellationToken);
+			var pendingPaymentsDict = pendingPayments.ToDictionary(p => p.OrderId);
 			foreach (var reservation in reservations)
 			{
 				_logger.LogInformation("Processing reservation {ReservationId}", reservation.Id);
@@ -41,11 +44,11 @@ namespace Ecom.Application.Services
 					continue;
 				}
 				//check payment status because of webhook race codnition (payment can be completed while the job is running)	
-				var payment = await _paymentRepository.GetPendingPaymentByOrderId(reservation.OrderId, cancellationToken);
-				if (payment == null)
+				// Check if payment is still pending using the pre-fetched dictionary
+				if (!pendingPaymentsDict.TryGetValue(reservation.OrderId, out var payment))
 				{
-					_logger.LogInformation("Skipping reservation {ReservationId} because payment is not pending", reservation.Id);
-					continue; //(payment already succeeded/failed)
+					_logger.LogInformation("Skipping reservation {ReservationId} because payment is not pending (already processed)", reservation.Id);
+					continue;
 				}
 				reservation.Expire();
 				_logger.LogInformation("Expired reservation {ReservationId}", reservation.Id);
