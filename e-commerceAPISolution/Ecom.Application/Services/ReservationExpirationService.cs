@@ -49,6 +49,13 @@ namespace Ecom.Application.Services
 				}
 				reservation.Expire();
 				_logger.LogInformation("Expired reservation {ReservationId}", reservation.Id);
+
+				var order = reservation.Order;
+				if (order != null && order.Status == OrderStatusEnum.Pending)
+				{
+					order.Cancel();
+					_logger.LogInformation("Cancelled order {OrderId} due to reservation expiration", reservation.OrderId);
+				}
 			}
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			_logger.LogInformation("Finished reservation expiration job");
