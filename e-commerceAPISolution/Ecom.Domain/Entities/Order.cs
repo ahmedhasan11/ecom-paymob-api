@@ -21,6 +21,7 @@ namespace Ecom.Domain.Entities
 		public string Currency { get; private set; }
 		public ShippingAddress Address { get; private set; }
 		public bool RequiresRefund { get; private set; }
+		public byte[] RowVersion { get; private set; }
 		private Order() {}
 		public static Order Create(Guid userId , ShippingAddress address , List<CreateOrderItemData> requestedItems)
 		{
@@ -97,7 +98,6 @@ namespace Ecom.Domain.Entities
 		}
 		public void Cancel(bool requiresRefund = false)
 		{
-
 			if (requiresRefund)
 			{
 				RequiresRefund = true;
