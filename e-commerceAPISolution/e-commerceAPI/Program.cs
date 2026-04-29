@@ -88,6 +88,17 @@ namespace e_commerceAPI
 							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
 							QueueLimit = 0
 						}));
+				options.AddPolicy("RegisterPolicy", context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: GetPartitionKey(context, allowUserId: false),
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 5,
+							Window = TimeSpan.FromMinutes(1),
+							SegmentsPerWindow = 2,
+							QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+							QueueLimit = 0
+						}));
 
 				options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 			});

@@ -20,6 +20,7 @@ namespace e_commerceAPI.Controllers
 		private readonly ICurrentUserService _currentUserService;
 		public AccountController( IAuthService authService, ICurrentUserService currentUserService )	{_authService = authService; _currentUserService = currentUserService;}
 
+		[EnableRateLimiting("RegisterPolicy")]
 		[AllowAnonymous]
 		[HttpPost("register")]
 		public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto, CancellationToken cancellationToken)
