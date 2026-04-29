@@ -20,6 +20,7 @@ namespace e_commerceAPI.Controllers
 		[HttpGet]
 		public async Task<ActionResult<CartResultDto>> GetCart( CancellationToken cancellationToken)
 		{
+			
 			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 			if (!Guid.TryParse(Id, out var userId))
 			{
