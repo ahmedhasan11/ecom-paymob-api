@@ -99,7 +99,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			// Add global retry logic for Hangfire jobs
 			GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
 			{
-				Attempts = 1,
+				Attempts = 2,
 				DelaysInSeconds = new[] { 60, 120 },
 				OnAttemptsExceeded = AttemptsExceededAction.Fail
 			});
