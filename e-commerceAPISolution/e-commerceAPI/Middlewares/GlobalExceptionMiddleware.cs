@@ -59,21 +59,22 @@ namespace e_commerceAPI.Middlewares
 
 				}
 				//if an error hhappened at any layer
-				_logger.LogError(ex, "Unhandled exception occurred while processing {Method} {Path}. TraceId={TraceId}",
-				context.Request.Method,	context.Request.Path, context.TraceIdentifier);
+				var logLevel = statusCode >= 500 ? LogLevel.Error : LogLevel.Warning;
+				_logger.Log(logLevel, ex, "Exception occurred while processing {Method} {Path}. StatusCode={StatusCode}, TraceId={TraceId}",
+				context.Request.Method, context.Request.Path, statusCode, context.TraceIdentifier);
 
 				context.Response.ContentType = "application/problem+json";
 				context.Response.StatusCode = statusCode;
 
-				var Problem = new ProblemDetails()
+				var problem = new ProblemDetails()
 				{
 					Status = statusCode,
 					Title = title,
 					Detail = statusCode == 500? "An unexpected error occurred": ex.Message,
 					Instance = context.Request.Path,										
 				};
-				Problem.Extensions["TraceId"] = context.TraceIdentifier;
-				await context.Response.WriteAsJsonAsync(Problem);
+				problem.Extensions["TraceId"] = context.TraceIdentifier;
+				await context.Response.WriteAsJsonAsync(problem);
 			}
 
 		}
