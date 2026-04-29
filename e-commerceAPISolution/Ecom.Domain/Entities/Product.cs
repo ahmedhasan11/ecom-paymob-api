@@ -101,6 +101,7 @@ namespace Ecom.Domain.Entities
 		public void Restore()
 		{
 			IsDeleted = false;
+			IsAvailable = true;
 		}
 	}
 }
