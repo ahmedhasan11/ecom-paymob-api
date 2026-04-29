@@ -143,7 +143,7 @@ namespace e_commerceAPI
 			builder.Services.AddControllers();
 
 			builder.Services.AddFluentValidationAutoValidation(); /*?? ???? HTTP request ???? FluentValidation ????????*/
-
+			builder.Services.AddTransient<GlobalExceptionMiddleware>();
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -192,11 +192,12 @@ namespace e_commerceAPI
 
             app.UseHttpsRedirection();
 			app.UseRouting();// Required for RateLimiter and Auth to acknowledge endpoints
-			app.UseRateLimiter();// Security: Throttling before Auth to prevent resource exhaustion
+
 
 			//Auth
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseRateLimiter();// Security: Throttling before Auth to prevent resource exhaustion
 
 			//Hangfire
 			app.UseHangfireDashboard("/hangfire", new DashboardOptions
