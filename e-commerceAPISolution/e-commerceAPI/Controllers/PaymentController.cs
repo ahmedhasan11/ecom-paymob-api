@@ -2,7 +2,6 @@
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace e_commerceAPI.Controllers
 {
@@ -11,12 +10,14 @@ namespace e_commerceAPI.Controllers
 	public class PaymentController : ControllerBase
 	{
 		private readonly IPaymentService _paymentService;
-		public PaymentController(IPaymentService paymentService)
+		private readonly ICurrentUserService _currentUserService;
+
+		public PaymentController(IPaymentService paymentService, ICurrentUserService currentUserService)
 		{
 			_paymentService = paymentService;
+			_currentUserService = currentUserService;
 		}
 
-		
 		[HttpPost("{orderId}/session")]
 		public async Task<ActionResult<PaymentSessionResponse>> CreatePaymentSession(Guid orderId, CancellationToken cancellationToken)
 		{
@@ -24,12 +25,12 @@ namespace e_commerceAPI.Controllers
 			{
 				return BadRequest("orderId cannot be empty.");
 			}
-			var Id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if (!Guid.TryParse(Id, out var userId))
+			var userId = _currentUserService.UserId;
+			if (userId == null)
 			{
 				return Unauthorized();
 			}
-			var paymentSessionResponse= await _paymentService.CreatePaymentSessionAsync(orderId,userId, cancellationToken);
+			var paymentSessionResponse = await _paymentService.CreatePaymentSessionAsync(orderId, userId.Value, cancellationToken);
 			
 			return Ok(paymentSessionResponse);
 		}

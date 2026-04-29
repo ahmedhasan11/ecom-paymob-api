@@ -64,6 +64,8 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 			//External API Services
+			services.AddHttpContextAccessor();
+			services.AddScoped<ICurrentUserService, CurrentUserService>();
 			services.AddScoped<IJwtService, JwtService>();
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddScoped<IRefreshTokenService, RefreshTokenService>();

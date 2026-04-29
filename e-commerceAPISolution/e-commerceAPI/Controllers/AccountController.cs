@@ -17,7 +17,8 @@ namespace e_commerceAPI.Controllers
 	public class AccountController : ControllerBase
 	{
 		private readonly IAuthService _authService;
-		public AccountController( IAuthService authService)	{_authService = authService;}
+		private readonly ICurrentUserService _currentUserService;
+		public AccountController( IAuthService authService, ICurrentUserService currentUserService )	{_authService = authService; _currentUserService = currentUserService;}
 
 		[AllowAnonymous]
 		[HttpPost("register")]
@@ -74,35 +75,35 @@ namespace e_commerceAPI.Controllers
 		[HttpPost("logout-all")]
 		public async Task<IActionResult> LogoutAll( CancellationToken cancellationToken)
 		{
-			var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value; //byrg3 string , method el service mstnya Guid
-			if (!Guid.TryParse(userIdClaim, out var userId)) //TryParse 3shan lw Guid.Parse lw wrong value --> exception
+			var userId = _currentUserService.UserId; 
+			if (userId==null) 
 			{
 				return Unauthorized();
 			}
-			var result = await _authService.LogoutAllDevicesAsync(userId, cancellationToken);
+			var result = await _authService.LogoutAllDevicesAsync(userId.Value, cancellationToken);
 			if (result==false)
 			{
 				return Unauthorized(result);
 			}
 			return Ok(result);
 
-		}
+		} //userId
 
 		[HttpPost("change-password")]
 		public async Task<IActionResult> ChangePassword(ChangePasswordDto dto, CancellationToken cancellationToken)
 		{
-			var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if(!Guid.TryParse(userIdClaim, out var userId))
+			var userId = _currentUserService.UserId;
+			if (userId == null)
 			{
 				return Unauthorized();
 			}
-			bool result = await _authService.ChangePasswordAsync(userId, dto, cancellationToken);
+			bool result = await _authService.ChangePasswordAsync(userId.Value, dto, cancellationToken);
 			if (result==false)
 			{
 				return BadRequest("Old password is incorrect.");
 			}
 			return Ok(result);
-		}
+		} //userId
 
 
 		[EnableRateLimiting("ForgotPolicy")]
