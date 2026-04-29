@@ -2,7 +2,6 @@
 using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace e_commerceAPI.Controllers
 {
@@ -11,20 +10,23 @@ namespace e_commerceAPI.Controllers
 	public class CheckoutController : ControllerBase
 	{
 		private readonly ICheckoutService _checkoutService;
-		public CheckoutController(ICheckoutService checkoutService)
+		private readonly ICurrentUserService _currentUserService;
+
+		public CheckoutController(ICheckoutService checkoutService, ICurrentUserService currentUserService)
 		{
 			_checkoutService = checkoutService;
+			_currentUserService = currentUserService;
 		}
 
 		[HttpPost]
 		public async Task<ActionResult<Guid>> Checkout(ShippingAddressDto addressDto,CancellationToken cancellationToken)
 		{
-			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if (!Guid.TryParse(id, out var userId))
+			var userId = _currentUserService.UserId;
+			if (userId == null)
 			{
 				return Unauthorized();
 			}
-			var orderId = await _checkoutService.CheckoutAsync(userId, cancellationToken, addressDto);
+			var orderId = await _checkoutService.CheckoutAsync(userId.Value, cancellationToken, addressDto);
 
 			return Ok(new { orderId });
 		}

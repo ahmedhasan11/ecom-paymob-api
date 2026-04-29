@@ -4,7 +4,6 @@ using Ecom.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace e_commerceAPI.Controllers
 {
@@ -13,7 +12,13 @@ namespace e_commerceAPI.Controllers
 	public class OrderController : ControllerBase
 	{
 		private readonly IOrderService _orderService;
-		public OrderController(IOrderService orderService) { _orderService = orderService; }
+		private readonly ICurrentUserService _currentUserService;
+
+		public OrderController(IOrderService orderService, ICurrentUserService currentUserService) 
+		{ 
+			_orderService = orderService; 
+			_currentUserService = currentUserService;
+		}
 
 		[Authorize(Policy = "AdminOnly")]
 		[HttpPatch("{orderId}/status")]
@@ -30,12 +35,12 @@ namespace e_commerceAPI.Controllers
 		[HttpGet("my")]
 		public async Task<ActionResult<PagedResult<OrderResult>>> GetUserOrders(OrdersPaginationOptions dtoOptions, CancellationToken cancellationToken)
 		{
-			var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if (!Guid.TryParse(id, out var userId))
+			var userId = _currentUserService.UserId;
+			if (userId == null)
 			{
 				return Unauthorized();
 			}
-			var orders= await _orderService.GetUserOrdersSummaryAsync(userId, dtoOptions, cancellationToken);
+			var orders= await _orderService.GetUserOrdersSummaryAsync(userId.Value, dtoOptions, cancellationToken);
 			return Ok(orders);
 		}
 
@@ -46,14 +51,13 @@ namespace e_commerceAPI.Controllers
 			{
 				return BadRequest("Order Id cannot be empty.");
 			}
-			var id =User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-			if (!Guid.TryParse(id, out var userId))
+			var userId = _currentUserService.UserId;
+			if (userId == null)
 			{
 				return Unauthorized();
 			}
-			var order = await _orderService.GetOrderDetails(userId, orderId, cancellationToken);
+			var order = await _orderService.GetOrderDetails(userId.Value, orderId, cancellationToken);
 			return Ok(order);
-
 		}
 	}
 }
