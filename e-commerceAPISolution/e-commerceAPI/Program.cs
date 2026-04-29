@@ -143,7 +143,7 @@ namespace e_commerceAPI
 			builder.Services.AddControllers();
 
 			builder.Services.AddFluentValidationAutoValidation(); /*?? ???? HTTP request ???? FluentValidation ????????*/
-
+			builder.Services.AddTransient<GlobalExceptionMiddleware>();
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
