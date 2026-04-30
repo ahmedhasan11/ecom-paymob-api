@@ -113,5 +113,12 @@ namespace Ecom.Domain.Entities
 
 			Status = OrderStatusEnum.Cancelled;
 		}
+		public void UpdateShippingAddress(ShippingAddress newAddress)
+		{
+			if (newAddress is null)
+				throw new ArgumentNullException(nameof(newAddress));
+
+			Address = newAddress;
+		}
 	}
 }
