@@ -45,7 +45,8 @@ namespace Ecom.Application.Services
 				throw new ArgumentException("userId cannot be empty.", nameof(userId));
 			}
 			var pendingOrder = await _orderRepository.GetPendingOrderForUser(userId, cancellationToken);
-			if(pendingOrder is not null) { 
+			//solved EDGE-1 : update pendingOrder.Address then return pendingOrder.Id without creating new order and reservation
+			if (pendingOrder is not null) { 
 				_logger.LogInformation("Checkout skipped: User {UserId} has an existing pending order with ID {OrderId}. Returning existing order ID.", userId, pendingOrder.Id);
 				return pendingOrder.Id;
 			}
