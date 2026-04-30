@@ -46,8 +46,19 @@ namespace Ecom.Application.Services
 			}
 			var pendingOrder = await _orderRepository.GetPendingOrderForUser(userId, cancellationToken);
 			//solved EDGE-1 : update pendingOrder.Address then return pendingOrder.Id without creating new order and reservation
-			if (pendingOrder is not null) { 
-				_logger.LogInformation("Checkout skipped: User {UserId} has an existing pending order with ID {OrderId}. Returning existing order ID.", userId, pendingOrder.Id);
+			if (pendingOrder is not null) 
+			{
+				ShippingAddress newAddress = new ShippingAddress(addressdto.RecipientName, addressdto.PhoneNumber,
+					addressdto.City, addressdto.Street, addressdto.BuildingNumber, addressdto.PostalCode);
+
+				pendingOrder.UpdateShippingAddress(newAddress);
+
+				await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+				_logger.LogInformation(
+					"Updated shipping address for existing pending order {OrderId} for user {UserId}. Returning existing order.",
+					pendingOrder.Id, userId);
+
 				return pendingOrder.Id;
 			}
 			#region Load Cart
