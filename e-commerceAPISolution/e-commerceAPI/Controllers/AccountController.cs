@@ -135,8 +135,8 @@ namespace e_commerceAPI.Controllers
 		}
 
 		[AllowAnonymous]
-		[HttpPost("confirm-email")]
-		public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto dto, CancellationToken cancellationToken)
+		[HttpGet("confirm-email")]
+		public async Task<IActionResult> ConfirmEmail([FromQuery]ConfirmEmailDto dto, CancellationToken cancellationToken)
 		{
 			bool isconfirmed = await _authService.ConfirmEmailAsync(dto, cancellationToken);
 			if (isconfirmed==false)
