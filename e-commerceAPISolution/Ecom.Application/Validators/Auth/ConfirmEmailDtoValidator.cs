@@ -13,7 +13,7 @@ namespace Ecom.Application.Validators.Auth
 		public ConfirmEmailDtoValidator() 
 		{
 			RuleFor(x => x.Email).NotEmpty().EmailAddress();
-			RuleFor(x => x.ConfirmationToken).NotEmpty();
+			RuleFor(x => x.Token).NotEmpty();
 		}
 	}
 }

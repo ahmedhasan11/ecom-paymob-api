@@ -7,6 +7,7 @@ using Ecom.Domain.Interfaces;
 using Ecom.Infrastructure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -363,13 +364,17 @@ namespace Ecom.Infrastructure.Authentication_Services
 			}
 
 			string confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-			string encodedToken = WebUtility.UrlEncode(confirmationToken);
+			var tokenBytes = Encoding.UTF8.GetBytes(confirmationToken);
+			string encodedToken = WebEncoders.Base64UrlEncode(tokenBytes);
 			string encodedEmail = WebUtility.UrlEncode(email);
 			var BaseUrl = _configuration.GetValue<string>("ClientApp:BaseUrl");
-			var confirmlink = $"{BaseUrl}/confirm-email?email={encodedEmail}&token={encodedToken}";
+			var confirmlink = $"https://localhost:7088/api/account/confirm-email?email={encodedEmail}&token={encodedToken}";
 			var to = email;
 			string Subject = "Confirm Your Email";
-			string Body = $"Click the link below to Confirm your Email:\r\n<{confirmlink}>\r\n";
+			string Body = $@"
+    <p>Click the link below to confirm your email:</p>
+    <a href='{confirmlink}'>Confirm Email</a>
+";
 			try
 			{
 				await _emailService.SendEmailAsync(to, Subject, Body, cancellationToken);
@@ -386,7 +391,8 @@ namespace Ecom.Infrastructure.Authentication_Services
 		{
 			_logger.LogInformation("Email confirmation attempt for Email: {Email}", dto.Email);
 
-			var decodedToken = WebUtility.UrlDecode(dto.ConfirmationToken);
+			var decodedBytes = WebEncoders.Base64UrlDecode(dto.Token);
+			var decodedToken = Encoding.UTF8.GetString(decodedBytes);
 			ApplicationUser? user = await _userManager.FindByEmailAsync(dto.Email);
 			if (user == null) 
 			{
