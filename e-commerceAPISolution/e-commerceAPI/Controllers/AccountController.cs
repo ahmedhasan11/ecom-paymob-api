@@ -90,6 +90,7 @@ namespace e_commerceAPI.Controllers
 
 		} //userId
 
+		[Authorize]
 		[HttpPost("change-password")]
 		public async Task<IActionResult> ChangePassword(ChangePasswordDto dto, CancellationToken cancellationToken)
 		{
@@ -104,7 +105,7 @@ namespace e_commerceAPI.Controllers
 				return BadRequest("Old password is incorrect.");
 			}
 			return Ok(result);
-		} //userId
+		} 
 
 
 		[EnableRateLimiting("ForgotPolicy")]

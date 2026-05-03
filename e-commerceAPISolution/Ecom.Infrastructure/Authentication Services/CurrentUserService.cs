@@ -20,10 +20,12 @@ namespace Ecom.Infrastructure.Authentication_Services
         {
             get
             {
-                var userIdClaim = _httpContextAccessor.HttpContext?.User?
-                    .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+				var userIdClaim = _httpContextAccessor.HttpContext?.User?
+					.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+					?? _httpContextAccessor.HttpContext?.User?
+					.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if (Guid.TryParse(userIdClaim, out var userId))
+				if (Guid.TryParse(userIdClaim, out var userId))
                 {
                     return userId;
                 }

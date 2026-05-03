@@ -295,37 +295,50 @@ namespace Ecom.Infrastructure.Authentication_Services
 
 		}
 
-		public async Task ForgotPasswordAsync(string email, CancellationToken cancellationToken) 
+		public async Task ForgotPasswordAsync(string email, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Forgot password requested for Email: {Email}", email);
+
 			if (string.IsNullOrWhiteSpace(email))
-			{
 				return;
-			}
+
 			ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+
+			// ✔ Security: متقولش إن الإيميل مش موجود
 			if (user == null)
 			{
 				_logger.LogInformation("Forgot password flow completed");
 				return;
 			}
+
+			// 🔥 Generate token
 			var rawToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-			var encodedToken= WebUtility.UrlEncode(rawToken);
-			var encodedEmail= WebUtility.UrlEncode(email);
-			var BaseUrl = _configuration.GetValue<string>("ClientApp:BaseUrl");
-			var resetlink = $"{BaseUrl}/reset-password?email={encodedEmail}&token={encodedToken}";
-			var to = email;
+
+			// 🔥 Base64Url Encode (بدل UrlEncode)
+			var tokenBytes = Encoding.UTF8.GetBytes(rawToken);
+			var encodedToken = WebEncoders.Base64UrlEncode(tokenBytes);
+
+			var encodedEmail = WebUtility.UrlEncode(email);
+
+			// ⚠️ للتست (بدون frontend)
+			var resetlink = $"https://localhost:7088/api/account/reset-password?email={encodedEmail}&token={encodedToken}";
+
 			string Subject = "Reset Your Password";
-			string Body = $"Click the link below to reset your password:\r\n<{resetlink}>\r\n";
-			try 
+
+			string Body = $@"
+        <p>Click the link below to reset your password:</p>
+        <a href='{resetlink}'>Reset Password</a>
+    ";
+
+			try
 			{
-				await _emailService.SendEmailAsync(to, Subject, Body,cancellationToken);
+				await _emailService.SendEmailAsync(email, Subject, Body, cancellationToken);
 				_logger.LogInformation("Reset password email sent to {Email}", email);
 			}
 			catch (EmailSendingException ex)
 			{
 				_logger.LogError(ex, "Failed to send reset password email to {Email}", email);
 			}
-			return;
 		}
 		public async Task<ResetPasswordResultDto> ResetPasswordAsync(ResetPasswordDto dto, CancellationToken cancellationToken)
 		{

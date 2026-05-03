@@ -41,8 +41,8 @@ namespace Ecom.Application.Services
 			CartResultDto? cart = await query.Select(c => new CartResultDto
 			{
 				CartId = c.Id,
-			    TotalItemsCount= c.CartItems.Select(ci=>ci.Quantity).DefaultIfEmpty(0).Sum(),
-			    SubTotal= c.CartItems.Select(ci => ci.Quantity * ci.Product.Price.Amount).DefaultIfEmpty(0m).Sum(),
+			    TotalItemsCount= c.CartItems.Sum(ci => (int?)ci.Quantity) ?? 0,
+			    SubTotal= c.CartItems.Sum(ci => (decimal?)(ci.Quantity * ci.Product.Price.Amount)) ?? 0m,
 			    HasUnavailableItems= c.CartItems.Any(ci=>ci.Product.IsDeleted||!ci.Product.IsAvailable|| ci.Product.StockQuantity < ci.Quantity),
 				CartItems= c.CartItems.Select(ci=>new CartItemDto
 				{
