@@ -1,4 +1,5 @@
 ﻿using Ecom.Domain.Common;
+using Ecom.Domain.Exceptions;
 using Ecom.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -28,11 +29,11 @@ namespace Ecom.Domain.Entities
 		{
 			if (string.IsNullOrWhiteSpace(name))
 			{
-				throw new ArgumentException("Name cannot be empty.", nameof(name));
+				throw new DomainValidationException("Name cannot be empty.");
 			}
 			if (InitialStock < 0)
 			{
-				throw new ArgumentException("Stock cannot be negative");
+				throw new DomainValidationException("Stock cannot be negative");
 			}
 			Name =name.Trim();
 			Price = Money.From(price); // valdiation of price is done already inside Money VO
@@ -53,11 +54,11 @@ namespace Ecom.Domain.Entities
 		{
 			if (quantity<=0)
 			{
-				throw new ArgumentException("Quantity must be greater than zero.");
+				throw new DomainValidationException("Quantity must be greater than zero.");
 			}
 			if (IsDeleted==true)
 			{
-				throw new InvalidOperationException("Cannot modify a deleted product.");
+				throw new BusinessException("Cannot modify a deleted product.");
 			}
 			StockQuantity += quantity;
 		}
@@ -65,15 +66,15 @@ namespace Ecom.Domain.Entities
 		{
 			if (quantity <= 0)
 			{
-				throw new ArgumentException("Quantity must be greater than zero.");
+				throw new DomainValidationException("Quantity must be greater than zero.");
 			}
 			if (IsDeleted==true)
 			{
-				throw new InvalidOperationException("Cannot modify a deleted product.");
+				throw new BusinessException("Cannot modify a deleted product.");
 			}
 			if (quantity > StockQuantity)
 			{
-				throw new InvalidOperationException("Insufficient stock.");
+				throw new BusinessException("Insufficient stock.");
 			}
 			StockQuantity -= quantity;
 		}
@@ -81,7 +82,7 @@ namespace Ecom.Domain.Entities
 		{
 			if (IsDeleted == true)
 			{
-				throw new InvalidOperationException("Cannot modify a deleted product.");
+				throw new BusinessException("Cannot modify a deleted product.");
 			}
 			IsAvailable = true;
 		}
@@ -89,7 +90,7 @@ namespace Ecom.Domain.Entities
 		{
 			if (IsDeleted == true)
 			{
-				throw new InvalidOperationException("Cannot modify a deleted product.");
+				throw new BusinessException("Cannot modify a deleted product.");
 			}
 			IsAvailable =false;
 		}

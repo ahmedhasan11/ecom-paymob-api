@@ -1,5 +1,6 @@
 ﻿
 using Ecom.Application.Exceptions;
+using Ecom.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
@@ -34,7 +35,7 @@ namespace e_commerceAPI.Middlewares
 				string title;
 				switch (ex)
 				{
-					case ValidationException:
+					case DomainValidationException:
 						statusCode = StatusCodes.Status400BadRequest;
 						title = "Validation Failed";
 						break;
@@ -51,6 +52,10 @@ namespace e_commerceAPI.Middlewares
 					case EmailSendingException:
 						statusCode = StatusCodes.Status500InternalServerError;
 						title = "Email service is currently unavailable.";
+						break;
+					case BusinessException:
+						statusCode = StatusCodes.Status409Conflict;
+						title = "Business rule violation";
 						break;
 					default:
 						statusCode = StatusCodes.Status500InternalServerError;
