@@ -29,11 +29,11 @@ namespace Ecom.Domain.Entities
 		{
 			if (string.IsNullOrWhiteSpace(name))
 			{
-				throw new DomainValidationException("Name cannot be empty.");
+				throw new InputValidationException("Name cannot be empty.");
 			}
 			if (InitialStock < 0)
 			{
-				throw new DomainValidationException("Stock cannot be negative");
+				throw new InputValidationException("Stock cannot be negative");
 			}
 			Name =name.Trim();
 			Price = Money.From(price); // valdiation of price is done already inside Money VO
@@ -54,7 +54,7 @@ namespace Ecom.Domain.Entities
 		{
 			if (quantity<=0)
 			{
-				throw new DomainValidationException("Quantity must be greater than zero.");
+				throw new InputValidationException("Quantity must be greater than zero.");
 			}
 			if (IsDeleted==true)
 			{
@@ -66,7 +66,7 @@ namespace Ecom.Domain.Entities
 		{
 			if (quantity <= 0)
 			{
-				throw new DomainValidationException("Quantity must be greater than zero.");
+				throw new InputValidationException("Quantity must be greater than zero.");
 			}
 			if (IsDeleted==true)
 			{

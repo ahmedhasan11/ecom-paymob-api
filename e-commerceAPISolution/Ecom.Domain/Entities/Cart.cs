@@ -1,4 +1,5 @@
 ﻿using Ecom.Domain.Common;
+using Ecom.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Ecom.Domain.Entities
 {
 	public class Cart:AuditableEntity
 	{
-		public Guid Id { get; private set; }= Guid.NewGuid();
+		public Guid Id { get; private set; }
 		public Guid UserId { get; private set; }
 
 		public List<CartItem> CartItems { get; private set; } = new List<CartItem>();
@@ -22,7 +23,7 @@ namespace Ecom.Domain.Entities
 		{
 			if (userId==Guid.Empty)
 			{
-				throw new ArgumentException("UserId cannot be empty.", nameof(UserId));
+				throw new InputValidationException("UserId cannot be empty.");
 			}
 			UserId = userId;
 		}
@@ -31,11 +32,11 @@ namespace Ecom.Domain.Entities
 		{
 			if (productId==Guid.Empty)
 			{
-				throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
+				throw new InputValidationException("ProductId cannot be empty.");
 			}
 			if (Quantity<=0)
 			{
-				throw new ArgumentException("Quantity must be greater than zero.", nameof(Quantity));
+				throw new InputValidationException("Quantity must be greater than zero.");
 			}
 			var existingItem = CartItems.FirstOrDefault(x => x.ProductId == productId);
 			if (existingItem is not null)
@@ -51,7 +52,7 @@ namespace Ecom.Domain.Entities
 		{
 			if (productId == Guid.Empty)
 			{
-				throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
+				throw new InputValidationException("ProductId cannot be empty.");
 			}
 			var expectedItem = CartItems.FirstOrDefault(x => x.ProductId == productId);
 			if (expectedItem is null)
@@ -64,11 +65,11 @@ namespace Ecom.Domain.Entities
 		public void UpdateQuantity(Guid productId, int newQuantity)
 		{
 			if (productId == Guid.Empty)
-				throw new ArgumentException(nameof(productId));
+				throw new InputValidationException(nameof(productId));
 			var existingItem = CartItems.FirstOrDefault(x=>x.ProductId==productId);
 			if (existingItem is null) 
 			{
-				throw new InvalidOperationException("Cart item not found.");
+				throw new BusinessException("Cart item not found.");
 			}
 			if (newQuantity == 0)
 			{

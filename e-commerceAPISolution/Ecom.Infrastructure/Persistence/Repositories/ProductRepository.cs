@@ -110,6 +110,12 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 		{
 			return await _dbContext.Products.Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 		}
+		public async Task<Product?> GetProductByIdAsyncUntracked(Guid id, CancellationToken cancellationToken)
+		{
+			return await _dbContext.Products.AsNoTracking().Where(product => !product.IsDeleted).FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+		}
+
+
 
 		public async Task<Product?> GetProductByIdIncludingDeletedAsync(Guid id, CancellationToken cancellationToken)
 		{

@@ -29,9 +29,9 @@ namespace Ecom.Infrastructure.Persistence
 		public DbSet<InventoryReservation> InventoryReservations { get; set; }
 
 		public DbSet<Payment> Payments { get; set; }
-		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
+		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
-			var entries = ChangeTracker	.Entries<AuditableEntity>();
+			var entries = ChangeTracker.Entries<AuditableEntity>();
 
 			foreach (var entry in entries)
 			{
@@ -42,11 +42,25 @@ namespace Ecom.Infrastructure.Persistence
 
 				if (entry.State == EntityState.Modified)
 				{
-					entry.Entity.UpdatedAt = DateTime.UtcNow;
-					entry.Property(x => x.CreatedAt).IsModified = false;
+					// Only update the timestamp if at least one property (other than CreatedAt/UpdatedAt) has actually changed.
+					// This prevents accidental updates (and concurrency errors) on entities like Product that are just being referenced.
+					var isActuallyModified = entry.Properties.Any(p => p.IsModified &&
+						p.Metadata.Name != nameof(AuditableEntity.CreatedAt) &&
+						p.Metadata.Name != nameof(AuditableEntity.UpdatedAt));
+
+					if (isActuallyModified)
+					{
+						entry.Entity.UpdatedAt = DateTime.UtcNow;
+						entry.Property(x => x.CreatedAt).IsModified = false;
+					}
+					else
+					{
+						// If nothing changed, tell EF to ignore this entity during the save.
+						entry.State = EntityState.Unchanged;
+					}
 				}
-			}
-			return await base.SaveChangesAsync(cancellationToken);
+			} // Closing the foreach (var entry in entries) loop
+				return await base.SaveChangesAsync(cancellationToken);
 		}
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
