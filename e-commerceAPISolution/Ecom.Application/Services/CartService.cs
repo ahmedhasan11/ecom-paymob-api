@@ -2,6 +2,7 @@
 using Ecom.Application.Exceptions;
 using Ecom.Application.Interfaces;
 using Ecom.Domain.Entities;
+using Ecom.Domain.Exceptions;
 using Ecom.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,7 +34,7 @@ namespace Ecom.Application.Services
 		{
 			if (userId==Guid.Empty)
 			{
-				throw new ArgumentException("UserId cannot be empty.", nameof(userId));
+				throw new InputValidationException("UserId cannot be empty.");
 			}
 
 			var query = _cartRepository.GetCartQuery(userId);
@@ -63,19 +64,18 @@ namespace Ecom.Application.Services
 
 			return cart;
 		}
-
 		public async Task<CartResultDto> AddItemToCartAsync(Guid userId , RequestAddToCartDto dto, CancellationToken cancellationToken)
 		{
 			if (userId == Guid.Empty)
-				throw new ArgumentException("Invalid userId.", nameof(userId));
+				throw new InputValidationException("Invalid userId.");
 			if (dto.Quantity <= 0)
-				throw new ArgumentException("Quantity must be greater than zero.");
-			Product? product =await _productRepository.GetProductByIdAsync(dto.ProductId, cancellationToken);
+				throw new InputValidationException("Quantity must be greater than zero.");
+			Product? product =await _productRepository.GetProductByIdAsyncUntracked(dto.ProductId, cancellationToken);
 
 			if (product is null)
 				throw new NotFoundException("Product not found.");
 			if (product.IsDeleted || !product.IsAvailable)
-				throw new InvalidOperationException("Product is not available.");
+				throw new BusinessException("Product is not available.");
 
 			Cart? cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			
@@ -90,24 +90,23 @@ namespace Ecom.Application.Services
 			{
 				_logger.LogWarning(	"User {UserId} attempted to exceed stock for product {ProductId}. Requested: {Requested}, Available: {Available}",
 					userId,	product.Id,	dto.Quantity,	product.StockQuantity);
-				throw new InvalidOperationException("Requested quantity exceeds available stock.");
+				throw new BusinessException("Requested quantity exceeds available stock.");
 			}
-
-
 			cart.AddItem(product.Id, dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			return MapToCartResult(cart);
+
 		}
 
 		public async Task<CartResultDto> RemoveItemFromCartAsync(Guid userId, Guid productId, CancellationToken cancellationToken)
 		{
 			if (userId==Guid.Empty)
 			{
-				throw new ArgumentException("Invalid userId.", nameof(userId));
+				throw new InputValidationException("Invalid userId.");
 			}
 			if (productId==Guid.Empty)
 			{
-				throw new ArgumentException(nameof(productId));
+				throw new InputValidationException("Invalid productId.");
 			}
 
 			var cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
@@ -125,28 +124,28 @@ namespace Ecom.Application.Services
 		{
 			if (userId == Guid.Empty)
 			{
-				throw new ArgumentException("Invalid userId.", nameof(userId));
+				throw new InputValidationException("Invalid userId.");
 			}
 			if (productId == Guid.Empty)
 			{
-				throw new ArgumentException(nameof(productId));
+				throw new InputValidationException("Invalid productId.");
 			}
 			if (dto.Quantity < 0)
 			{
-				throw new ArgumentException(nameof(dto.Quantity));
+				throw new InputValidationException("Invalid quantity.");
 			}
 			var product = await _productRepository.GetProductByIdAsync(productId, cancellationToken);
 			if (product is null)
 				throw new NotFoundException("Product not found.");
 			if (product.IsDeleted || !product.IsAvailable)
-				throw new InvalidOperationException("Product is not available.");
+				throw new BusinessException("Product is not available.");
 			if (dto.Quantity > product.StockQuantity)
 			{
 				_logger.LogWarning(
 				"User {UserId} attempted to update quantity exceeding stock for product {ProductId}. Requested: {Requested}, Available: {Available}",
 				userId,	productId,	dto.Quantity,	product.StockQuantity);
 
-				throw new InvalidOperationException("Requested quantity exceeds available stock.");
+				throw new BusinessException("Requested quantity exceeds available stock.");
 			}
 			var cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			if (cart is null)
@@ -164,7 +163,7 @@ namespace Ecom.Application.Services
 		{
 			if (userId==Guid.Empty)
 			{
-				throw new ArgumentException("Invalid userId.", nameof(userId));
+				throw new InputValidationException("Invalid userId.");
 			}
 			var cart = await _cartRepository.GetMyCartAsync(userId, cancellationToken);
 			if (cart is null)

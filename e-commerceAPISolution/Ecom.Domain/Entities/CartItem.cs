@@ -8,7 +8,7 @@ namespace Ecom.Domain.Entities
 {
 	public class CartItem
 	{
-		public Guid Id { get; private set; }= Guid.NewGuid();
+		public Guid Id { get; private set; }
 
 		public Cart Cart { get; private set; }
 		public Guid CartId { get; private set; }

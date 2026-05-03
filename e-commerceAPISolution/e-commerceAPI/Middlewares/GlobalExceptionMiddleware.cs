@@ -35,7 +35,7 @@ namespace e_commerceAPI.Middlewares
 				string title;
 				switch (ex)
 				{
-					case DomainValidationException:
+					case InputValidationException:
 						statusCode = StatusCodes.Status400BadRequest;
 						title = "Validation Failed";
 						break;

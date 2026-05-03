@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ecom.Domain.Exceptions
 {
-	public class DomainValidationException: Exception
+	public class InputValidationException: Exception
 	{
-		public DomainValidationException(string message) : base(message) { }
+		public InputValidationException(string message) : base(message) { }
 	}
 }
