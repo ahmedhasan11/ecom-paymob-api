@@ -58,7 +58,9 @@ namespace Ecom.Infrastructure.Payments
 			   merchant_order_id = req.PaymentId.ToString(),
 			   payment_methods = [ _paymob.IntegrationId ],
 			   special_reference= req.OrderId.ToString(),
-			   billing_data=billingData,
+				redirection_url = _paymob.RedirectUrl,
+				notification_url = _paymob.NotificationUrl,
+				billing_data =billingData,
 			   expiration= _paymob.ExpirationSeconds
 			}; //Request
 			_logger.LogInformation("Sending request to Paymob API for PaymentId {PaymentId}", req.PaymentId);
@@ -82,7 +84,7 @@ namespace Ecom.Infrastructure.Payments
 		{
 			//var content = JsonSerializer.Serialize(paymobRequest);
 			var content = JsonContent.Create(paymobRequest); //make serializing + set content type = application/json   // convert obj --> JSON
-			var response = await _httpClient.PostAsync("/v1/intention", content, cancellationToken);
+			var response = await _httpClient.PostAsync("v1/intention/", content, cancellationToken);
 
 			if (!response.IsSuccessStatusCode)
 			{

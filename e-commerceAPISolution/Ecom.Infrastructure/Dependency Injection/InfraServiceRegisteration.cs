@@ -83,7 +83,7 @@ namespace Ecom.Infrastructure.Dependency_Injection
 			services.Configure<PaymobSettings>(configuration.GetSection("Paymob"));
 
 			//Paymob Call Configure
-			services.AddHttpClient<PaymentGateway>(client =>
+			services.AddHttpClient<IPaymentGateway, PaymentGateway>(client =>
 			{
 				client.BaseAddress = new Uri(configuration["Paymob:BaseUrl"]!);
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token",	configuration["Paymob:SecretKey"]

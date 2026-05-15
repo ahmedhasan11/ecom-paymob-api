@@ -25,6 +25,8 @@ namespace Ecom.Infrastructure.Payments
 
 		public string? special_reference { get; set; }
 
+		public string? redirection_url { get; set; }
+		public string? notification_url { get; set; }
 		public int expiration { get; set; }
 
 	}

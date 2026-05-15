@@ -19,6 +19,8 @@ namespace Ecom.Domain.Interfaces
 		Task<List<Payment>> GetExpiredPendingPaymentsAsync(DateTime now , DateTime threshold, CancellationToken cancellationToken);
 		Task<List<Payment>> GetPendingPaymentsByOrderIdsInBulk(List<Guid> orderIds, CancellationToken cancellationToken);
 
+		Task<List<Payment>> GetSucceededPaymentsByOrderIdsInBulk(List<Guid> orderIds, CancellationToken cancellationToken);
+
 
 
 

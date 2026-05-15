@@ -207,14 +207,16 @@ namespace e_commerceAPI
 
 			//Auth
 			app.UseAuthentication();
+			app.UseHangfireDashboard();
 			app.UseAuthorization();
 			app.UseRateLimiter();// Security: Throttling before Auth to prevent resource exhaustion
 
-			//Hangfire
-			app.UseHangfireDashboard("/hangfire", new DashboardOptions
-			{
-				Authorization = new[] { new HangfireAuthorizationFilter() }
-			});
+			////Hangfire
+			//app.UseHangfireDashboard("/hangfire", new DashboardOptions
+			//{
+			//	Authorization = new[] { new HangfireAuthorizationFilter() }
+			//});
+			app.UseHangfireDashboard();
 			app.AddHangfireJobs();
 
 			app.MapControllers();

@@ -68,7 +68,7 @@ namespace Ecom.Infrastructure.Payments
 			, obj.IsStandalonePayment.ToString().ToLowerInvariant(), obj.IsVoided.ToString().ToLowerInvariant(), obj.Order?.Id ?? 0, obj.Owner
 			, obj.Pending.ToString().ToLowerInvariant(), obj.SourceData?.Pan ?? "", obj.SourceData?.SubType ?? "", obj.SourceData?.Type ?? ""
 			, obj.Success.ToString().ToLowerInvariant());
-
+			
 			var dataBytes = Encoding.UTF8.GetBytes(concatenatedString);
 			var computedHash = hmac.ComputeHash(dataBytes); //computed bytes 
 
