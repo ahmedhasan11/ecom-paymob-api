@@ -94,7 +94,7 @@ namespace Ecom.Application.Services
 			}
 			cart.AddItem(product.Id, dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return MapToCartResult(cart);
+			return await GetMyCartAsync(userId, cancellationToken);
 
 		}
 
@@ -116,7 +116,7 @@ namespace Ecom.Application.Services
 			}
 			cart.RemoveItem(productId);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return MapToCartResult(cart);
+			return await GetMyCartAsync(userId, cancellationToken);
 
 		}
 
@@ -155,7 +155,7 @@ namespace Ecom.Application.Services
 
 			cart.UpdateQuantity(productId, dto.Quantity);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return MapToCartResult(cart);
+			return await GetMyCartAsync(userId, cancellationToken);
 
 		}
 
