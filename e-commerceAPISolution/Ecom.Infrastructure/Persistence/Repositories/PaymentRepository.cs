@@ -50,5 +50,10 @@ namespace Ecom.Infrastructure.Persistence.Repositories
 				.Take(100)
 				.ToListAsync(cancellationToken);
 		}
+
+		public async Task<List<Payment>> GetSucceededPaymentsByOrderIdsInBulk(List<Guid> orderIds, CancellationToken cancellationToken)
+		{
+			return await _db.Payments.Where(p => orderIds.Contains(p.OrderId) && p.Status == PaymentStatusEnum.Succeeded).ToListAsync(cancellationToken);
+		}
 	}
 }

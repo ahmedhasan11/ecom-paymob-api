@@ -33,8 +33,8 @@ namespace Ecom.Application.Services
 				return;
 			}
 			var orderIds = reservations.Select(r => r.OrderId).Distinct().ToList();
-			var pendingPayments = await _paymentRepository.GetPendingPaymentsByOrderIdsInBulk(orderIds, cancellationToken);
-			var pendingPaymentsDict = pendingPayments.ToDictionary(p => p.OrderId);
+			var succeededPayments = await _paymentRepository.GetSucceededPaymentsByOrderIdsInBulk(orderIds, cancellationToken);
+			var succeededPaymentsDict = succeededPayments.ToLookup(p => p.OrderId);// Use ToLookup to handle multiple payment attempts (though unlikely)
 			foreach (var reservation in reservations)
 			{
 				_logger.LogInformation("Processing reservation {ReservationId}", reservation.Id);
@@ -43,11 +43,11 @@ namespace Ecom.Application.Services
 					_logger.LogWarning("Skipping reservation {ReservationId} because it's not active", reservation.Id);
 					continue;
 				}
-				//check payment status because of webhook race codnition (payment can be completed while the job is running)	
-				// Check if payment is still pending using the pre-fetched dictionary
-				if (!pendingPaymentsDict.TryGetValue(reservation.OrderId, out var payment))
+				//check payment status because of webhook race condition (payment can be completed while the job is running)	
+				// Check if ANY payment for this order has succeeded
+				if (succeededPaymentsDict.Contains(reservation.OrderId))
 				{
-					_logger.LogInformation("Skipping reservation {ReservationId} because payment is not pending (already processed)", reservation.Id);
+					_logger.LogInformation("Skipping reservation {ReservationId} because payment is already succeeded", reservation.Id);
 					continue;
 				}
 				reservation.Expire();

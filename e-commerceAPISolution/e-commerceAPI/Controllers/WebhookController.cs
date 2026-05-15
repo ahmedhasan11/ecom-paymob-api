@@ -29,7 +29,7 @@ namespace e_commerceAPI.Controllers
 			}
 			try
 			{
-				await _paymentWebhookService.HandleWebhookAsync(req, hmac, cancellationToken);
+				await _paymentWebhookService.HandleWebhookAsync(req, hmac, CancellationToken.None);
 				return Ok(); // ✅ success
 			}
 			catch (InvalidHmacException ex)
